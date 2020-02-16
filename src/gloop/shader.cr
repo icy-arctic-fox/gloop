@@ -30,7 +30,7 @@ module Gloop
     # Length of the resulting shader source code, in bytes.
     # This includes the null-terminating character.
     def source_length
-      LibGL.get_shader_iv(name, LibGL::ShaderParameter::ShaderSourceLength, out length)
+      LibGL.get_shader_iv(name, LibGL::ShaderParameterName::ShaderSourceLength, out length)
       length
     end
 
@@ -69,7 +69,7 @@ module Gloop
     # Checks if there was a compilation problem with the shader.
     # Returns true if there was, or false if the compilation was ok.
     def compile_error?
-      LibGL.get_shader_iv(name, LibGL::ShaderParameter::CompileStatus, out result)
+      LibGL.get_shader_iv(name, LibGL::ShaderParameterName::CompileStatus, out result)
       result != LibGL::Boolean::False.to_i
     end
 
@@ -86,7 +86,7 @@ module Gloop
     # This includes the null-terminating character.
     # If there is no log available, then zero is returned.
     def info_log_length
-      LibGL.get_shader_iv(name, LibGL::ShaderParameter::InfoLogLength, out length)
+      LibGL.get_shader_iv(name, LibGL::ShaderParameterName::InfoLogLength, out length)
       length
     end
 
@@ -100,7 +100,7 @@ module Gloop
     # When true, the shader is still attached to a program (orphaned),
     # and will be deleted when it is no longer in use.
     def pending_deletion?
-      LibGL.get_shader_iv(name, LibGL::ShaderParameter::DeleteStatus, out status)
+      LibGL.get_shader_iv(name, LibGL::ShaderParameterName::DeleteStatus, out status)
       status != LibGL::Boolean::False.to_i
     end
 
