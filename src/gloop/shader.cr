@@ -1,4 +1,5 @@
 require "opengl"
+require "./bool_conversion"
 
 module Gloop
   # Common base type for all shaders.
@@ -71,7 +72,7 @@ module Gloop
     # Returns true if there was, or false if the compilation was ok.
     def compile_error?
       LibGL.get_shader_iv(name, LibGL::ShaderParameterName::CompileStatus, out result)
-      result != LibGL::Boolean::False.to_i
+      int_to_bool(result)
     end
 
     # Retrieves the information log for the shader.
@@ -102,13 +103,13 @@ module Gloop
     # and will be deleted when it is no longer in use.
     def pending_deletion?
       LibGL.get_shader_iv(name, LibGL::ShaderParameterName::DeleteStatus, out status)
-      status != LibGL::Boolean::False.to_i
+      int_to_bool(status)
     end
 
     # Checks if the shader exists and has not been deleted.
     def exists?
       result = LibGL.is_shader(name)
-      result != LibGL::Boolean::False.to_i
+      int_to_bool(result)
     end
 
     # Generates a string containing basic information about the shader.
