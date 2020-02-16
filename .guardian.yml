@@ -1,4 +1,7 @@
-files: ./**/*.cr
+files: ./src/**/*.cr
+run: crystal spec
+---
+files: ./spec/**/*.cr
 run: crystal spec
 ---
 files: ./shard.yml
