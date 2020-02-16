@@ -1,9 +1,13 @@
 require "opengl"
 require "./bool_conversion"
+require "./error_handling"
 
 module Gloop
   # Common base type for all shaders.
   abstract struct Shader
+    include BoolConversion
+    include ErrorHandling
+
     # Name of the shader.
     # Used to reference the shader.
     getter name : LibGL::UInt
@@ -14,7 +18,7 @@ module Gloop
 
     # Creates a new shader.
     def initialize
-      @name = LibGL.create_shader(type)
+      @name = checked { LibGL.create_shader(type) }
     end
 
     # The shader's type.
@@ -24,16 +28,20 @@ module Gloop
     def source
       buffer_size = source_length
       String.new(buffer_size) do |buffer|
-        LibGL.get_shader_source(name, buffer_size, out length, buffer)
-        {length, 0}
+        checked do
+          LibGL.get_shader_source(name, buffer_size, out length, buffer)
+          {length, 0}
+        end
       end
     end
 
     # Length of the resulting shader source code, in bytes.
     # This includes the null-terminating character.
     def source_length
-      LibGL.get_shader_iv(name, LibGL::ShaderParameterName::ShaderSourceLength, out length)
-      length
+      checked do
+        LibGL.get_shader_iv(name, LibGL::ShaderParameterName::ShaderSourceLength, out length)
+        length
+      end
     end
 
     # Sets the source of the shader.
@@ -47,10 +55,10 @@ module Gloop
     def sources=(sources)
       references = sources.map { |source| source.to_s.to_unsafe }
       if references.responds_to?(:to_unsafe)
-        LibGL.shader_source(name, references.size, references, nil)
+        checked { LibGL.shader_source(name, references.size, references, nil) }
       else
         array = references.to_a
-        LibGL.shader_source(name, array.size, array, nil)
+        checked { LibGL.shader_source(name, array.size, array, nil) }
       end
     end
 
@@ -58,7 +66,7 @@ module Gloop
     # No error checking is performed on the compilation.
     # Use `#compile_error?` to check if the compilation was successful.
     def compile
-      LibGL.compile_shader(name)
+      checked { LibGL.compile_shader(name) }
     end
 
     # Compiles the shader source code.
@@ -71,16 +79,20 @@ module Gloop
     # Checks if there was a compilation problem with the shader.
     # Returns true if there was, or false if the compilation was ok.
     def compile_error?
-      LibGL.get_shader_iv(name, LibGL::ShaderParameterName::CompileStatus, out result)
-      int_to_bool(result)
+      checked do
+        LibGL.get_shader_iv(name, LibGL::ShaderParameterName::CompileStatus, out result)
+        int_to_bool(result)
+      end
     end
 
     # Retrieves the information log for the shader.
     # This can be inspected when a compilation error occurs.
     def info_log
       String.new(info_log_length) do |buffer|
-        LibGL.get_shader_info_log(name, buffer.size, out length, buffer)
-        {length, 0}
+        checked do
+          LibGL.get_shader_info_log(name, buffer.size, out length, buffer)
+          {length, 0}
+        end
       end
     end
 
@@ -88,27 +100,31 @@ module Gloop
     # This includes the null-terminating character.
     # If there is no log available, then zero is returned.
     def info_log_length
-      LibGL.get_shader_iv(name, LibGL::ShaderParameterName::InfoLogLength, out length)
-      length
+      checked do
+        LibGL.get_shader_iv(name, LibGL::ShaderParameterName::InfoLogLength, out length)
+        length
+      end
     end
 
     # Deletes the shader and frees memory associated to it.
     # Do not attempt to continue using the shader after calling this method.
     def delete
-      LibGL.delete_shader(name)
+      checked { LibGL.delete_shader(name) }
     end
 
     # Checks if the shader has been marked for deletion.
     # When true, the shader is still attached to a program (orphaned),
     # and will be deleted when it is no longer in use.
     def pending_deletion?
-      LibGL.get_shader_iv(name, LibGL::ShaderParameterName::DeleteStatus, out status)
-      int_to_bool(status)
+      checked do
+        LibGL.get_shader_iv(name, LibGL::ShaderParameterName::DeleteStatus, out status)
+        int_to_bool(status)
+      end
     end
 
     # Checks if the shader exists and has not been deleted.
     def exists?
-      result = LibGL.is_shader(name)
+      result = checked { LibGL.is_shader(name) }
       int_to_bool(result)
     end
 
