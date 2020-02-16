@@ -9,7 +9,7 @@ module Gloop
     # and raises an exception if one did.
     private def check_error
       code = LibGL.get_error
-      if code != LibGL::ErrorCode::NoError
+      if code != LibGL::ErrorCode::NoError.to_u32
         raise translate_error(code)
       end
     end
