@@ -73,7 +73,7 @@ module Gloop
     # An error is raised if the compilation failed.
     def compile!
       compile
-      raise "Shader compilation failed - #{compile_error}" if compile_error?
+      raise "Shader compilation failed - #{info_log}" if compile_error?
     end
 
     # Checks if there was a compilation problem with the shader.
@@ -88,9 +88,10 @@ module Gloop
     # Retrieves the information log for the shader.
     # This can be inspected when a compilation error occurs.
     def info_log
-      String.new(info_log_length) do |buffer|
+      buffer_size = info_log_length
+      String.new(buffer_size) do |buffer|
         checked do
-          LibGL.get_shader_info_log(name, buffer.size, out length, buffer)
+          LibGL.get_shader_info_log(name, buffer_size, out length, buffer)
           {length, 0}
         end
       end
