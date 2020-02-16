@@ -1,3 +1,5 @@
+require "./gloop/*"
+
 # Object oriented OpenGL library.
 module Gloop
   VERSION = "0.1.0"
