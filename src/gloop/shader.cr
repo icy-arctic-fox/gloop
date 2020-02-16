@@ -21,8 +21,9 @@ module Gloop
 
     # Retrieves the shader's source code.
     def source
-      String.new(source_length) do |buffer|
-        LibGL.get_shader_source(name, buffer.size, out length, buffer)
+      buffer_size = source_length
+      String.new(buffer_size) do |buffer|
+        LibGL.get_shader_source(name, buffer_size, out length, buffer)
         {length, 0}
       end
     end
