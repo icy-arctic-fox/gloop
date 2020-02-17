@@ -64,7 +64,7 @@ module Gloop
 
     # Compiles the shader source code.
     # No error checking is performed on the compilation.
-    # Use `#compile_error?` to check if the compilation was successful.
+    # Use `#compiled?` to check if the compilation was successful.
     def compile
       checked { LibGL.compile_shader(name) }
     end
@@ -73,12 +73,12 @@ module Gloop
     # An error is raised if the compilation failed.
     def compile!
       compile
-      raise "Shader compilation failed - #{info_log}" if compile_error?
+      raise "Shader compilation failed - #{info_log}" unless compiled?
     end
 
-    # Checks if there was a compilation problem with the shader.
-    # Returns true if there was, or false if the compilation was ok.
-    def compile_error?
+    # Checks if the compilation was successful.
+    # Returns true if it was, or false if there was a problem.
+    def compiled?
       checked do
         LibGL.get_shader_iv(name, LibGL::ShaderParameterName::CompileStatus, out result)
         int_to_bool(result)
