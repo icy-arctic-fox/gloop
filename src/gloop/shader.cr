@@ -26,23 +26,45 @@ module Gloop
     abstract def type : LibGL::ShaderType
 
     # Retrieves the shader's source code.
-    def source
-      buffer_size = source_length
+    # Returns nil if there is no source code.
+    def source?
+      buffer_size = source_length?
+      return unless buffer_size
+
       String.new(buffer_size) do |buffer|
         checked do
-          LibGL.get_shader_source(name, buffer_size, out length, buffer)
+          # +1 for null-terminating character that Crystal's String.new throws in.
+          LibGL.get_shader_source(name, buffer_size + 1, out length, buffer)
           {length, 0}
         end
       end
     end
 
+    # Retrieves the shader's source code.
+    # Raises an error if there is no source code.
+    def source
+      source? || raise NilAssertionError.new("No shader source code")
+    end
+
     # Length of the resulting shader source code, in bytes.
-    # This includes the null-terminating character.
-    def source_length
-      checked do
+    # Returns nil if there is no source code.
+    def source_length?
+      byte_size = checked do
         LibGL.get_shader_iv(name, LibGL::ShaderParameterName::ShaderSourceLength, out length)
         length
       end
+
+      # If the size is zero, then there's no source, return nil.
+      # Otherwise, return the size, minus one to account for the null-terminating character.
+      unless byte_size.zero?
+        byte_size - 1
+      end # else - fallthrough nil
+    end
+
+    # Length of the resulting shader source code, in bytes.
+    # Raises if there is no source code.
+    def source_length
+      source_length? || raise NilAssertionError.new("No shader source code")
     end
 
     # Sets the source of the shader.
@@ -88,24 +110,46 @@ module Gloop
 
     # Retrieves the information log for the shader.
     # This can be inspected when a compilation error occurs.
-    def info_log
-      buffer_size = info_log_length
+    # Returns nil if there is no info log.
+    def info_log?
+      buffer_size = info_log_length?
+      return unless buffer_size
+
       String.new(buffer_size) do |buffer|
         checked do
-          LibGL.get_shader_info_log(name, buffer_size, out length, buffer)
+          # +1 for null-terminating character that Crystal's String.new throws in.
+          LibGL.get_shader_info_log(name, buffer_size + 1, out length, buffer)
           {length, 0}
         end
       end
     end
 
+    # Retrieves the information log for the shader.
+    # This can be inspected when a compilation error occurs.
+    # Raises an error if there is no source code.
+    def info_log
+      info_log? || raise NilAssertionError.new("No shader info log")
+    end
+
     # Length of the information log for the shader, in bytes.
-    # This includes the null-terminating character.
-    # If there is no log available, then zero is returned.
-    def info_log_length
-      checked do
+    # If there is no log available, then nil is returned.
+    def info_log_length?
+      byte_size = checked do
         LibGL.get_shader_iv(name, LibGL::ShaderParameterName::InfoLogLength, out length)
         length
       end
+
+      # If the size is zero, then there's no log, return nil.
+      # Otherwise, return the size, minus one to account for the null-terminating character.
+      unless byte_size.zero?
+        byte_size - 1
+      end # else - fallthrough nil
+    end
+
+    # Length of the information log for the shader, in bytes.
+    # Raises if there is no info log.
+    def info_log_length
+      info_log_length? || raise NilAssertionError.new("No shader info log")
     end
 
     # Deletes the shader and frees memory associated to it.
