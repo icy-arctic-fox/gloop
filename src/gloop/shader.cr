@@ -1,6 +1,7 @@
 require "opengl"
 require "./bool_conversion"
 require "./error_handling"
+require "./shader_compilation_error"
 
 module Gloop
   # Common base type for all shaders.
@@ -73,7 +74,7 @@ module Gloop
     # An error is raised if the compilation failed.
     def compile!
       compile
-      raise "Shader compilation failed - #{info_log}" unless compiled?
+      raise ShaderCompilationError.new(info_log) unless compiled?
     end
 
     # Checks if the compilation was successful.
