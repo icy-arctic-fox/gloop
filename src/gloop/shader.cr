@@ -182,5 +182,10 @@ module Gloop
       io << name
       io << ')'
     end
+
+    # Retrieves the underlying name (identifier) used by OpenGL to reference the shader.
+    def to_unsafe
+      name
+    end
   end
 end
