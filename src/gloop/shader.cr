@@ -126,7 +126,7 @@ module Gloop
 
     # Retrieves the information log for the shader.
     # This can be inspected when a compilation error occurs.
-    # Raises an error if there is no source code.
+    # Raises an error if there is no log available.
     def info_log
       info_log? || raise NilAssertionError.new("No shader info log")
     end
