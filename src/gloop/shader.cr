@@ -14,7 +14,7 @@ module Gloop
     getter name : LibGL::UInt
 
     # Associates with an existing shader.
-    private def initialize(@name)
+    protected def initialize(@name)
     end
 
     # Creates a new shader.

@@ -1,6 +1,7 @@
 require "opengl"
 require "./bool_conversion"
 require "./error_handling"
+require "./shader_factory"
 
 module Gloop
   # Pipeline consisting of shaders used to transform vertices into pixels.
@@ -29,6 +30,26 @@ module Gloop
     # Detaches a shader from the program.
     def detach(shader)
       checked { LibGL.detach_shader(name, shader) }
+    end
+
+    # Retrieves the shaders attached to the program.
+    def shaders
+      names = Slice(LibGL::UInt).new(shader_count, read_only: true)
+      names = checked do
+        LibGL.get_attached_shaders(name, names.size, out count, names)
+        names[0, count]
+      end
+
+      factory = ShaderFactory.new
+      names.map { |name| factory.build(name) }
+    end
+
+    # Retrieves the number of shaders attached to the program.
+    def shader_count
+      checked do
+        LibGL.get_program_iv(name, LibGL::ProgramPropertyARB::AttachedShaders, out count)
+        count
+      end
     end
 
     # Links the attached shaders into a single program.
