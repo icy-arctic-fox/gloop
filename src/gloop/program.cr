@@ -1,6 +1,7 @@
 require "opengl"
 require "./bool_conversion"
 require "./error_handling"
+require "./program_link_error"
 require "./shader_factory"
 
 module Gloop
@@ -63,7 +64,7 @@ module Gloop
     # An error is raised if the link failed.
     def link!
       link
-      raise ShaderCompilationError.new(info_log) unless linked?
+      raise ProgramLinkError.new(info_log) unless linked?
     end
 
     # Checks if the linkage was successful.
