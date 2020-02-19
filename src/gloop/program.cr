@@ -120,7 +120,7 @@ module Gloop
     end
 
     # Uses the program for the current rendering state.
-    def enable
+    def bind
       checked { LibGL.use_program(name) }
     end
 
