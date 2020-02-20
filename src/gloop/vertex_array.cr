@@ -35,6 +35,11 @@ module Gloop
       checked { LibGL.bind_vertex_array(name) }
     end
 
+    # Undbinds any previously bound vertex array object from the current context.
+    def self.unbind
+      ErrorHandling.static_checked { LibGL.bind_vertex_array(0) }
+    end
+
     # Deletes the vertex array object and frees memory held by it.
     # Do not attempt to continue using the VAO after calling this method.
     def delete
