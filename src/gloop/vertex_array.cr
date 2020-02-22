@@ -18,7 +18,7 @@ module Gloop
     # Creates a new vertex array object.
     def initialize
       @name = checked do
-        LibGL.gen_vertex_arrays(1, out name)
+        LibGL.create_vertex_arrays(1, out name)
         name
       end
     end
@@ -26,7 +26,7 @@ module Gloop
     # Creates multiple vertex array objects at once.
     def self.create(count)
       names = Slice(LibGL::UInt).new(count)
-      checked { LibGL.gen_vertex_arrays(names.size, names) }
+      checked { LibGL.create_vertex_arrays(names.size, names) }
       names.map { |name| new(name) }
     end
 
