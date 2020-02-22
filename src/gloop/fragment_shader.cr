@@ -6,6 +6,12 @@ module Gloop
   struct FragmentShader < Shader
     # The shader's type.
     # Always returns `FragmentShader`
+    def self.type : LibGL::ShaderType
+      LibGL::ShaderType::FragmentShader
+    end
+
+    # The shader's type.
+    # Always returns `FragmentShader`
     def type : LibGL::ShaderType
       LibGL::ShaderType::FragmentShader
     end

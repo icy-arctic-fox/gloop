@@ -22,6 +22,24 @@ module Gloop
       @name = checked { LibGL.create_shader(type) }
     end
 
+    # Creates a stand-alone shader program.
+    def self.create(source)
+      sources = StaticArray[source]
+      create(sources)
+    end
+
+    # Creates a stand-alone shader program.
+    def self.create(sources : Enumerable)
+      references = sources.map { |source| source.to_s.to_unsafe }
+      name = if references.responds_to?(:to_unsafe)
+        ErrorHandling.static_checked { LibGL.create_shader_program_v(type, references.size, references) }
+      else
+        array = references.to_a
+        ErrorHandling.static_checked { LibGL.create_shader_program_v(type, array.size, array) }
+      end
+      new(name)
+    end
+
     # The shader's type.
     abstract def type : LibGL::ShaderType
 
