@@ -1,11 +1,11 @@
 module Gloop
-  abstract struct DataBuffer < Buffer
+  abstract struct DataBuffer(T) < Buffer
     def write(content, usage)
-      checked { LibGL.named_buffer_data(name, content.size, content, usage) }
+      checked { LibGL.named_buffer_data(name, sizeof(T) * content.size, content, usage) }
     end
 
     def data=(content)
-      checked { LibGL.named_buffer_data(name, content.size, content, usage) }
+      checked { LibGL.named_buffer_data(name, sizeof(T) * content.size, content, usage) }
     end
 
     # Usage pattern of the buffer.
