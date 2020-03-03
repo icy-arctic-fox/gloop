@@ -2,13 +2,13 @@ require "opengl"
 require "./buffer"
 
 module Gloop
-  struct VertexDataBuffer(T) < DataBuffer(T)
+  struct VertexDataBuffer < DataBuffer
     def target
       LibGL::BufferTargetARB::ArrayBuffer
     end
   end
 
-  struct VertexStorageBuffer(T) < StorageBuffer(T)
+  struct VertexStorageBuffer < StorageBuffer
     def target
       LibGL::BufferStorageTarget::ArrayBuffer
     end
