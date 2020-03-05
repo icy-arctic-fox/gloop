@@ -58,6 +58,18 @@ module Gloop
       checked { LibGL.delete_buffers(1, pointerof(name)) }
     end
 
+    # Deletes multiple buffers and frees memory held by them.
+    # Do not attempt to continue using the buffers after calling this method.
+    def self.delete(buffers)
+      names = buffers.map(&.to_unsafe)
+      if names.responds_to?(:to_unsafe)
+        checked { LibGL.delete_buffers(names.size, names) }
+      else
+        array = names.to_a
+        checked { LibGL.delete_buffers(array.size, array) }
+      end
+    end
+
     # Checks if the buffer object exists and has not been deleted.
     def exists?
       result = checked { LibGL.is_buffer(name) }
