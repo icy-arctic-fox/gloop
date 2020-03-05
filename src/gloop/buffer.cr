@@ -52,6 +52,40 @@ module Gloop
       end
     end
 
+    # Retrieves the entire content of the buffer.
+    # Returns a slice of bytes.
+    def data
+      self[0, size]
+    end
+
+    # Retrieves a subset of the buffer's data.
+    # Returns a slice of bytes.
+    def [](range : Range)
+      start, count = Indexable.range_to_index_and_count(range, size)
+      self[start, count]
+    end
+
+    # Retrieves a subset of the buffer's data.
+    # Returns a slice of bytes.
+    def [](start : Int, count : Int)
+      Bytes.new(count).tap do |slice|
+        checked { LibGL.get_named_buffer_sub_data(name, start, count, slice) }
+      end
+    end
+
+    # Updates a subset of the buffer's data.
+    # The *content* should be a pointer or respond to `to_unsafe`, which returns a pointer.
+    def []=(range : Range, content)
+      start, count = Indexable.range_to_index_and_count(range, size)
+      self[start, count] = content
+    end
+
+    # Updates a subset of the buffer's data.
+    # The *content* should be a pointer or respond to `to_unsafe`, which returns a pointer.
+    def []=(start : Int, count : Int, content)
+      checked { LibGL.named_buffer_sub_data(name, start, count, content) }
+    end
+
     # Deletes the buffer object and frees memory held by it.
     # Do not attempt to continue using the buffer after calling this method.
     def delete
