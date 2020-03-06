@@ -104,6 +104,11 @@ module Gloop
       end
     end
 
+    # Copies the contents of one buffer to another.
+    def self.copy(source, destination, source_offset, destination_offset, size)
+      checked { LibGL.copy_named_buffer_sub_data(source, destination, source_offset, destination_offset, size) }
+    end
+
     # Checks if the buffer object exists and has not been deleted.
     def exists?
       result = checked { LibGL.is_buffer(name) }
