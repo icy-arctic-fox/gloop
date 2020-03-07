@@ -109,6 +109,60 @@ module Gloop
       checked { LibGL.copy_named_buffer_sub_data(source, destination, source_offset, destination_offset, size) }
     end
 
+    # Exposes the contents of the entire buffer.
+    def map(*, access = LibGL::BufferAccessARB::ReadWrite)
+      pointer = checked do
+        LibGL.map_named_buffer(name, access)
+      end
+      slice = pointer.to_slice(size)
+      BufferMapping.new(name, slice)
+    end
+
+    # Exposes the contents of the entire buffer.
+    # The buffer is unmapped after the block finishes.
+    def map(*, access = LibGL::BufferAccessARB::ReadWrite, &)
+      map(access: access).tap do |mapping|
+        yield mapping
+      ensure
+        mapping.unmap
+      end
+    end
+
+    # Exposes a subset of the contents of the buffer.
+    def map_range(offset, size, *, access = LibGL::BufferAccessARB::ReadWrite)
+      pointer = checked do
+        LibGL.map_named_buffer_range(name, offset, size, access)
+      end
+      slice = pointer.to_slice(size)
+      BufferMapping.new(name, slice)
+    end
+
+    # Exposes a subset of the contents of the buffer.
+    def map_range(range, *, access = LibGL::BufferAccessARB::ReadWrite)
+      start, count = Indexable.range_to_index_and_count(range, size)
+      map_range(start, count, access: access)
+    end
+
+    # Exposes a subset of the contents of the buffer.
+    # The buffer is unmapped after the block finishes.
+    def map_range(offset, size, *, access = LibGL::BufferAccessARB::ReadWrite, &)
+      map_range(offset, size, access: access).tap do |mapping|
+        yield mapping
+      ensure
+        mapping.unmap
+      end
+    end
+
+    # Exposes a subset of the contents of the buffer.
+    # The buffer is unmapped after the block finishes.
+    def map_range(range, *, access = LibGL::BufferAccessARB::ReadWrite, &)
+      map_range(range, access: access).tap do |mapping|
+        yield mapping
+      ensure
+        mapping.unmap
+      end
+    end
+
     # Checks if the buffer object exists and has not been deleted.
     def exists?
       result = checked { LibGL.is_buffer(name) }
