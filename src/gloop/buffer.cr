@@ -140,7 +140,7 @@ module Gloop
 
     # Exposes the contents of the entire buffer.
     # The buffer is unmapped after the block finishes.
-    def map(*, access = LibGL::BufferAccessARB::ReadWrite, &)
+    def map(*, access = LibGL::BufferAccessARB::ReadWrite)
       map(access: access).tap do |mapping|
         yield mapping
       ensure
@@ -165,7 +165,7 @@ module Gloop
 
     # Exposes a subset of the contents of the buffer.
     # The buffer is unmapped after the block finishes.
-    def map_range(offset, size, *, access = LibGL::BufferAccessARB::ReadWrite, &)
+    def map_range(offset, size, *, access = LibGL::BufferAccessARB::ReadWrite)
       map_range(offset, size, access: access).tap do |mapping|
         yield mapping
       ensure
@@ -175,7 +175,7 @@ module Gloop
 
     # Exposes a subset of the contents of the buffer.
     # The buffer is unmapped after the block finishes.
-    def map_range(range, *, access = LibGL::BufferAccessARB::ReadWrite, &)
+    def map_range(range, *, access = LibGL::BufferAccessARB::ReadWrite)
       map_range(range, access: access).tap do |mapping|
         yield mapping
       ensure
