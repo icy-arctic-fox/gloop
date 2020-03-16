@@ -86,6 +86,26 @@ module Gloop
       checked { LibGL.named_buffer_sub_data(name, start, count, content) }
     end
 
+    # Copies the entirety of another buffer to this one.
+    def copy_from(source : self)
+      source.copy_to(self)
+    end
+
+    # Copies the entirety of this buffer to another one.
+    def copy_to(dest)
+      Buffer.copy(self, dest, 0, 0, size)
+    end
+
+    # Copies part of this buffer to another one.
+    def copy_to(dest, source_offset, dest_offset, size)
+      Buffer.copy(self, dest, source_offset, dest_offset, size)
+    end
+
+    # Copies one buffer to another.
+    def self.copy(source, dest, source_offset, dest_offset, size)
+      ErrorHandling.static_checked { LibGL.copy_named_buffer_sub_data(source, dest, source_offset, dest_offset, size) }
+    end
+
     # Deletes the buffer object and frees memory held by it.
     # Do not attempt to continue using the buffer after calling this method.
     def delete
