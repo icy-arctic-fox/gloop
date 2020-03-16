@@ -30,7 +30,7 @@ module Gloop
     # Creates an error from the given code.
     # The *code* indicates which type of error to create.
     private def translate_error(code)
-      case code
+      case LibGL::ErrorCode.new(code.to_i32)
       when LibGL::ErrorCode::InvalidEnum                 then InvalidEnumError.new
       when LibGL::ErrorCode::InvalidValue                then InvalidValueError.new
       when LibGL::ErrorCode::InvalidOperation            then InvalidOperationError.new
