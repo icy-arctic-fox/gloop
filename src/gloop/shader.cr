@@ -38,7 +38,7 @@ module Gloop
     end
 
     # Wraps an existing OpenGL shader object.
-    def initialize(@shader : LibGL::UInt)
+    protected def initialize(@shader : LibGL::UInt)
     end
 
     # Creates a new, empty shader.
