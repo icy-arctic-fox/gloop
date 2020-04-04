@@ -177,5 +177,51 @@ module Gloop
     # This includes the null-terminating character.
     # If there's no source available, then zero is returned.
     private parameter source_size, ShaderSourceLength
+
+    # Class methods that every sub-class should expose.
+    module ClassMethods
+      # Creates and compiles a shader from a source string.
+      # To check the result of the compilation, use `Shader#compiled?`.
+      def compile(source)
+        new.tap do |shader|
+          shader.source = source
+          shader.compile
+        end
+      end
+
+      # Creates and compiles a shader from a source string.
+      # Raises a `ShaderCompilationError` if the compilation failed.
+      def compile!(source)
+        new.tap do |shader|
+          shader.source = source
+          shader.compile!
+        end
+      end
+
+      # Creates and compiles a shader from multiple source string.
+      # Each string will be concatenated to create the entire source.
+      # To check the result of the compilation, use `Shader#compiled?`.
+      def compile(sources : Enumerable)
+        new.tap do |shader|
+          shader.sources = sources
+          shader.compile
+        end
+      end
+
+      # Creates and compiles a shader from multiple source string.
+      # Each string will be concatenated to create the entire source.
+      # Raises a `ShaderCompilationError` if the compilation failed.
+      def compile!(sources : Enumerable)
+        new.tap do |shader|
+          shader.sources = sources
+          shader.compile!
+        end
+      end
+    end
+
+    # Automatically add the class methods on every child.
+    macro inherited
+      extend ClassMethods
+    end
   end
 end
