@@ -1,4 +1,3 @@
-require "opengl"
 require "./error"
 
 module Gloop
@@ -14,9 +13,29 @@ module Gloop
       yield.tap { Gloop.error! }
     end
 
+    # Expects an OpenGL function to return a truthy value.
+    # The return value of the function is checked
+    # to be not false, nil, or integer false (zero).
+    # Pass a block to this method that calls *one* OpenGL function.
+    # The value of the block will be returned if no error occurred.
+    # Otherwise, an error will be raised.
+    #
+    # An exception will be raised only if an error occurred.
+    # The error check will only happen if the block returns non-truthy.
+    private def expect_truthy
+      yield.tap do |result|
+        Gloop.error! if !result || result.zero?
+      end
+    end
+
     # Same as `#checked`, but for static invocations.
     protected def self.static_checked(&block : -> _)
       checked(&block)
+    end
+
+    # Same as `#expect_truthy`, but for static invocations.
+    protected def self.static_expect_truthy(&block : -> _)
+      expect_truthy(&block)
     end
   end
 end

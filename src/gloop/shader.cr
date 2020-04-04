@@ -43,7 +43,7 @@ module Gloop
 
     # Creates a new, empty shader.
     def initialize
-      @shader = checked { LibGL.create_shader(type) }
+      @shader = expect_truthy { LibGL.create_shader(type) }
     end
 
     # Releases resources held by the OpenGL implementation shader compiler.
