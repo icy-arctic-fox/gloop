@@ -154,7 +154,7 @@ module Gloop
     end
 
     # Generates a string containing basic information about the shader.
-    # The string contains the shader's name and type.
+    # The string contains the shader's identifier and type.
     def to_s(io)
       io << self.class
       io << '('
