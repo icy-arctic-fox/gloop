@@ -37,6 +37,24 @@ module Gloop
       end
     end
 
+    # Checks if the shader has been compiled.
+    parameter? compiled, CompileStatus
+
+    # Checks if this shader is pending deletion.
+    # When true, the `#delete` method has been called,
+    # but the shader is still in use by a program.
+    parameter? deleted, DeleteStatus
+
+    # Retrieves the number of bytes needed to store the info log.
+    # This includes the null-terminating character.
+    # If there's no info log available, then zero is returned.
+    private parameter info_log_size, InfoLogLength
+
+    # Retrieves the number of bytes needed to store the shader's source code.
+    # This includes the null-terminating character.
+    # If there's no source available, then zero is returned.
+    private parameter source_size, ShaderSourceLength
+
     # Wraps an existing OpenGL shader object.
     protected def initialize(@shader : LibGL::UInt)
     end
@@ -70,9 +88,6 @@ module Gloop
       raise ShaderCompilationError.new(info_log) unless compiled?
     end
 
-    # Checks if the shader has been compiled.
-    parameter? compiled, CompileStatus
-
     # Frees resources held by the shader
     # and invalidates the name associated with it.
     # **Do not** attempt to use this instance after calling this method.
@@ -83,11 +98,6 @@ module Gloop
     def delete
       checked { LibGL.delete_shader(@shader) }
     end
-
-    # Checks if this shader is pending deletion.
-    # When true, the `#delete` method has been called,
-    # but the shader is still in use by a program.
-    parameter? deleted, DeleteStatus
 
     # Checks if the shader exists and has not been fully deleted.
     def exists?
@@ -167,16 +177,6 @@ module Gloop
     def to_unsafe
       @shader
     end
-
-    # Retrieves the number of bytes needed to store the info log.
-    # This includes the null-terminating character.
-    # If there's no info log available, then zero is returned.
-    private parameter info_log_size, InfoLogLength
-
-    # Retrieves the number of bytes needed to store the shader's source code.
-    # This includes the null-terminating character.
-    # If there's no source available, then zero is returned.
-    private parameter source_size, ShaderSourceLength
 
     # Class methods that every sub-class should expose.
     module ClassMethods
