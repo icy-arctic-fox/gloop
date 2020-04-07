@@ -1,164 +1,279 @@
 require "opengl"
 require "./bool_conversion"
 require "./error_handling"
+require "./program_binary"
 require "./program_link_error"
+require "./program_validation_error"
 require "./shader_factory"
 
 module Gloop
-  # Pipeline consisting of shaders used to transform vertices into pixels.
+  # Collection of shaders used to transform vertices into pixels.
   struct Program
     include BoolConversion
     include ErrorHandling
 
-    # Name of the program.
-    # Used to reference the program.
-    getter name : LibGL::UInt
-
-    # Associates with an existing program.
-    private def initialize(@name)
-    end
-
-    # Creates a new program.
-    def initialize
-      @name = checked { LibGL.create_program }
-    end
-
-    # Attaches a shader to the program.
-    def attach(shader)
-      checked { LibGL.attach_shader(name, shader) }
-    end
-
-    # Detaches a shader from the program.
-    def detach(shader)
-      checked { LibGL.detach_shader(name, shader) }
-    end
-
-    # Retrieves the shaders attached to the program.
-    def shaders
-      names = Slice(LibGL::UInt).new(shader_count, read_only: true)
-      names = checked do
-        LibGL.get_attached_shaders(name, names.size, out count, names)
-        names[0, count]
-      end
-
-      factory = ShaderFactory.new
-      names.map { |name| factory.build(name) }
-    end
-
-    # Retrieves the number of shaders attached to the program.
-    def shader_count
-      checked do
-        LibGL.get_program_iv(name, LibGL::ProgramPropertyARB::AttachedShaders, out count)
-        count
-      end
-    end
-
-    # Links the attached shaders into a single program.
-    # No error checking is performed on the linkage.
-    # Use `#linked?` to check if the linkage was successful.
-    def link
-      checked { LibGL.link_program(name) }
-    end
-
-    # Links the attached shaders into a single program.
-    # An error is raised if the link failed.
-    def link!
-      link
-      raise ProgramLinkError.new(info_log) unless linked?
-    end
-
-    # Checks if the linkage was successful.
-    # Returns true if it was, or false if there was a problem.
-    def linked?
-      checked do
-        LibGL.get_program_iv(name, LibGL::ProgramPropertyARB::LinkStatus, out result)
-        int_to_bool(result)
-      end
-    end
-
-    # Retrieves the information log for the program.
-    # This can be inspected when a link error occurs.
-    # Returns nil if there is no info log.
-    def info_log?
-      buffer_size = info_log_length?
-      return unless buffer_size
-
-      String.new(buffer_size) do |buffer|
+    # Creates a getter method for a program parameter.
+    # The *name* is the name of the method to define.
+    # The *pname* is the enum value of the parameter to retrieve.
+    # This should be an enum value from `LibGL::ProgramParameterName`.
+    private macro parameter(name, pname)
+      def {{name.id}}
         checked do
-          # +1 for null-terminating character that Crystal's String.new throws in.
-          LibGL.get_program_info_log(name, buffer_size + 1, out length, buffer)
-          {length, 0}
+          LibGL.get_program_iv(@program, LibGL::ProgramPropertyARB::{{pname.id}}, out params)
+          params
         end
       end
     end
 
-    # Retrieves the information log for the program.
-    # This can be inspected when a link error occurs.
-    # Raises an error if there is no source code.
-    def info_log
-      info_log? || raise NilAssertionError.new("No program info log")
-    end
-
-    # Length of the information log for the program, in bytes.
-    # If there is no log available, then nil is returned.
-    def info_log_length?
-      byte_size = checked do
-        LibGL.get_program_iv(name, LibGL::ProgramPropertyARB::InfoLogLength, out length)
-        length
+    # Creates a getter method for a program parameter that returns a boolean.
+    # The *name* is the name of the method to define.
+    # The method name will have `?` appended to it.
+    # The *pname* is the enum value of the parameter to retrieve.
+    # This should be an enum value from `LibGL::ProgramParameterName`.
+    private macro parameter?(name, pname)
+      def {{name.id}}?
+        result = checked do
+          LibGL.get_program_iv(@program, LibGL::ProgramPropertyARB::{{pname.id}}, out params)
+          params
+        end
+        int_to_bool(result)
       end
-
-      # If the size is zero, then there's no log, return nil.
-      # Otherwise, return the size, minus one to account for the null-terminating character.
-      unless byte_size.zero?
-        byte_size - 1
-      end # else - fallthrough nil
     end
 
-    # Length of the information log for the program, in bytes.
-    # Raises if there is no info log.
-    def info_log_length
-      info_log_length? || raise NilAssertionError.new("No program info log")
+    # Creates a setter method for a program parameter that accepts a boolean.
+    # The *name* is the name of the method to define.
+    # The method name will have `=` appended to it.
+    # The *pname* is the enum value of the parameter to update.
+    # This should be an enum value from `LibGL::ProgramParameterPName`.
+    private macro bool_parameter_setter(name, pname)
+      def {{name.id}}=(flag)
+        value = bool_to_int(flag)
+        checked { LibGL.program_parameter_i(@program, LibGL::ProgramParameterPName::{{pname.id}}, value) }
+      end
     end
 
-    # Uses the program for the current rendering state.
-    def bind
-      checked { LibGL.use_program(name) }
+    # Indicates whether the application intends to retrieve the binary representation of the program.
+    # This should be set to true before linking and attempting to use `#binary`.
+    bool_parameter_setter binary_retrievable, ProgramBinaryRetrievableHint
+
+    # Checks if this program is pending deletion.
+    # When true, the `#delete` method has been called,
+    # but the program is still in use by the current rendering context.
+    parameter? deleted, DeleteStatus
+
+    # Indicates whether the shader linkage was successful.
+    # Calling this after `#link` indicates the result.
+    parameter? linked, LinkStatus
+
+    # Indicates whether the progoram can be bound to individual pipeline stages.
+    # This must be set to true before calling `#link` in order for it to be usable with a program pipeline.
+    bool_parameter_setter separable, ProgramSeparable
+
+    # Indicates whether the last validation check (call to `#validate`) was successful.
+    parameter? valid, ValidateStatus
+
+    # Retrieves the number of attributes in the program.
+    # Unused parameters are not included in the count.
+    private parameter attribute_count, ActiveAttributes
+
+    # Retrieves the size of the compiled and linked binary program.
+    # This will be zero if the link failed.
+    private parameter binary_size, ProgramBinaryLength
+
+    # Retrieves the number of bytes needed to store the info log.
+    # This includes the null-terminating character.
+    # If there's no info log available, then zero is returned.
+    private parameter info_log_size, InfoLogLength
+
+    # Retrieves the maximum string length of an attribute name.
+    # This length includes the null-terminating character.
+    private parameter max_attribute_name_size, ActiveAttributeMaxLength
+
+    # Retrieves the maximum string length of a uniform name.
+    # This length includes the null-terminating character.
+    private parameter max_uniform_name_size, ActiveUniformMaxLength
+
+    # Retrieves the number of shaders attached to the program.
+    private parameter shader_count, AttachedShaders
+
+    # Retrieves the number of uniforms in the program.
+    # Unused uniforms are not included in the count.
+    private parameter uniform_count, ActiveUniforms
+
+    # Wraps an existing OpenGL program object.
+    protected def initialize(@program : LibGL::UInt)
     end
 
-    # Deletes the program and frees memory associated to it.
-    # Do not attempt to continue using the program after calling this method.
+    # Creates a new, empty program.
+    def initialize
+      @program = expect_truthy { LibGL.create_program }
+    end
+
+    # Retrieves the program currently in use.
+    # Returns nil if there's no active program.
+    def self.current?
+      program = ErrorHandling.static_checked do
+        LibGL.get_integer_v(LibGL::GetPName::CurrentProgram, out data)
+        data
+      end.to_u32
+      program.zero? ? nil : new(program)
+    end
+
+    # Retrieves the program currently in use.
+    # Raises if there's no active program.
+    def self.current
+      current? || raise(NilAssertionError.new("No current program"))
+    end
+
+    def attribute(location : Int)
+      raise NotImplementedError.new("Program#attribute(location)")
+    end
+
+    def attribute(name : String)
+      raise NotImplementedError.new("Program#attribute(name)")
+    end
+
+    # Attaches a shader to the program.
+    def attach(shader)
+      checked { LibGL.attach_shader(@program, shader) }
+    end
+
+    # Retrieves the binary representation of the compiled and linked program.
+    def binary : ProgramBinary
+      raise NotImplementedError.new("Program#binary")
+    end
+
+    # Loads a program from a binary represents.
+    #
+    # Setting a program's binary bypasses the need to compile and link.
+    # This means `#linked?` will be true.
+    #
+    # All uniforms are reset to their initial values when using this method.
+    def binary=(binary : ProgramBinary)
+      raise NotImplementedError.new("Program#binary=")
+    end
+
+    # Frees resources held by the program
+    # and invalidates the name associated with it.
+    # **Do not** attempt to use this instance after calling this method.
+    #
+    # If a program object to be deleted is in use by the current rendering state,
+    # it will be flagged for deletion,
+    # but will not be deleted until it is no longer in use.
+    # If a program has been marked for deletion has shaders attached to it,
+    # those shaders will be automatically detached by not deleted
+    # unless they have been flagged for deletion by `Shader#delete`.
     def delete
-      checked { LibGL.delete_program(name) }
+      checked { LibGL.delete_program(@program) }
     end
 
-    # Checks if the program has been marked for deletion.
-    # When true, the program is still in use for the current rendering context (orphaned),
-    # and will be deleted when it is no longer in use.
-    def pending_deletion?
-      checked do
-        LibGL.get_program_iv(name, LibGL::ProgramPropertyARB::DeleteStatus, out status)
-        int_to_bool(status)
-      end
+    # Detaches a shader from the program that was previously attached.
+    # This effectively undoes `#attach`.
+    #
+    # If a shader has been marked for deletion by `Shader#delete`
+    # and it is not attached to any programs, it will be deleted after being detached.
+    def detach(shader)
+      checked { LibGL.detach_shader(@program, shader) }
     end
 
-    # Checks if the program exists and has not been deleted.
+    # Checks if the program exists and has not been fully deleted.
+    #
+    # A program marked for deletion with `#delete`
+    # but still part of the rendering state is considered to still exist.
     def exists?
-      result = checked { LibGL.is_program(name) }
+      result = expect_truthy { LibGL.is_program(@program) }
       int_to_bool(result)
     end
 
+    # Retrieves information about the program's linkage and validation.
+    # An empty string will be returned if there's no log available.
+    #
+    # The information log is OpenGL's mechanism
+    # for conveying information about the link process and validation to application developers.
+    # Even if the compilation was successful, some useful information may be in it.
+    def info_log
+      capacity = info_log_size
+      return "" if capacity.zero?
+
+      # Subtract one from capacity here because Crystal adds a null-terminator for us.
+      String.new(capacity - 1) do |buffer|
+        byte_size = checked do
+          LibGL.get_program_info_log(@program, capacity, out length, buffer)
+          length
+        end
+        # Don't subtract one here because OpenGL provides the length without the null-terminator.
+        {byte_size, 0}
+      end
+    end
+
+    # Links the previously attached shaders.
+    # Returns true if the link was successful.
+    # The result of the linkage can be checked later with `#linked?`.
+    def link
+      checked { LibGL.link_program(@program) }
+      linked?
+    end
+
+    # Links the previously attached shaders.
+    # Raises a `ProgramLinkError` if the linkage failed.
+    def link!
+      link || raise(ProgramLinkError.new(info_log))
+    end
+
+    # Retrieves the shaders attached to the program.
+    # This does not include shaders that were linked and subsequently detached.
+    def shaders
+      shaders = Slice(LibGL::UInt).new(shader_count, read_only: true)
+      shaders = checked do
+        LibGL.get_attached_shaders(@program, shaders.size, out count, shaders)
+        shaders[0, count]
+      end
+
+      factory = ShaderFactory.new
+      shaders.map { |shader| factory.build(shader) }
+    end
+
     # Generates a string containing basic information about the program.
-    # The string contains the program's name.
     def to_s(io)
       io << self.class
       io << '('
-      io << name
+      io << @program
       io << ')'
     end
 
-    # Retrieves the underlying name (identifier) used by OpenGL to reference the program.
+    # Retrieves the underlying identifier
+    # that OpenGL uses to reference the program.
     def to_unsafe
-      name
+      @program
+    end
+
+    def uniform(location)
+      raise NotImplementedError.new("Program#uniform(location)")
+    end
+
+    def uniform(name)
+      raise NotImplementedError.new("Program#uniform(name)")
+    end
+
+    # Specifies this program as the current one for the rendering context.
+    def use
+      checked { LibGL.use_program(@program) }
+    end
+
+    # Checks whether the program can operate in the current OpenGL context.
+    # Returns true if the validation was successful.
+    # The result of the validation can be checked later with `#valid?`.
+    # Additional information about the validation may be contained in `#info_log`.
+    def validate
+      checked { LibGL.validate_program(@program) }
+      valid?
+    end
+
+    # Checks whether the program can operate in the current OpenGL context.
+    # If the program failed validation, an error will be raised.
+    # Additional information about the validation may be contained in `#info_log`.
+    def validate!
+      validate || raise(ProgramValidationError.new(info_log))
     end
   end
 end
