@@ -100,8 +100,11 @@ module Gloop
     end
 
     # Checks if the shader exists and has not been fully deleted.
+    #
+    # A shader marked for deletion with `#delete`
+    # but still attached to a `Program` is considered to still exist.
     def exists?
-      result = checked { LibGL.is_shader(@shader) }
+      result = expect_truthy { LibGL.is_shader(@shader) }
       int_to_bool(result)
     end
 
