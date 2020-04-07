@@ -139,8 +139,22 @@ module Gloop
     end
 
     # Retrieves the binary representation of the compiled and linked program.
+    def binary? : ProgramBinary?
+      capacity = binary_size
+      return if capacity.zero?
+
+      ProgramBinary.new(capacity) do |buffer|
+        checked do
+          LibGL.get_program_binary(@program, capacity, out length, out format, buffer)
+          {format, length}
+        end
+      end
+    end
+
+    # Retrieves the binary representation of the compiled and linked program.
+    # Raises if the program binary is unavailable.
     def binary : ProgramBinary
-      raise NotImplementedError.new("Program#binary")
+      binary? || raise(NilAssertionError.new("Program binary unavailable"))
     end
 
     # Loads a program from a binary represents.
@@ -150,7 +164,7 @@ module Gloop
     #
     # All uniforms are reset to their initial values when using this method.
     def binary=(binary : ProgramBinary)
-      raise NotImplementedError.new("Program#binary=")
+      checked { LibGL.program_binary(@program, binary.format, binary.binary, binary.binary.size) }
     end
 
     # Frees resources held by the program
