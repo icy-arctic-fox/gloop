@@ -76,16 +76,17 @@ module Gloop
     protected abstract def type : LibGL::ShaderType
 
     # Compiles the shader from previously set source(s).
-    # To check the result of the compilation, use `#compiled?`.
+    # Returns true if the compilation was successful.
+    # The result of the compilation can be checked later with `#compiled?`.
     def compile
       checked { LibGL.compile_shader(@shader) }
+      compiled?
     end
 
     # Compiles the shader from previously set source(s).
     # Raises a `ShaderCompilationError` if the compilation failed.
     def compile!
-      compile
-      raise ShaderCompilationError.new(info_log) unless compiled?
+      compile || raise(ShaderCompilationError.new(info_log))
     end
 
     # Frees resources held by the shader
