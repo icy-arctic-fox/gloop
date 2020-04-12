@@ -193,9 +193,9 @@ module Gloop
     # The data can then be directly read and/or written,
     # depending on the specified *access* policy.
     # Returns a `Map` instance.
-    def map(range : Range, access : Map::Access)
+    def map_range(range : Range, access : Map::Access)
       start, count = Indexable.range_to_index_and_count(range, size)
-      map(start, count, access)
+      map_range(start, count, access)
     end
 
     # Maps part of the buffer's content into the client application's memory.
@@ -204,8 +204,8 @@ module Gloop
     # Yields a `Map` instance and returns the result of `#unmap`.
     # The buffer is automatically unmapped after the block completes,
     # even if an exception is raised.
-    def map(range : Range, access : Map::Access)
-      map = map(range, access)
+    def map_range(range : Range, access : Map::Access)
+      map = map_range(range, access)
       begin
         yield map
       rescue e
@@ -219,7 +219,7 @@ module Gloop
     # The data can then be directly read and/or written,
     # depending on the specified *access* policy.
     # Returns a `Map` instance.
-    def map(start : Int, count : Int, access : Map::Access)
+    def map_range(start : Int, count : Int, access : Map::Access)
       pointer = expect_truthy { LibGL.map_named_buffer_range(@buffer, start, count, access) }
       slice = Bytes.new(pointer, size, read_only: !access.write?)
       Map.new(@buffer, slice)
@@ -231,8 +231,8 @@ module Gloop
     # Yields a `Map` instance and returns the result of `#unmap`.
     # The buffer is automatically unmapped after the block completes,
     # even if an exception is raised.
-    def map(start : Int, count : Int, access : Map::Access)
-      map = map(start, count, access)
+    def map_range(start : Int, count : Int, access : Map::Access)
+      map = map_range(start, count, access)
       begin
         yield map
       rescue e
