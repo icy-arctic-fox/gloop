@@ -37,20 +37,6 @@ Spectator.describe Gloop::VertexShader do
   asdf;
   SHADER
 
-  describe "#type" do
-    it "is VertexShader" do
-      expect(subject.type).to eq(LibGL::ShaderType::VertexShader)
-    end
-  end
-
-  describe "#source_length" do
-    before_each { subject.source = VALID_SHADER }
-
-    it "is the length of the source code" do
-      expect(subject.source_length).to eq(VALID_SHADER.size)
-    end
-  end
-
   describe "#source" do
     it "gets and sets the source code" do
       subject.source = VALID_SHADER
