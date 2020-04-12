@@ -57,7 +57,7 @@ module Gloop
     end
 
     # Hint to OpenGL for how the buffer will be used.
-    enum Usage < UInt32
+    enum Usage : UInt32
       # The data store contents will be modified once and used at most a few times.
       # The data store contents are modified by the application,
       # and used as the source for OpenGL drawing and image specification commands.

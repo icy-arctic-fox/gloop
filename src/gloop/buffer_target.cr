@@ -2,9 +2,7 @@ require "opengl"
 require "./error_handling"
 
 module Gloop
-  enum BufferTarget < UInt32
-    include ErrorHandling
-
+  enum BufferTarget : UInt32
     Array = LibGL::BufferTargetARB::ArrayBuffer
 
     ElementArray = LibGL::BufferTargetARB::ElementArrayBuffer
@@ -35,12 +33,12 @@ module Gloop
 
     # Binds the specified buffer to the target.
     def bind(buffer)
-      checked { LibGL.bind_buffer(value, buffer) }
+      ErrorHandling.static_checked { LibGL.bind_buffer(value, buffer) }
     end
 
     # Removes any previously bound buffer from the target.
     def unbind
-      checked { LibGL.bind_buffer(value, 0) }
+      ErrorHandling.static_checked { LibGL.bind_buffer(value, 0) }
     end
   end
 end
