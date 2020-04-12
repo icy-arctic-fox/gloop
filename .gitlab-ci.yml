@@ -15,7 +15,7 @@ before_script:
 spec:
   script:
   - apt update
-  - apt install -y xorg-dev libgl-dev
+  - apt install -y xorg-dev libgl-dev libglfw3-dev
   - crystal spec --error-on-warnings
 
 style:
@@ -28,7 +28,7 @@ nightly:
   allow_failure: true
   script:
   - apt update
-  - apt install -y xorg-dev libgl-dev
+  - apt install -y xorg-dev libgl-dev libglfw3-dev
   - crystal spec --error-on-warnings
   - crystal tool format --check
 
