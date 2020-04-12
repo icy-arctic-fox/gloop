@@ -14,6 +14,8 @@ before_script:
 
 spec:
   script:
+  - apt update
+  - apt install -y xorg-dev libgl-dev
   - crystal spec --error-on-warnings
 
 style:
@@ -25,6 +27,8 @@ nightly:
   image: "crystallang/crystal:nightly"
   allow_failure: true
   script:
+  - apt update
+  - apt install -y xorg-dev libgl-dev
   - crystal spec --error-on-warnings
   - crystal tool format --check
 
