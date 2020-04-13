@@ -78,6 +78,11 @@ module Gloop
       # Data written to the mapped region of a buffer is immediately visible to the server.
       # The mapping must be made with `#map_range`.
       MapCoherent = LibGL::BufferStorageMask::MapCoherent
+
+      # Converts to an OpenGL enum.
+      def to_unsafe
+        LibGL::BufferStorageMask.new(value)
+      end
     end
   end
 end

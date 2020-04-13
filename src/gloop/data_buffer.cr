@@ -62,47 +62,52 @@ module Gloop
       # The data store contents will be modified once and used at most a few times.
       # The data store contents are modified by the application,
       # and used as the source for OpenGL drawing and image specification commands.
-      StreamDraw = LibGL::BufferUsageARB::StreamDraw
+      StreamDraw = LibGL::VertexBufferObjectUsage::StreamDraw
 
       # The data store contents will be modified once and used at most a few times.
       # The data store contents are modified by reading data from OpenGL,
       # and used to return that data when queried by the application.
-      StreamRead = LibGL::BufferUsageARB::StreamRead
+      StreamRead = LibGL::VertexBufferObjectUsage::StreamRead
 
       # The data store contents will be modified once and used at most a few times.
       # The data store contents are modified by reading from OpenGL,
       # and used as the source for OpenGL drawing and image specification commands.
-      StreamCopy = LibGL::BufferUsageARB::StreamCopy
+      StreamCopy = LibGL::VertexBufferObjectUsage::StreamCopy
 
       # The data store contents will be modified once and used many times.
       # The data store contents are modified by the application,
       # and used as the source for OpenGL drawing and image specification commands.
-      StaticDraw = LibGL::BufferUsageARB::StaticDraw
+      StaticDraw = LibGL::VertexBufferObjectUsage::StaticDraw
 
       # The data store contents will be modified once and used many times.
       # The data store contents are modified by reading data from OpenGL,
       # and used to return that data when queried by the application.
-      StaticRead = LibGL::BufferUsageARB::StaticRead
+      StaticRead = LibGL::VertexBufferObjectUsage::StaticRead
 
       # The data store contents will be modified once and used many times.
       # The data store contents are modified by reading from OpenGL,
       # and used as the source for OpenGL drawing and image specification commands.
-      StaticCopy = LibGL::BufferUsageARB::StaticCopy
+      StaticCopy = LibGL::VertexBufferObjectUsage::StaticCopy
 
       # The data store contents will be modified repeatedly and used many times.
       # The data store contents are modified by the application,
       # and used as the source for OpenGL drawing and image specification commands.
-      DynamicDraw = LibGL::BufferUsageARB::DynamicDraw
+      DynamicDraw = LibGL::VertexBufferObjectUsage::DynamicDraw
 
       # The data store contents will be modified repeatedly and used many times.
       # The data store contents are modified by reading data from OpenGL,
       # and used to return that data when queried by the application.
-      DynamicRead = LibGL::BufferUsageARB::DynamicRead
+      DynamicRead = LibGL::VertexBufferObjectUsage::DynamicRead
 
       # The data store contents will be modified repeatedly and used many times.
       # The data store contents are modified by reading from OpenGL,
       # and used as the source for OpenGL drawing and image specification commands.
-      DynamicCopy = LibGL::BufferUsageARB::DynamicCopy
+      DynamicCopy = LibGL::VertexBufferObjectUsage::DynamicCopy
+
+      # Converts to an OpenGL enum.
+      def to_unsafe
+        LibGL::VertexBufferObjectUsage.new(value)
+      end
     end
   end
 end

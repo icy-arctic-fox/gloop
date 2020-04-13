@@ -80,6 +80,11 @@ module Gloop
 
         # Enables flushing regions of mapped content.
         FlushExplicit = LibGL::MapBufferAccessMask::MapFlushExplicit
+
+        # Converts to an OpenGL enum.
+        def to_unsafe
+          LibGL::MapBufferAccessMask.new(value)
+        end
       end
     end
   end

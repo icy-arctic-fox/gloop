@@ -101,6 +101,11 @@ module Gloop
       ErrorHandling.static_checked { LibGL.buffer_storage(value, data.bytesize, data, usage) }
     end
 
+    # Converts to an OpenGL enum.
+    def to_unsafe
+      LibGL::BufferTargetARB.new(value)
+    end
+
     # Removes any previously bound buffer from the target.
     def unbind
       ErrorHandling.static_checked { LibGL.bind_buffer(value, 0) }
