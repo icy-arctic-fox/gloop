@@ -36,6 +36,21 @@ module Gloop
       ErrorHandling.static_checked { LibGL.bind_buffer(value, buffer) }
     end
 
+    # Retrieves the buffer currently bound to the target.
+    # Returns nil if no buffer is bound.
+    def current
+      buffer = ErrorHandling.static_checked do
+        LibGL.get_integer_v(value, out data)
+        data
+      end
+
+      if current_storage?
+        StorageBuffer.new(buffer)
+      else
+        DataBuffer.new(buffer)
+      end
+    end
+
     # Retrieves the entire contents of the buffer bound to the target.
     # Returns a slice of bytes.
     def data
@@ -133,6 +148,15 @@ module Gloop
     # The *content* should be a pointer or respond to `to_unsafe`, which returns a pointer.
     def []=(start : Int, count : Int, content)
       ErrorHandling.static_checked { LibGL.buffer_sub_data(value, start, count, content) }
+    end
+
+    # Checks if the currently bound buffer is immutable.
+    private def current_storage?
+      result = checked do
+        LibGL.get_buffer_parameter_iv(value, LibGL::VertexBufferObjectParameter::BufferImmutableStorage, out params)
+        params
+      end
+      int_to_bool(result)
     end
   end
 end
