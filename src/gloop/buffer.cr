@@ -305,5 +305,13 @@ module Gloop
     def []=(start : Int, count : Int, content)
       checked { LibGL.named_buffer_sub_data(@buffer, start, count, content) }
     end
+
+    # Creates a single buffer object.
+    private def create_buffer
+      checked do
+        LibGL.create_buffers(1, out buffer)
+        buffer
+      end
+    end
   end
 end

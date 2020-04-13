@@ -8,18 +8,12 @@ module Gloop
     # Creates a new, uninitialized buffer.
     # The data should be set manually with `#data=`.
     def initialize
-      @buffer = checked do
-        LibGL.create_buffers(1, out buffer)
-        buffer
-      end
+      @buffer = create_buffer
     end
 
     # Creates a new buffer of the specified size with undefined contents.
     def initialize(size : Int, usage = Usage::None)
-      @buffer = checked do
-        LibGL.create_buffers(1, out buffer)
-        buffer
-      end
+      @buffer = create_buffer
       checked { LibGL.named_buffer_storage(@buffer, size, nil, usage) }
     end
 
@@ -28,10 +22,7 @@ module Gloop
     # and return a pointer via `to_unsafe`.
     # The Slice (Bytes) and StaticArray types satisfy this.
     def initialize(data, usage = Usage::None)
-      @buffer = checked do
-        LibGL.create_buffers(1, out buffer)
-        buffer
-      end
+      @buffer = create_buffer
       data = data.to_slice unless data.responds_to?(:bytesize)
       checked { LibGL.named_buffer_storage(@buffer, data.bytesize, data, usage) }
     end
