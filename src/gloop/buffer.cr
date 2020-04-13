@@ -160,7 +160,7 @@ module Gloop
     # Returns a `Map` instance.
     def map(access : Map::Access)
       pointer = expect_truthy { LibGL.map_named_buffer(@buffer, access) }
-      slice = Bytes.new(pointer, size, read_only: !access.write?)
+      slice = Bytes.new(pointer.as(UInt8*), size, read_only: !access.write?)
       Map.new(@buffer, slice)
     end
 
@@ -213,7 +213,7 @@ module Gloop
     # Returns a `Map` instance.
     def map_range(start : Int, count : Int, access : Map::Access)
       pointer = expect_truthy { LibGL.map_named_buffer_range(@buffer, start, count, access) }
-      slice = Bytes.new(pointer, size, read_only: !access.write?)
+      slice = Bytes.new(pointer.as(UInt8*), size, read_only: !access.write?)
       Map.new(@buffer, slice)
     end
 
@@ -243,7 +243,7 @@ module Gloop
       end
       return unless pointer
 
-      slice = Bytes.new(pointer, size, read_only: !map_access.write?)
+      slice = Bytes.new(pointer.as(UInt8*), size, read_only: !map_access.write?)
       Map.new(@buffer, slice)
     end
 
