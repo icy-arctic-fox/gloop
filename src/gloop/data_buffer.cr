@@ -18,35 +18,44 @@ module Gloop
     end
 
     # Creates a new buffer with initial contents.
-    # The *data* parameter must respond to `bytesize` or `to_slice`
-    # and return a pointer via `to_unsafe`.
+    # The *data* parameter must respond to `to_a` or `to_slice`.
     # The Slice (Bytes) and StaticArray types satisfy this.
     def initialize(data, usage = Usage::StaticDraw)
       @buffer = create_buffer
-      data = data.to_slice unless data.responds_to?(:bytesize)
-      checked { LibGL.named_buffer_data(@buffer, data.bytesize, data, usage) }
+      slice = if data.responds_to?(:to_slice)
+                data.to_slice
+              else
+                data.to_a.to_slice
+              end
+      checked { LibGL.named_buffer_data(@buffer, slice.bytesize, slice, usage) }
     end
 
     # Updates the contents of the buffer.
     # The usage hint remains the same.
-    # The *data* parameter must respond to `bytesize` or `to_slice`
-    # and return a pointer via `to_unsafe`.
+    # The *data* parameter must respond to `to_a` or `to_slice`.
     # The Slice (Bytes) and StaticArray types satisfy this.
     def data=(data)
       usage = checked do
         LibGL.get_named_buffer_parameter_iv(@buffer, LibGL::VertexBufferObjectParameter::BufferUsage, out params)
         params
       end
-      data = data.to_slice unless data.responds_to?(:bytesize)
-      checked { LibGL.named_buffer_data(@buffer, data.bytesize, data, usage) }
+      slice = if data.responds_to?(:to_slice)
+                data.to_slice
+              else
+                data.to_a.to_slice
+              end
+      checked { LibGL.named_buffer_data(@buffer, slice.bytesize, slice, usage) }
     end
 
     # Updates the contents of the buffer.
-    # The *data* parameter must respond to `bytesize` or `to_slice`
-    # and return a pointer via `to_unsafe`.
+    # The *data* parameter must respond to `to_a` or `to_slice`.
     # The Slice (Bytes) and StaticArray types satisfy this.
     def update(data, usage)
-      data = data.to_slice unless data.responds_to?(:bytesize)
+      slice = if data.responds_to?(:to_slice)
+                data.to_slice
+              else
+                data.to_a.to_slice
+              end
       checked { LibGL.named_buffer_data(@buffer, data.bytesize, data, usage) }
     end
 
