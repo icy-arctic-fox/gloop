@@ -71,7 +71,7 @@ module Gloop
 
       # Specifies the type of access the application has to a mapped buffer's contents.
       @[Flags]
-      enum Access
+      enum Access : UInt32
         # The application is allowed to read from the mapped contents.
         Read = LibGL::MapBufferAccessMask::MapRead
 
