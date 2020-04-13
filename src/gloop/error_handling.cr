@@ -33,7 +33,8 @@ module Gloop
         yield
       {% else %}
         yield.tap do |result|
-          Gloop.error! if !result || result.zero?
+          Gloop.error! if !result ||
+            (result.responds_to?(:zero?) && result.zero?)
         end
       {% end %}
     end
