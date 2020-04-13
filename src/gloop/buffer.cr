@@ -74,14 +74,6 @@ module Gloop
     protected def initialize(@buffer : LibGL::UInt)
     end
 
-    # Creates a new, empty buffer.
-    protected def initialize
-      @buffer = checked do
-        LibGL.create_buffers(1, out buffer)
-        buffer
-      end
-    end
-
     # Copies one buffer to another.
     def self.copy(source, destination, source_offset, destination_offset, count)
       ErrorHandling.static_checked do

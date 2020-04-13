@@ -8,34 +8,45 @@ module Gloop
     # Creates a new, uninitialized buffer.
     # The data should be set manually with `#data=`.
     def initialize
-      super
+      @buffer = checked do
+        LibGL.create_buffers(1, out buffer)
+        buffer
+      end
     end
 
     # Creates a new buffer of the specified size with undefined contents.
     def initialize(size : Int, usage = Usage::StaticDraw)
-      initialize
+      @buffer = checked do
+        LibGL.create_buffers(1, out buffer)
+        buffer
+      end
       checked { LibGL.named_buffer_data(@buffer, size, nil, usage) }
     end
 
     # Creates a new buffer with initial contents.
-    # The *data* parameter must respond to `bytesize`
-    # and return a pointer with `to_unsafe`.
-    # The Slice (Bytes) type satisfies this.
+    # The *data* parameter must respond to `bytesize` or `to_slice`
+    # and return a pointer via `to_unsafe`.
+    # The Slice (Bytes) and StaticArray types satisfy this.
     def initialize(data, usage = Usage::StaticDraw)
-      initialize
+      @buffer = checked do
+        LibGL.create_buffers(1, out buffer)
+        buffer
+      end
+      data = data.to_slice unless data.responds_to?(:bytesize)
       checked { LibGL.named_buffer_data(@buffer, data.bytesize, data, usage) }
     end
 
     # Updates the contents of the buffer.
     # The usage hint remains the same.
-    # The *data* parameter must respond to `bytesize`
-    # and return a pointer with `to_unsafe`.
-    # The Slice (Bytes) type satisfies this.
+    # The *data* parameter must respond to `bytesize` or `to_slice`
+    # and return a pointer via `to_unsafe`.
+    # The Slice (Bytes) and StaticArray types satisfy this.
     def data=(data)
       usage = checked do
         LibGL.get_named_buffer_parameter_iv(@buffer, LibGL::VertexBufferObjectParameter::BufferUsage, out params)
         params
       end
+      data = data.to_slice unless data.responds_to?(:bytesize)
       checked { LibGL.named_buffer_data(@buffer, data.bytesize, data, usage) }
     end
 
