@@ -157,7 +157,7 @@ module Gloop
 
     # Checks if the currently bound buffer is immutable.
     private def current_storage?
-      result = checked do
+      result = ErrorHandling.static_checked do
         LibGL.get_buffer_parameter_iv(value, LibGL::VertexBufferObjectParameter::BufferImmutableStorage, out params)
         params
       end
