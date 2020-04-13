@@ -57,6 +57,15 @@ module Gloop
       self[0, size]
     end
 
+    # Retrieves the usage hint given to OpenGL on how the buffer will be used.
+    def data_usage
+      value = ErrorHandling.static_checked do
+        LibGL.get_buffer_parameter_iv(self.value, LibGL::VertexBufferObjectParameter::BufferUsage, out params)
+        params
+      end
+      DataBuffer::Usage.from_value(value)
+    end
+
     # Updates the contents of the data buffer bound to the target.
     # The usage hint remains the same.
     # The *data* parameter must respond to `bytesize`
@@ -111,15 +120,6 @@ module Gloop
     # The Slice (Bytes) type satisfies this.
     def update_storage(data, usage : StorageBuffer::Usage)
       ErrorHandling.static_checked { LibGL.buffer_storage(value, data.bytesize, data, usage) }
-    end
-
-    # Retrieves the usage hint given to OpenGL on how the buffer will be used.
-    def data_usage
-      value = ErrorHandling.static_checked do
-        LibGL.get_buffer_parameter_iv(self.value, LibGL::VertexBufferObjectParameter::BufferUsage, out params)
-        params
-      end
-      DataBuffer::Usage.from_value(value)
     end
 
     # Retrieves a subset of the buffer's data.
