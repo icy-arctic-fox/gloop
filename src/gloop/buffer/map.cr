@@ -70,20 +70,19 @@ module Gloop
       end
 
       # Specifies the type of access the application has to a mapped buffer's contents.
-      @[Flags]
       enum Access : UInt32
         # The application is allowed to read from the mapped contents.
-        Read = LibGL::MapBufferAccessMask::MapRead
+        Read = LibGL::BufferAccessARB::ReadOnly
 
         # The application is allowed to write to the mapped contents.
-        Write = LibGL::MapBufferAccessMask::MapWrite
+        Write = LibGL::BufferAccessARB::WriteOnly
 
-        # Enables flushing regions of mapped content.
-        FlushExplicit = LibGL::MapBufferAccessMask::MapFlushExplicit
+        # The application is allowed to read from and write to the mapped contents.
+        ReadWrite = LibGL::BufferAccessARB::ReadWrite
 
         # Converts to an OpenGL enum.
         def to_unsafe
-          LibGL::MapBufferAccessMask.new(value)
+          LibGL::BufferAccessARB.new(value)
         end
       end
     end
