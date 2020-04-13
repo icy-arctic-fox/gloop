@@ -250,7 +250,7 @@ module Gloop
         params
       end
       return unless pointer
-      
+
       slice = Bytes.new(pointer, size, read_only: !map_access.write?)
       Map.new(@buffer, slice)
     end
