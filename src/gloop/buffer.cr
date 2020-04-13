@@ -249,6 +249,8 @@ module Gloop
         LibGL.get_named_buffer_pointer_v(@buffer, LibGL::BufferPointerNameARB::BufferMapPointer, out params)
         params
       end
+      return unless pointer
+      
       slice = Bytes.new(pointer, size, read_only: !map_access.write?)
       Map.new(@buffer, slice)
     end
