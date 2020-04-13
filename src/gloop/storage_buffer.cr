@@ -40,10 +40,11 @@ module Gloop
     end
 
     # Updates the contents of the buffer.
-    # The *data* parameter must respond to `bytesize`
-    # and return a pointer with `to_unsafe`.
-    # The Slice (Bytes) type satisfies this.
+    # The *data* parameter must respond to `bytesize` or `to_slice`
+    # and return a pointer via `to_unsafe`.
+    # The Slice (Bytes) and StaticArray types satisfy this.
     def update(data, usage)
+      data = data.to_slice unless data.responds_to?(:bytesize)
       checked { LibGL.named_buffer_storage(@buffer, data.bytesize, data, usage) }
     end
 
