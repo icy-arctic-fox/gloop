@@ -18,45 +18,33 @@ module Gloop
     end
 
     # Creates a new buffer with initial contents.
-    # The *data* parameter must respond to `to_a` or `to_slice`.
-    # The Slice (Bytes) and StaticArray types satisfy this.
+    # The *data* parameter must respond to `bytesize` and `to_unsafe`.
+    # The `to_unsafe` method must return a pointer to the data.
+    # The Slice (Bytes) type satisfies this.
     def initialize(data, usage = Usage::None)
       @buffer = create_buffer
-      slice = if data.responds_to?(:to_slice)
-                data.to_slice
-              else
-                data.to_a.to_slice
-              end
-      checked { LibGL.named_buffer_storage(@buffer, slice.bytesize, slice, usage) }
+      checked { LibGL.named_buffer_storage(@buffer, data.bytesize, data, usage) }
     end
 
     # Updates the contents of the buffer.
     # The usage hint remains the same.
-    # The *data* parameter must respond to `to_a` or `to_slice`.
-    # The Slice (Bytes) and StaticArray types satisfy this.
+    # The *data* parameter must respond to `bytesize` and `to_unsafe`.
+    # The `to_unsafe` method must return a pointer to the data.
+    # The Slice (Bytes) type satisfies this.
     def data=(data)
       usage = checked do
         LibGL.get_named_buffer_parameter_iv(@buffer, LibGL::VertexBufferObjectParameter::BufferStorageFlags, out params)
         params
       end
-      slice = if data.responds_to?(:to_slice)
-                data.to_slice
-              else
-                data.to_a.to_slice
-              end
-      checked { LibGL.named_buffer_storage(@buffer, slice.bytesize, slice, usage) }
+      checked { LibGL.named_buffer_storage(@buffer, data.bytesize, data, usage) }
     end
 
     # Updates the contents of the buffer.
-    # The *data* parameter must respond to `to_a` or `to_slice`.
-    # The Slice (Bytes) and StaticArray types satisfy this.
+    # The *data* parameter must respond to `bytesize` and `to_unsafe`.
+    # The `to_unsafe` method must return a pointer to the data.
+    # The Slice (Bytes) type satisfies this.
     def update(data, usage)
-      slice = if data.responds_to?(:to_slice)
-                data.to_slice
-              else
-                data.to_a.to_slice
-              end
-      checked { LibGL.named_buffer_storage(@buffer, slice.bytesize, slice, usage) }
+      checked { LibGL.named_buffer_storage(@buffer, data.bytesize, data, usage) }
     end
 
     # Retrieves the usage hint given to OpenGL on how the buffer will be used.
