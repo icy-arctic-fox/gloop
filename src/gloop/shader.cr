@@ -1,6 +1,7 @@
 require "opengl"
 require "./bool_conversion"
 require "./error_handling"
+require "./labelable"
 require "./shader_compilation_error"
 
 module Gloop
@@ -8,6 +9,7 @@ module Gloop
   abstract struct Shader
     include BoolConversion
     include ErrorHandling
+    include Labelable
 
     # Creates a getter method for a shader parameter.
     # The *name* is the name of the method to define.
@@ -180,6 +182,11 @@ module Gloop
     # that OpenGL uses to reference the shader.
     def to_unsafe
       @shader
+    end
+
+    # Namespace from which the name of the object is allocated.
+    private def object_identifier : LibGL::ObjectIdentifier
+      LibGL::ObjectIdentifier::Shader
     end
 
     # Class methods that every sub-class should expose.

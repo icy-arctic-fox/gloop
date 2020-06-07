@@ -1,6 +1,7 @@
 require "opengl"
 require "./bool_conversion"
 require "./error_handling"
+require "./labelable"
 require "./program_binary"
 require "./program_link_error"
 require "./program_validation_error"
@@ -11,6 +12,7 @@ module Gloop
   struct Program
     include BoolConversion
     include ErrorHandling
+    include Labelable
 
     # Creates a getter method for a program parameter.
     # The *name* is the name of the method to define.
@@ -288,6 +290,11 @@ module Gloop
     # Additional information about the validation may be contained in `#info_log`.
     def validate!
       validate || raise(ProgramValidationError.new(info_log))
+    end
+
+    # Namespace from which the name of the object is allocated.
+    private def object_identifier : LibGL::ObjectIdentifier
+      LibGL::ObjectIdentifier::Program
     end
   end
 end

@@ -1,12 +1,14 @@
 require "opengl"
 require "./bool_conversion"
 require "./error_handling"
+require "./labelable"
 
 module Gloop
   # Stores information about attributes and vertex buffers.
   struct VertexArray
     include BoolConversion
     include ErrorHandling
+    include Labelable
 
     # Name of the vertex array object.
     getter name : LibGL::UInt
@@ -64,6 +66,11 @@ module Gloop
     # Retrieves the underlying name (identifier) used by OpenGL to reference the vertex array object.
     def to_unsafe
       name
+    end
+
+    # Namespace from which the name of the object is allocated.
+    private def object_identifier : LibGL::ObjectIdentifier
+      LibGL::ObjectIdentifier::VertexArray
     end
   end
 end

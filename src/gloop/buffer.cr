@@ -2,11 +2,13 @@ require "opengl"
 require "./bool_conversion"
 require "./buffer/*"
 require "./error_handling"
+require "./labelable"
 
 module Gloop
   abstract struct Buffer
     include BoolConversion
     include ErrorHandling
+    include Labelable
 
     # Creates a getter method for a buffer parameter.
     # The *name* is the name of the method to define.
@@ -312,6 +314,11 @@ module Gloop
         LibGL.create_buffers(1, out buffer)
         buffer
       end
+    end
+
+    # Namespace from which the name of the object is allocated.
+    private def object_identifier : LibGL::ObjectIdentifier
+      LibGL::ObjectIdentifier::Buffer
     end
   end
 end
