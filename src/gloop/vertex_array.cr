@@ -32,6 +32,20 @@ module Gloop
       names.map { |name| new(name) }
     end
 
+    # Deletes multiple vertex arrays.
+    def self.delete(arrays)
+      # Retrieve underlying identifier for each vertex array.
+      identifiers = arrays.map(&.to_unsafe)
+
+      # Some enumerable types allow unsafe direct access to their internals.
+      # If available, use that, as it is much faster.
+      # Otherwise, convert to an array, which allows unsafe direct access.
+      identifiers = identifiers.to_a unless identifiers.responds_to?(:to_unsafe)
+      ErrorHandling.static_checked do
+        LibGL.delete_vertex_arrays(identifiers.size, identifiers)
+      end
+    end
+
     # Binds the vertex array object to the current context.
     def bind
       checked { LibGL.bind_vertex_array(name) }
