@@ -46,9 +46,30 @@ module Gloop
       end
     end
 
+    # Retrieves the currently bound vertex array.
+    def self.current
+      name = checked do
+        LibGL.get_integer_v(LibGL::PName::VertexArrayBinding, out result)
+        result
+      end
+      new(name)
+    end
+
     # Binds the vertex array object to the current context.
     def bind
       checked { LibGL.bind_vertex_array(name) }
+    end
+
+    # Binds this vertex array for the duration of the block.
+    # The previously bound vertex array is rebound after the block completes (even if an error is raised).
+    def bind(&)
+      previous = self.class.current
+      begin
+        bind
+        yield
+      ensure
+        previous.bind
+      end
     end
 
     # Undbinds any previously bound vertex array object from the current context.
