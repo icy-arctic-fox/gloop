@@ -47,6 +47,15 @@ module Gloop
       int_to_bool(value)
     end
 
+    # Generates a string containing basic information about the vertex array attribute.
+    # The string contains the vertex array attribute's index.
+    def to_s(io)
+      io << self.class
+      io << '('
+      io << index
+      io << ')'
+    end
+
     # Returns the OpenGL representation of the vertex attribute.
     def to_unsafe
       index
