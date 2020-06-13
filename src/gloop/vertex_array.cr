@@ -89,6 +89,18 @@ module Gloop
       int_to_bool(result)
     end
 
+    # Enables the specified vertex *attribute* on this vertex array object.
+    # The *attribute* can be a `VertexAttribute` instance or index.
+    def enable(attribute)
+      checked { LibGL.enable_vertex_array_attrib(name, attribute) }
+    end
+
+    # Disables the specified vertex *attribute* on this vertex array object.
+    # The *attribute* can be a `VertexAttribute` instance or index.
+    def disable(attribute)
+      checked { LibGL.disable_vertex_array_attrib(name, attribute) }
+    end
+
     # Generates a string containing basic information about the vertex array object.
     # The string contains the vertex array object's name.
     def to_s(io)
