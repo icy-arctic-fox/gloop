@@ -137,6 +137,7 @@ module Gloop
 
     # Provides an intermediate interface to modify attributes associated with a vertex array.
     struct AttributeProxy
+      include BoolConversion
       include ErrorHandling
 
       # Creates the proxy.
