@@ -101,6 +101,11 @@ module Gloop
       checked { LibGL.disable_vertex_array_attrib(name, attribute) }
     end
 
+    # Specifies the element (index) buffer to use.
+    def element_buffer=(buffer)
+      checked { LibGL.vertex_array_element_buffer(name, buffer) }
+    end
+
     # Sets the format of the specified *attribute* on this vertex array object.
     # The *attribute* can be a `VertexAttribute` instance or index.
     def set_format(attribute, format : FloatVertexAttributeFormat, offset)
