@@ -103,7 +103,7 @@ module Gloop
 
     # Sets the format of the specified *attribute* on this vertex array object.
     # The *attribute* can be a `VertexAttribute` instance or index.
-    def []=(attribute, format : FloatVertexAttributeFormat)
+    def set_format(attribute, format : FloatVertexAttributeFormat)
       type = LibGL::VertexAttribType.new(format.type.value)
       normalized = bool_to_int(format.normalized?)
       checked do
@@ -113,7 +113,7 @@ module Gloop
 
     # Sets the format of the specified *attribute* on this vertex array object.
     # The *attribute* can be a `VertexAttribute` instance or index.
-    def []=(attribute, format : IntVertexAttributeFormat)
+    def set_format(attribute, format : IntVertexAttributeFormat)
       type = LibGL::VertexAttribType.new(format.type.value)
       checked do
         LibGL.vertex_array_attrib_i_format(name, attribute, format.size, type, format.offset)
