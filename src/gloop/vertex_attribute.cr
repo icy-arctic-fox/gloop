@@ -1,6 +1,8 @@
 require "opengl"
 require "./bool_conversion"
 require "./error_handling"
+require "./int_vertex_attribute_pointer"
+require "./float_vertex_attribute_pointer"
 
 module Gloop
   # References an attribute of a vertex.
@@ -52,7 +54,7 @@ module Gloop
     end
 
     # Sets the format of the vertex attribute.
-    def format=(format : FloatVertexAttributeFormat)
+    def format=(format : FloatVertexAttributePointer)
       normalized = bool_to_int(format.normalized?)
       pointer    = Pointer(Void).new(format.offset)
       checked do
@@ -61,7 +63,7 @@ module Gloop
     end
 
     # Sets the format of the vertex attribute.
-    def format=(format : IntVertexAttributeFormat)
+    def format=(format : IntVertexAttributePointer)
       pointer = Pointer(Void).new(format.offset)
       checked do
         LibGL.vertex_attrib_i_pointer(index, format.size, format.type, format.stride, pointer)

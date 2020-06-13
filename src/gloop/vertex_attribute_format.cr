@@ -7,14 +7,8 @@ module Gloop
     # This can be 1, 2, 3, or 4.
     getter size : LibGL::Int
 
-    # Number of bytes to the next attribute of this type.
-    getter stride : LibGL::SizeI
-
-    # Byte offset into the vertex buffer where the attribute starts.
-    getter offset : Int32
-
     # Creates a vertex attribute format descriptor.
-    def initialize(@size, @stride, @offset)
+    def initialize(@size)
     end
   end
 end

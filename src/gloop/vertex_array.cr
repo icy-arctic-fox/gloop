@@ -103,7 +103,17 @@ module Gloop
 
     # Sets the format of the specified *attribute* on this vertex array object.
     # The *attribute* can be a `VertexAttribute` instance or index.
-    def set_format(attribute, format : FloatVertexAttributeFormat)
+    def set_format(attribute, format : FloatVertexAttributeFormat, offset)
+      type = LibGL::VertexAttribType.new(format.type.value)
+      normalized = bool_to_int(format.normalized?)
+      checked do
+        LibGL.vertex_array_attrib_format(name, attribute, format.size, type, normalized, offset)
+      end
+    end
+
+    # Sets the format of the specified *attribute* on this vertex array object.
+    # The *attribute* can be a `VertexAttribute` instance or index.
+    def set_format(attribute, format : FloatVertexAttributePointer)
       type = LibGL::VertexAttribType.new(format.type.value)
       normalized = bool_to_int(format.normalized?)
       checked do
@@ -113,7 +123,16 @@ module Gloop
 
     # Sets the format of the specified *attribute* on this vertex array object.
     # The *attribute* can be a `VertexAttribute` instance or index.
-    def set_format(attribute, format : IntVertexAttributeFormat)
+    def set_format(attribute, format : IntVertexAttributeFormat, offset)
+      type = LibGL::VertexAttribType.new(format.type.value)
+      checked do
+        LibGL.vertex_array_attrib_i_format(name, attribute, format.size, type, offset)
+      end
+    end
+
+    # Sets the format of the specified *attribute* on this vertex array object.
+    # The *attribute* can be a `VertexAttribute` instance or index.
+    def set_format(attribute, format : IntVertexAttributePointer)
       type = LibGL::VertexAttribType.new(format.type.value)
       checked do
         LibGL.vertex_array_attrib_i_format(name, attribute, format.size, type, format.offset)

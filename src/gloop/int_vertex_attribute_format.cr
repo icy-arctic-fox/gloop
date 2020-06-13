@@ -9,43 +9,43 @@ module Gloop
     getter type : Type
 
     # Creates a vertex attribute format descriptor.
-    def initialize(size, @type, stride, offset)
-      super(size, stride, offset)
+    def initialize(size, @type)
+      super(size)
     end
 
     # Creates a vertex attribute format descriptor with a signed 8-bit type.
-    def initialize(size, type : Int8.class, stride, offset)
-      super(size, stride, offset)
+    def initialize(size, type : Int8.class)
+      super(size)
       @type = Type::Int8
     end
 
     # Creates a vertex attribute format descriptor with an unsigned 8-bit type.
-    def initialize(size, type : UInt8.class, stride, offset)
-      super(size, stride, offset)
+    def initialize(size, type : UInt8.class)
+      super(size)
       @type = Type::UInt8
     end
 
     # Creates a vertex attribute format descriptor with a signed 16-bit type.
-    def initialize(size, type : Int16.class, stride, offset)
-      super(size, stride, offset)
+    def initialize(size, type : Int16.class)
+      super(size)
       @type = Type::Int16
     end
 
     # Creates a vertex attribute format descriptor with an unsigned 16-bit type.
-    def initialize(size, type : UInt16.class, stride, offset)
-      super(size, stride, offset)
+    def initialize(size, type : UInt16.class)
+      super(size)
       @type = Type::UInt16
     end
 
     # Creates a vertex attribute format descriptor with a signed 32-bit type.
-    def initialize(size, type : Int32.class, stride, offset)
-      super(size, stride, offset)
+    def initialize(size, type : Int32.class)
+      super(size)
       @type = Type::Int32
     end
 
     # Creates a vertex attribute format descriptor with an unsigned 32-bit type.
-    def initialize(size, type : UInt32.class, stride, offset)
-      super(size, stride, offset)
+    def initialize(size, type : UInt32.class)
+      super(size)
       @type = Type::UInt32
     end
 

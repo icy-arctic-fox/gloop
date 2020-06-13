@@ -13,55 +13,55 @@ module Gloop
     getter? normalized : Bool
 
     # Creates a vertex attribute format descriptor.
-    def initialize(size, @type, @normalized, stride, offset)
-      super(size, stride, offset)
+    def initialize(size, @type, @normalized)
+      super(size)
     end
 
     # Creates a vertex attribute format descriptor with a 32-bit floating-point type.
-    def initialize(size, type : Float32.class, @normalized, stride, offset)
-      super(size, stride, offset)
+    def initialize(size, type : Float32.class, @normalized)
+      super(size)
       @type = Type::Float32
     end
 
     # Creates a vertex attribute format descriptor with a 64-bit floating-point type.
-    def initialize(size, type : Float64.class, @normalized, stride, offset)
-      super(size, stride, offset)
+    def initialize(size, type : Float64.class, @normalized)
+      super(size)
       @type = Type::Float64
     end
 
     # Creates a vertex attribute format descriptor with a signed 8-bit type.
-    def initialize(size, type : Int8.class, @normalized, stride, offset)
-      super(size, stride, offset)
+    def initialize(size, type : Int8.class, @normalized)
+      super(size)
       @type = Type::Int8
     end
 
     # Creates a vertex attribute format descriptor with an unsigned 8-bit type.
-    def initialize(size, type : UInt8.class, @normalized, stride, offset)
-      super(size, stride, offset)
+    def initialize(size, type : UInt8.class, @normalized)
+      super(size)
       @type = Type::UInt8
     end
 
     # Creates a vertex attribute format descriptor with a signed 16-bit type.
-    def initialize(size, type : Int16.class, @normalized, stride, offset)
-      super(size, stride, offset)
+    def initialize(size, type : Int16.class, @normalized)
+      super(size)
       @type = Type::Int16
     end
 
     # Creates a vertex attribute format descriptor with an unsigned 16-bit type.
-    def initialize(size, type : UInt16.class, @normalized, stride, offset)
-      super(size, stride, offset)
+    def initialize(size, type : UInt16.class, @normalized)
+      super(size)
       @type = Type::UInt16
     end
 
     # Creates a vertex attribute format descriptor with a signed 32-bit type.
-    def initialize(size, type : Int32.class, @normalized, stride, offset)
-      super(size, stride, offset)
+    def initialize(size, type : Int32.class, @normalized)
+      super(size)
       @type = Type::Int32
     end
 
     # Creates a vertex attribute format descriptor with an unsigned 32-bit type.
-    def initialize(size, type : UInt32.class, @normalized, stride, offset)
-      super(size, stride, offset)
+    def initialize(size, type : UInt32.class, @normalized)
+      super(size)
       @type = Type::UInt32
     end
 
