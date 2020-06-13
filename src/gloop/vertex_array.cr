@@ -174,12 +174,19 @@ module Gloop
 
       # Sets the format of this attribute on the vertex array object.
       def format=(format : FloatVertexAttributePointer)
-        set_format(format, format.offset)
+        type = LibGL::VertexAttribType.new(format.type.value)
+        normalized = bool_to_int(format.normalized?)
+        checked do
+          LibGL.vertex_array_attrib_format(@vao, @index, format.size, type, normalized, format.offset)
+        end
       end
 
       # Sets the format of this attribute on the vertex array object.
       def format=(format : IntVertexAttributePointer)
-        set_format(format, format.offset)
+        type = LibGL::VertexAttribType.new(format.type.value)
+        checked do
+          LibGL.vertex_array_attrib_i_format(@vao, @index, format.size, type, format.offset)
+        end
       end
     end
   end
