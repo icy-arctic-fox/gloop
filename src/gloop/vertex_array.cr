@@ -1,6 +1,10 @@
 require "opengl"
 require "./bool_conversion"
 require "./error_handling"
+require "./float_vertex_attribute_format"
+require "./float_vertex_attribute_pointer"
+require "./int_vertex_attribute_format"
+require "./int_vertex_attribute_pointer"
 require "./labelable"
 
 module Gloop
