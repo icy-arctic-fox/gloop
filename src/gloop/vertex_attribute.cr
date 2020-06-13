@@ -54,6 +54,7 @@ module Gloop
     end
 
     # Sets the format of the vertex attribute.
+    # Applies the format to the currently bound vertex array object (VAO).
     def format=(format : FloatVertexAttributePointer)
       normalized = bool_to_int(format.normalized?)
       pointer    = Pointer(Void).new(format.offset)
@@ -63,6 +64,7 @@ module Gloop
     end
 
     # Sets the format of the vertex attribute.
+    # Applies the format to the currently bound vertex array object (VAO).
     def format=(format : IntVertexAttributePointer)
       pointer = Pointer(Void).new(format.offset)
       checked do
