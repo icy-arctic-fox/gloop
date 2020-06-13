@@ -1,9 +1,11 @@
 require "opengl"
+require "./bool_conversion"
 require "./error_handling"
 
 module Gloop
   # References an attribute of a vertex.
   struct VertexAttribute
+    include BoolConversion
     include ErrorHandling
 
     # Maximum index allowed for a vertex attribute.
@@ -34,6 +36,15 @@ module Gloop
     # Disables the vertex attribute for the currently bound vertex array object (VAO).
     def disable
       checked { LibGL.disable_vertex_attrib_array(index) }
+    end
+
+    # Checks if the vertex attribute for the currently bound vertex array object (VAO) is enabled.
+    def enabled?
+      value = checked do
+        LibGL.get_vertex_attrib_iv(index, LibGL::VertexAttribPropertyARB::VertexAttribArrayEnabled, out result)
+        result
+      end
+      int_to_bool(value)
     end
 
     # Returns the OpenGL representation of the vertex attribute.
