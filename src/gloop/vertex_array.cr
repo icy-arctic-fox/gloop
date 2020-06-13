@@ -80,7 +80,7 @@ module Gloop
     # Deletes the vertex array object and frees memory held by it.
     # Do not attempt to continue using the VAO after calling this method.
     def delete
-      checked { LibGL.delete_vertex_arrays(1, pointerof(name)) }
+      checked { LibGL.delete_vertex_arrays(1, pointerof(@name)) }
     end
 
     # Checks if the vertex array object exists and has not been deleted.
