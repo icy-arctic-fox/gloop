@@ -47,6 +47,26 @@ module Gloop
       int_to_bool(value)
     end
 
+    def format
+    end
+
+    # Sets the format of the vertex attribute.
+    def format=(format : FloatVertexAttributeFormat)
+      normalized = bool_to_int(format.normalized?)
+      pointer    = Pointer(Void).new(format.offset)
+      checked do
+        LibGL.vertex_attrib_pointer(index, format.size, format.type, normalized, format.stride, pointer)
+      end
+    end
+
+    # Sets the format of the vertex attribute.
+    def format=(format : IntVertexAttributeFormat)
+      pointer = Pointer(Void).new(format.offset)
+      checked do
+        LibGL.vertex_attrib_i_pointer(index, format.size, format.type, format.stride, pointer)
+      end
+    end
+
     # Generates a string containing basic information about the vertex array attribute.
     # The string contains the vertex array attribute's index.
     def to_s(io)

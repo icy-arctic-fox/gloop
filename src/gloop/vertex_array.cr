@@ -101,6 +101,23 @@ module Gloop
       checked { LibGL.disable_vertex_array_attrib(name, attribute) }
     end
 
+    # Sets the format of the specified *attribute* on this vertex array object.
+    # The *attribute* can be a `VertexAttribute` instance or index.
+    def []=(attribute, format : FloatVertexAttributeFormat)
+      normalized = bool_to_int(format.normalized?)
+      checked do
+        LibGL.vertex_array_attrib_format(name, attribute, format.size, format.type, normalized, format.offset)
+      end
+    end
+
+    # Sets the format of the specified *attribute* on this vertex array object.
+    # The *attribute* can be a `VertexAttribute` instance or index.
+    def []=(attribute, format : IntVertexAttributeFormat)
+      checked do
+        LibGL.vertex_array_attrib_i_format(name, attribute, format.size, format.type, format.offset)
+      end
+    end
+
     # Generates a string containing basic information about the vertex array object.
     # The string contains the vertex array object's name.
     def to_s(io)
