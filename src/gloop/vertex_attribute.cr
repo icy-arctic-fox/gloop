@@ -15,8 +15,8 @@ module Gloop
 
     # Maximum number of allowed vertex attributes.
     def self.count
-      ErrorHandling.static_check do
-        LibGL.get_integer_v(LibGL::PName::MaxVertexAttribs, out result)
+      ErrorHandling.static_checked do
+        LibGL.get_integer_v(LibGL::GetPName::MaxVertexAttribs, out result)
         result
       end
     end
@@ -25,7 +25,8 @@ module Gloop
     getter index : LibGL::UInt
 
     # Creates a reference to a vertex attribute.
-    def initialize(@index)
+    def initialize(index)
+      @index = index.to_u32
     end
 
     # Enables the vertex attribute for the currently bound vertex array object (VAO).
