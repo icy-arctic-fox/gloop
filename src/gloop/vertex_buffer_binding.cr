@@ -16,7 +16,7 @@ module Gloop
     # Maximum number of vertex binding slots.
     def self.count
       ErrorHandling.static_checked do
-        LibGL.get_integer_v(LibGL::GetPName::MaxVertexAttribs, out result)
+        LibGL.get_integer_v(LibGL::GetPName::MaxVertexAttribBindings, out result)
         result
       end
     end
