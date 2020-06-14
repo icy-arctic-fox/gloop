@@ -104,6 +104,17 @@ module Gloop
       end
     end
 
+    # Checks if the specified *buffer* is a "storage" buffer,
+    # as opposed to a "data" buffer.
+    protected def self.storage?(buffer)
+      result = ErrorHandling.static_checked do
+        LibGL.get_named_buffer_parameter_iv(buffer,
+          LibGL::VertexBufferObjectParameter::BufferImmutableStorage, out params)
+        params
+      end
+      int_to_bool(result)
+    end
+
     # Binds this buffer to the specified target.
     def bind(target)
       checked { LibGL.bind_buffer(target, @buffer) }

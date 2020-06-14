@@ -1,7 +1,10 @@
 require "opengl"
 require "./bool_conversion"
+require "./buffer"
+require "./data_buffer"
 require "./error_handling"
 require "./labelable"
+require "./storage_buffer"
 require "./vertex_array/*"
 
 module Gloop
@@ -86,6 +89,20 @@ module Gloop
     def exists?
       result = checked { LibGL.is_vertex_array(name) }
       int_to_bool(result)
+    end
+
+    # Retrieves the element (index) buffer that will be bound when this vertex array is bound.
+    def element_buffer
+      buffer = checked do
+        LibGL.get_vertex_array_iv(name, LibGL::VertexArrayPName::ElementArrayBuffer, out result)
+        result
+      end
+
+      if Buffer.storage?(buffer)
+        StorageBuffer.new(buffer)
+      else
+        DataBuffer.new(buffer)
+      end
     end
 
     # Specifies the element (index) buffer to use.
