@@ -10,6 +10,34 @@ module Gloop
     include BoolConversion
     include ErrorHandling
 
+    # Creates a getter method for an attribute parameter.
+    # The *name* is the name of the method to define.
+    # The *pname* is the enum value of the parameter to retrieve.
+    # This should be an enum value from `LibGL::VertexAttribPropertyARB`.
+    private macro parameter(name, pname)
+      def {{name.id}}
+        checked do
+          LibGL.get_vertex_attrib_iv(index, LibGL::VertexAttribPropertyARB::{{pname.id}}, out param)
+          param
+        end
+      end
+    end
+
+    # Creates a getter method for an attribute parameter that returns a boolean.
+    # The *name* is the name of the method to define.
+    # The method name will have `?` appended to it.
+    # The *pname* is the enum value of the parameter to retrieve.
+    # This should be an enum value from `LibGL::VertexAttribPropertyARB`.
+    private macro parameter?(name, pname)
+      def {{name.id}}?
+        result = checked do
+          LibGL.get_vertex_attrib_iv(index, LibGL::VertexAttribPropertyARB::{{pname.id}}, out param)
+          param
+        end
+        int_to_bool(result)
+      end
+    end
+
     # Maximum index allowed for a vertex attribute.
     def self.max_index
       count - 1
@@ -31,6 +59,9 @@ module Gloop
       @index = index.to_u32
     end
 
+    # Checks if the vertex attribute for the currently bound vertex array object (VAO) is enabled.
+    parameter? enabled, VertexAttribArrayEnabled
+
     # Enables the vertex attribute for the currently bound vertex array object (VAO).
     def enable
       checked { LibGL.enable_vertex_attrib_array(index) }
@@ -41,21 +72,61 @@ module Gloop
       checked { LibGL.disable_vertex_attrib_array(index) }
     end
 
-    # Checks if the vertex attribute for the currently bound vertex array object (VAO) is enabled.
-    def enabled?
-      value = checked do
-        LibGL.get_vertex_attrib_iv(index, LibGL::VertexAttribPropertyARB::VertexAttribArrayEnabled, out result)
-        result
+    # Number of components in the attribute.
+    # This can be 1, 2, 3, or 4.
+    parameter size, VertexAttribArraySize
+
+    # Number of bytes to the next attribute of this type.
+    # A zero indicates the elements are stored sequentially in memory.
+    parameter stride, VertexAttribArrayStride
+
+    # Retrieves the OpenGL attribute type.
+    private parameter type_value, VertexAttribArrayType
+
+    # Indicates whether the format uses integers.
+    parameter? integer, VertexAttribArrayInteger
+
+    # Type of data contained in the attribute components.
+    def type
+      value = type_value
+      if integer?
+        IntVertexAttributeFormat::Type.new(value)
+      else
+        FloatVertexAttributeFormat::Type.new(value)
       end
-      int_to_bool(value)
     end
 
-    def format
+    # Indicates whether values stored as integers are mapped to the range [-1, 1] or [0, 1]
+    # for signed and unsigned values respectively.
+    parameter? normalized, VertexAttribArrayNormalized
+
+    # Frequency divisor used for instanced rendering.
+    parameter divisor, VertexAttribArrayDivisor
+
+    # Byte offset from the first element relative to the start of the vertex buffer binding.
+    parameter offset, VertexAttribRelativeOffset
+
+    # Constructs the format information for this attribute.
+    def format : VertexAttributeFormat
+      if integer?
+        IntVertexAttributeFormat.new(size, type.as(IntVertexAttributeFormat::Type))
+      else
+        FloatVertexAttributeFormat.new(size, type.as(FloatVertexAttributeFormat::Type), normalized?)
+      end
+    end
+
+    # Constructs the format and pointer information for this attribute.
+    def pointer : VertexAttributePointer
+      if integer?
+        IntVertexAttributePointer.new(size, type.as(IntVertexAttributeFormat::Type), stride, offset)
+      else
+        FloatVertexAttributePointer.new(size, type.as(FloatVertexAttributeFormat::Type), normalized?, stride, offset)
+      end
     end
 
     # Sets the format of the vertex attribute.
     # Applies the format to the currently bound vertex array object (VAO).
-    def format=(format : FloatVertexAttributePointer)
+    def pointer=(format : FloatVertexAttributePointer)
       normalized = bool_to_int(format.normalized?)
       pointer = Pointer(Void).new(format.offset)
       checked do
@@ -65,7 +136,7 @@ module Gloop
 
     # Sets the format of the vertex attribute.
     # Applies the format to the currently bound vertex array object (VAO).
-    def format=(format : IntVertexAttributePointer)
+    def pointer=(format : IntVertexAttributePointer)
       pointer = Pointer(Void).new(format.offset)
       checked do
         LibGL.vertex_attrib_i_pointer(index, format.size, format.type, format.stride, pointer)
