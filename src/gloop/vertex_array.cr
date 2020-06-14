@@ -42,9 +42,7 @@ module Gloop
       # If available, use that, as it is much faster.
       # Otherwise, convert to an array, which allows unsafe direct access.
       identifiers = identifiers.to_a unless identifiers.responds_to?(:to_unsafe)
-      ErrorHandling.static_checked do
-        LibGL.delete_vertex_arrays(identifiers.size, identifiers)
-      end
+      ErrorHandling.static_checked { LibGL.delete_vertex_arrays(identifiers.size, identifiers) }
     end
 
     # Retrieves the currently bound vertex array.

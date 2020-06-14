@@ -24,9 +24,7 @@ module Gloop
       # The *stride* is the distance between elements in the buffer.
       # This is typically the size (in bytes) of each vertex.
       def bind_buffer(buffer, offset, stride)
-        checked do
-          LibGL.vertex_array_vertex_buffer(@vao, @index, buffer, offset, stride)
-        end
+        checked { LibGL.vertex_array_vertex_buffer(@vao, @index, buffer, offset, stride) }
       end
     end
   end
