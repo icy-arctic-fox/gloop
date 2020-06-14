@@ -62,6 +62,11 @@ module Gloop
           LibGL.vertex_array_attrib_i_format(@vao, @index, format.size, type, format.offset)
         end
       end
+
+      # Returns the OpenGL representation of the attribute (its index).
+      def to_unsafe
+        @index
+      end
     end
   end
 end
