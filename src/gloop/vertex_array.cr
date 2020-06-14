@@ -1,11 +1,8 @@
 require "opengl"
 require "./bool_conversion"
 require "./error_handling"
-require "./float_vertex_attribute_format"
-require "./float_vertex_attribute_pointer"
-require "./int_vertex_attribute_format"
-require "./int_vertex_attribute_pointer"
 require "./labelable"
+require "./vertex_array/*"
 
 module Gloop
   # Stores information about attributes and vertex buffers.
@@ -125,129 +122,6 @@ module Gloop
     # Namespace from which the name of the object is allocated.
     private def object_identifier : LibGL::ObjectIdentifier
       LibGL::ObjectIdentifier::VertexArray
-    end
-
-    # Provides an intermediate interface to access attributes attached to the vertex array.
-    struct AttributeCollection
-      include ErrorHandling
-
-      # Creates the collection.
-      # The *vao* should be the OpenGL ID of the vertex array to proxy access to.
-      protected def initialize(@vao : LibGL::UInt)
-      end
-
-      # Maximum number of allowed vertex attributes.
-      def size
-        checked do
-          LibGL.get_integer_v(LibGL::GetPName::MaxVertexAttribs, out result)
-          result
-        end
-      end
-
-      # Retrieves the attribute with the specified index.
-      def [](index) : AttributeProxy
-        AttributeProxy.new(@vao, index.to_u32)
-      end
-    end
-
-    # Provides an intermediate interface to modify attributes associated with a vertex array.
-    struct AttributeProxy
-      include BoolConversion
-      include ErrorHandling
-
-      # Creates the proxy.
-      # The *vao* is the OpenGL ID of the vertex array to proxy access to.
-      # The *index* is the attribute index to proxy.
-      protected def initialize(@vao : LibGL::UInt, @index : LibGL::UInt)
-      end
-
-      # Enables this attribute on this vertex array object.
-      def enable
-        checked { LibGL.enable_vertex_array_attrib(@vao, @index) }
-      end
-
-      # Disables this attribute on this vertex array object.
-      def disable
-        checked { LibGL.disable_vertex_array_attrib(@vao, @index) }
-      end
-
-      # Sets the format of this attribute on the vertex array object.
-      def set_format(format : FloatVertexAttributeFormat, offset)
-        type = LibGL::VertexAttribType.new(format.type.value)
-        normalized = bool_to_int(format.normalized?)
-        checked do
-          LibGL.vertex_array_attrib_format(@vao, @index, format.size, type, normalized, offset)
-        end
-      end
-
-      # Sets the format of this attribute on the vertex array object.
-      def set_format(format : IntVertexAttributeFormat, offset)
-        type = LibGL::VertexAttribType.new(format.type.value)
-        checked do
-          LibGL.vertex_array_attrib_i_format(@vao, @index, format.size, type, offset)
-        end
-      end
-
-      # Sets the format of this attribute on the vertex array object.
-      def format=(format : FloatVertexAttributePointer)
-        type = LibGL::VertexAttribType.new(format.type.value)
-        normalized = bool_to_int(format.normalized?)
-        checked do
-          LibGL.vertex_array_attrib_format(@vao, @index, format.size, type, normalized, format.offset)
-        end
-      end
-
-      # Sets the format of this attribute on the vertex array object.
-      def format=(format : IntVertexAttributePointer)
-        type = LibGL::VertexAttribType.new(format.type.value)
-        checked do
-          LibGL.vertex_array_attrib_i_format(@vao, @index, format.size, type, format.offset)
-        end
-      end
-    end
-
-    # Provides an intermediate interface to access vertex buffers attached to the vertex array.
-    struct VertexBufferBindingCollection
-      include ErrorHandling
-
-      # Creates the collection.
-      # The *vao* should be the OpenGL ID of the vertex array to proxy access to.
-      protected def initialize(@vao : LibGL::UInt)
-      end
-
-      # Maximum number of vertex binding slots.
-      def size
-        checked do
-          LibGL.get_integer_v(LibGL::GetPName::MaxVertexAttribBindings, out result)
-          result
-        end
-      end
-
-      # Retrieves the binding slot with the specified index.
-      def [](index) : VertexBufferBindingProxy
-        VertexBufferBindingProxy.new(@vao, index.to_u32)
-      end
-    end
-
-    # Provides an intermediate interface to modify vertex buffers associated with a vertex array.
-    struct VertexBufferBindingProxy
-      include ErrorHandling
-
-      # Creates the proxy.
-      # The *vao* is the OpenGL ID of the vertex array to proxy access to.
-      # The *index* is the binding index to proxy.
-      protected def initialize(@vao : LibGL::UInt, @index : LibGL::UInt)
-      end
-
-      # Binds a buffer to the slot.
-      # The *offset* is the position in the buffer where the first element starts.
-      # The *stride* is the distance between elements in the buffer.
-      # This is typically the size (in bytes) of each vertex.
-      def bind_buffer(buffer, offset, stride)
-        checked do
-          LibGL.vertex_array_vertex_buffer(@vao, @index, buffer, offset, stride)
-        end
-      end
     end
   end
 end
