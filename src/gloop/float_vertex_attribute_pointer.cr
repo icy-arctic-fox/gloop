@@ -6,59 +6,57 @@ module Gloop
   # Contains information about a vertex attribute's formatting and its position in a buffer.
   # This descriptor is for floating-point attributes.
   struct FloatVertexAttributePointer < VertexAttributePointer(FloatVertexAttributeFormat)
-    Format = FloatVertexAttributeFormat
-
     # Creates a vertex attribute format pointer.
     def initialize(size, type, normalized, stride, offset)
-      format = Format.new(size, type, normalized)
+      format = FloatVertexAttributeFormat.new(size, type, normalized)
       super(format, stride, offset)
     end
 
     # Creates a vertex attribute format pointer with a 32-bit floating-point type.
     def initialize(size, type : Float32.class, normalized, stride, offset)
-      format = Format.new(size, type, normalized)
+      format = FloatVertexAttributeFormat.new(size, type, normalized)
       super(format, stride, offset)
     end
 
     # Creates a vertex attribute format pointer with a 64-bit floating-point type.
     def initialize(size, type : Float64.class, normalized, stride, offset)
-      format = Format.new(size, type, normalized)
+      format = FloatVertexAttributeFormat.new(size, type, normalized)
       super(format, stride, offset)
     end
 
     # Creates a vertex attribute format pointer with a signed 8-bit type.
     def initialize(size, type : Int8.class, normalized, stride, offset)
-      format = Format.new(size, type, normalized)
+      format = FloatVertexAttributeFormat.new(size, type, normalized)
       super(format, stride, offset)
     end
 
     # Creates a vertex attribute format pointer with an unsigned 8-bit type.
     def initialize(size, type : UInt8.class, normalized, stride, offset)
-      format = Format.new(size, type, normalized)
+      format = FloatVertexAttributeFormat.new(size, type, normalized)
       super(format, stride, offset)
     end
 
     # Creates a vertex attribute format pointer with a signed 16-bit type.
     def initialize(size, type : Int16.class, normalized, stride, offset)
-      format = Format.new(size, type, normalized)
+      format = FloatVertexAttributeFormat.new(size, type, normalized)
       super(format, stride, offset)
     end
 
     # Creates a vertex attribute format pointer with an unsigned 16-bit type.
     def initialize(size, type : UInt16.class, normalized, stride, offset)
-      format = Format.new(size, type, normalized)
+      format = FloatVertexAttributeFormat.new(size, type, normalized)
       super(format, stride, offset)
     end
 
     # Creates a vertex attribute format pointer with a signed 32-bit type.
     def initialize(size, type : Int32.class, normalized, stride, offset)
-      format = Format.new(size, type, normalized)
+      format = FloatVertexAttributeFormat.new(size, type, normalized)
       super(format, stride, offset)
     end
 
     # Creates a vertex attribute format pointer with an unsigned 32-bit type.
     def initialize(size, type : UInt32.class, normalized, stride, offset)
-      format = Format.new(size, type, normalized)
+      format = FloatVertexAttributeFormat.new(size, type, normalized)
       super(format, stride, offset)
     end
 
