@@ -103,6 +103,11 @@ module Gloop
       AttributeCollection.new(name)
     end
 
+    # Provides access to all vertex buffers associated with the vertex array.
+    def bindings : VertexBufferBindingCollection
+      VertexBufferBindingCollection.new(name)
+    end
+
     # Generates a string containing basic information about the vertex array object.
     # The string contains the vertex array object's name.
     def to_s(io)
@@ -197,6 +202,50 @@ module Gloop
         type = LibGL::VertexAttribType.new(format.type.value)
         checked do
           LibGL.vertex_array_attrib_i_format(@vao, @index, format.size, type, format.offset)
+        end
+      end
+    end
+
+    # Provides an intermediate interface to access vertex buffers attached to the vertex array.
+    struct VertexBufferBindingCollection
+      include ErrorHandling
+
+      # Creates the collection.
+      # The *vao* should be the OpenGL ID of the vertex array to proxy access to.
+      protected def initialize(@vao : LibGL::UInt)
+      end
+
+      # Maximum number of vertex binding slots.
+      def size
+        checked do
+          LibGL.get_integer_v(LibGL::GetPName::MaxVertexAttribBindings, out result)
+          result
+        end
+      end
+
+      # Retrieves the binding slot with the specified index.
+      def [](index) : VertexBufferBindingProxy
+        VertexBufferBindingProxy.new(@vao, index.to_u32)
+      end
+    end
+
+    # Provides an intermediate interface to modify vertex buffers associated with a vertex array.
+    struct VertexBufferBindingProxy
+      include ErrorHandling
+
+      # Creates the proxy.
+      # The *vao* is the OpenGL ID of the vertex array to proxy access to.
+      # The *index* is the binding index to proxy.
+      protected def initialize(@vao : LibGL::UInt, @index : LibGL::UInt)
+      end
+
+      # Binds a buffer to the slot.
+      # The *offset* is the position in the buffer where the first element starts.
+      # The *stride* is the distance between elements in the buffer.
+      # This is typically the size (in bytes) of each vertex.
+      def bind_buffer(buffer, offset, stride)
+        checked do
+          LibGL.vertex_array_vertex_buffer(@vao, @index, buffer, offset, stride)
         end
       end
     end
