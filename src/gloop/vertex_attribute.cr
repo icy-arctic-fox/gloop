@@ -59,6 +59,14 @@ module Gloop
       @index = index.to_u32
     end
 
+    # Index of the binding slot the attribute is bound to.
+    private parameter binding_index, VertexAttribArrayBufferBinding
+
+    # Retrieves the binding slot the attribute is bound to.
+    def binding
+      VertexBufferBinding.new(binding_index)
+    end
+
     # Checks if the vertex attribute for the currently bound vertex array object (VAO) is enabled.
     parameter? enabled, VertexAttribArrayEnabled
 
