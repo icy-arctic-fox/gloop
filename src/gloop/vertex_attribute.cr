@@ -57,7 +57,7 @@ module Gloop
     # Applies the format to the currently bound vertex array object (VAO).
     def format=(format : FloatVertexAttributePointer)
       normalized = bool_to_int(format.normalized?)
-      pointer    = Pointer(Void).new(format.offset)
+      pointer = Pointer(Void).new(format.offset)
       checked do
         LibGL.vertex_attrib_pointer(index, format.size, format.type, normalized, format.stride, pointer)
       end
