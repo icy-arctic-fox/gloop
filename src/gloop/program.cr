@@ -6,6 +6,7 @@ require "./program_binary"
 require "./program_link_error"
 require "./program_validation_error"
 require "./shader_factory"
+require "./vertex_attribute"
 
 module Gloop
   # Collection of shaders used to transform vertices into pixels.
@@ -131,8 +132,15 @@ module Gloop
       raise NotImplementedError.new("Program#attribute(location)")
     end
 
+    # Retrieves the attribute with the specified name.
     def attribute(name : String)
-      raise NotImplementedError.new("Program#attribute(name)")
+      index = checked { LibGL.get_attrib_location(@program, name) }
+      index < 0 ? nil : VertexAttribute.new(index)
+    end
+
+    # Associates an attribute index with a named input.
+    def bind_attribute(name, attribute)
+      checked { LibGL.bind_attrib_location(@program, attribute, name) }
     end
 
     # Attaches a shader to the program.
