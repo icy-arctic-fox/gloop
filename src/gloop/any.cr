@@ -14,7 +14,7 @@ module Gloop
     def initialize(@raw : Type)
     end
 
-    {% for name, type in {b: Bool, i: Int32, u: UInt32, f: Float32, d: Float64} %}
+    {% for name, type in {b: Bool, i: Int32, u: UInt32, f32: Float32, f64: Float64} %}
     # Attempts to convert to a {{type}}.
     # Raises if the value is not a {{type}}.
     def as_{{name.id}} : {{type}}
