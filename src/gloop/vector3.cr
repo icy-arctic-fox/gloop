@@ -21,6 +21,18 @@ module Gloop
       @z = vector.z
     end
 
+    # Creates the vector from components and vectors.
+    def initialize(vec_xy : Vector2(T), @z : T)
+      @x = vec_xy.x
+      @y = vec_xy.y
+    end
+
+    # Creates the vector from components and vectors.
+    def initialize(@x : T, vec_yz : Vector2(T))
+      @y = vec_yz.x
+      @z = vec_yz.y
+    end
+
     # Value of the x component.
     def r : T
       @x
