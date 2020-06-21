@@ -3,9 +3,9 @@ module Gloop
   struct Any
     # Union of all possible OpenGL types.
     alias Type = Bool | Int32 | UInt32 | Float32 | Float64 |
-      Vector2(Bool) | Vector2(Int32) | Vector2(UInt32) | Vector2(Float32) | Vector2(Float64) |
-      Vector3(Bool) | Vector3(Int32) | Vector3(UInt32) | Vector3(Float32) | Vector3(Float64) |
-      Vector4(Bool) | Vector4(Int32) | Vector4(UInt32) | Vector4(Float32) | Vector4(Float64)
+                 Vector2(Bool) | Vector2(Int32) | Vector2(UInt32) | Vector2(Float32) | Vector2(Float64) |
+                 Vector3(Bool) | Vector3(Int32) | Vector3(UInt32) | Vector3(Float32) | Vector3(Float64) |
+                 Vector4(Bool) | Vector4(Int32) | Vector4(UInt32) | Vector4(Float32) | Vector4(Float64)
 
     # Underlying raw value.
     getter raw : Type
@@ -29,7 +29,7 @@ module Gloop
 
     {% for count in (2..4) %}
     {% vec_name = "vec#{count}#{name}".id
-      vec_type = "Vector#{count}(#{type})".id %}
+       vec_type = "Vector#{count}(#{type})".id %}
     # Attempts to convert to a {{count}}-component vector of {{type}}.
     # Raises if the value is not of this type.
     def as_{{vec_name}} : {{vec_type}}
