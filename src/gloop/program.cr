@@ -96,7 +96,7 @@ module Gloop
 
     # Retrieves the maximum string length of a uniform name.
     # This length includes the null-terminating character.
-    private parameter max_uniform_name_size, ActiveUniformMaxLength
+    protected parameter max_uniform_name_size, ActiveUniformMaxLength
 
     # Retrieves the number of shaders attached to the program.
     private parameter shader_count, AttachedShaders
