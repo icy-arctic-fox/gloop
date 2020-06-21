@@ -1,4 +1,5 @@
 require "opengl"
+require "./active_uniform"
 require "./bool_conversion"
 require "./error_handling"
 require "./labelable"
@@ -6,6 +7,7 @@ require "./program_binary"
 require "./program_link_error"
 require "./program_validation_error"
 require "./shader_factory"
+require "./uniform"
 require "./vertex_attribute"
 
 module Gloop
@@ -271,12 +273,15 @@ module Gloop
       @program
     end
 
-    def uniform(location)
-      raise NotImplementedError.new("Program#uniform(location)")
+    # Retrieves the location of a uniform given its name.
+    def uniform(name : String) : Uniform
+      location = checked { LibGL.get_uniform_location(@program, name) }
+      Uniform.new(location)
     end
 
-    def uniform(name)
-      raise NotImplementedError.new("Program#uniform(name)")
+    # Used to retrieve information about an active uniform in the program.
+    def uniform(index : Int32) : ActiveUniform
+      ActiveUniform.new(@program, index)
     end
 
     # Specifies this program as the current one for the rendering context.
