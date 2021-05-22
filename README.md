@@ -23,6 +23,14 @@ require "gloop"
 
 TODO: Write usage instructions here
 
+## Versioning
+
+Gloop is written against OpenGL 4.6 Core profile.
+However, this doesn't mean OpenGL 4.6 must be used.
+As long as your application calls methods only in the target version, the code will compile and link.
+For instance, [Direct State Access (DSA)](https://www.khronos.org/opengl/wiki/Direct_State_Access) was introduced in OpenGL 4.5.
+If your code doesn't utilize DSA, then it should be fine to target a version lower than 4.5.
+
 ## Development
 
 TODO: Write development instructions here
