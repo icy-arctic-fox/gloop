@@ -1,5 +1,6 @@
-# GLOOP
+# Gloop
 
+Add some structure to your OpenGL code!
 Object oriented OpenGL library for Crystal.
 
 ## Installation
