@@ -2,6 +2,7 @@ require "opengl"
 require "./context/*"
 require "./error_handling"
 require "./parameters"
+require "./version"
 
 module Gloop
   # Information about the current OpenGL context.
@@ -31,6 +32,12 @@ module Gloop
     #
     # Minimum required version: 2.0
     parameter MinorVersion, minor_version
+
+    # Retrieves the OpenGL context version.
+    # Combines `#major_version` and `#minor_version`.
+    def version : Version
+      Version.new(major_version, minor_version)
+    end
 
     # Retrieves the profile of the current OpenGL context.
     #

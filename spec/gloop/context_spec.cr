@@ -12,6 +12,10 @@ Spectator.describe Gloop::Context do
     specify { expect(&.minor_version).to eq(6) }
   end
 
+  describe "#version" do
+    specify { expect(&.version.to_s).to eq("4.6") }
+  end
+
   describe "#profile" do
     specify { expect(&.profile).to eq(Gloop::Context::Profile::Core) }
   end
