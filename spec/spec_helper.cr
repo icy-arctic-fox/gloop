@@ -5,7 +5,12 @@ require "../src/gloop"
 
 # Initializes OpenGL enough for testing.
 def init_opengl
-  LibGLFW.init
+  if LibGLFW.init.zero?
+    error = LibGLFW.get_error(out description)
+    description = String.new(description)
+    raise "Failed to initialize GLFW - #{error} - #{description}"
+  end
+
   LibGLFW.window_hint(LibGLFW::WindowHint::Visible, LibGLFW::Bool::False)
   LibGLFW.window_hint(LibGLFW::WindowHint::ContextVersionMajor, 4)
   LibGLFW.window_hint(LibGLFW::WindowHint::ContextVersionMinor, 6)
