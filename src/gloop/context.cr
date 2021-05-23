@@ -1,12 +1,14 @@
 require "opengl"
 require "./context/*"
 require "./error_handling"
+require "./parameters"
 
 module Gloop
   # Information about the current OpenGL context.
   module Context
     extend self
     extend ErrorHandling
+    include Parameters
 
     # Retrieves the major portion of the OpenGL's context version.
     # For instance, if the OpenGL version is 4.6, 4 is returned.
@@ -17,12 +19,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    def major_version
-      checked do
-        LibGL.get_integer_v(LibGL::GetPName::MajorVersion, out value)
-        value
-      end
-    end
+    parameter MajorVersion, major_version : Int32
 
     # Retrieves the minor portion of the OpenGL's context version.
     # For instance, if the OpenGL version is 4.6, 6 is returned.
@@ -33,12 +30,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    def minor_version
-      checked do
-        LibGL.get_integer_v(LibGL::GetPName::MinorVersion, out value)
-        value
-      end
-    end
+    parameter MinorVersion, minor_version
 
     # Retrieves the profile of the current OpenGL context.
     #
@@ -48,12 +40,6 @@ module Gloop
     # ```
     #
     # Minimum required version: 3.2
-    def profile
-      value = checked do
-        LibGL.get_integer_v(LibGL::GetPName::ContextProfileMask, out value)
-        value
-      end
-      Profile.from_value(value)
-    end
+    parameter ContextProfileMask, profile : Profile
   end
 end
