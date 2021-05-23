@@ -42,6 +42,16 @@ module Gloop
     # Minimum required version: 3.2
     parameter ContextProfileMask, profile : Profile
 
+    # Retrieves flags for additional features of the current OpenGL context.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetIntegerv(GL_CONTEXT_FLAGS, &value)
+    # ```
+    #
+    # Minimum required version: 2.0
+    parameter ContextFlags, flags : Flags
+
     # Retrieves the name of the company providing the OpenGL implementation.
     #
     # Effectively calls:

@@ -16,6 +16,10 @@ Spectator.describe Gloop::Context do
     specify { expect(&.profile).to eq(Gloop::Context::Profile::Core) }
   end
 
+  describe "#flags" do
+    specify { expect(&.flags).to eq(Gloop::Context::Flags::Debug) }
+  end
+
   describe "#vendor" do
     # Can't stub or expect a specific value, just expect it to work instead.
     specify { expect(&.vendor).to_not be_nil }
