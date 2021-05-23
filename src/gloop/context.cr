@@ -92,5 +92,11 @@ module Gloop
     #
     # Minimum required version: 2.0
     parameter ShadingLanguageVersion, shading_language_version : String
+
+    # Retrieves the extensions supported by this implementation of OpenGL.
+    # Returns an indexable (iterable) collection of `Extension` instances.
+    def extensions
+      ExtensionList.new
+    end
   end
 end

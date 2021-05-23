@@ -33,4 +33,8 @@ Spectator.describe Gloop::Context do
   describe "#shading_language_version" do
     specify { expect(&.shading_language_version).to contain("4.6") }
   end
+
+  describe "#extensions" do
+    specify { expect(&.extensions).to be_a(Enumerable(Gloop::Extension)) }
+  end
 end
