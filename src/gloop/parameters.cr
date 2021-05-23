@@ -3,7 +3,7 @@ require "./error_handling"
 
 module Gloop
   # Mix-in providing macros to generate getters for retrieving OpenGL state parameters.
-  # These wrap calls to `glGet`.
+  # These wrap calls to `glGet` and `glGetString`.
   # All calls are wrapped with error checking.
   private module Parameters
     extend ErrorHandling
@@ -26,7 +26,7 @@ module Gloop
     end
 
     # Defines a getter method that retrieves an OpenGL parameter.
-    # The *pname* is the OpenGL parameter name to retrieve.
+    # The *pname* is the name of the OpenGL parameter to retrieve.
     # This should be an enum value (just the name) from `LibGL::GetPName`.
     # The *name* will be the name of the generated method.
     # It can have a type annotation, which will control how the parameter's value is retrieved.
@@ -38,6 +38,13 @@ module Gloop
     # parameter MajorVersion, major_version
     # parameter DepthRange, depth_range : Float32
     # parameter ContextProfileMask, profile : Profile
+    # ```
+    #
+    # Specifying `String` as the type will use `glGetString`.
+    # In this case, *pname* must be a enum value (again, just the name) from `LibGL::StringName`.
+    #
+    # ```
+    # parameter Vendor, vendor : String
     # ```
     private macro parameter(pname, name)
       {% if name.is_a?(TypeDeclaration) %}
@@ -74,6 +81,9 @@ module Gloop
               LibGL.get_boolean_v(LibGL::GetPName::{{pname.id}}, out value)
               !value.false?
             end
+          {% elsif type <= String %}
+            ptr = expect_truthy { LibGL.get_string(LibGL::StringName::{{pname.id}}) }
+            String.new(ptr)
           {% else %}
             value = checked do
               LibGL.get_integer_v(LibGL::GetPName::{{pname.id}}, out value)

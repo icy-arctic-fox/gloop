@@ -48,5 +48,56 @@ module Gloop
     #
     # Minimum required version: 3.2
     parameter ContextProfileMask, profile : Profile
+
+    # Retrieves the name of the company providing the OpenGL implementation.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetString(GL_VENDOR)
+    # ```
+    #
+    # Minimum required version: 2.0
+    parameter Vendor, vendor : String
+
+    # Retrieves the name of the renderer.
+    # This name is typically tied to a particular configuration or hardware platform.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetString(GL_VENDOR)
+    # ```
+    #
+    # Minimum required version: 2.0
+    parameter Renderer, renderer : String
+
+    # Retrieves the version/release string.
+    # This usually takes the form:
+    # ```text
+    # MAJOR.MINOR[.RELEASE]
+    # ```
+    # Vendor-specific information may follow the version string.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetString(GL_VERSION)
+    # ```
+    #
+    # Minimum required version: 2.0
+    parameter Version, version_string : String
+
+    # Retrieves the primary GLSL version.
+    # This usually takes the form:
+    # ```text
+    # MAJOR.MINOR[.RELEASE]
+    # ```
+    # Vendor-specific information may follow the version string.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetString(GL_SHADING_LANGUAGE_VERSION)
+    # ```
+    #
+    # Minimum required version: 2.0
+    parameter ShadingLanguageVersion, shading_language_version : String
   end
 end
