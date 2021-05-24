@@ -6,6 +6,7 @@ module Gloop::Debug
   # Debug information received from OpenGL.
   struct Message
     extend ErrorHandling
+    include ErrorHandling
 
     # Retrieves the maximum length allowed for the `#message` string.
     #
@@ -51,6 +52,20 @@ module Gloop::Debug
       @type = Type.from_value(type)
       @severity = Severity.from_value(severity)
       @message = String.new(string, length)
+    end
+
+    # Sends this debug message to OpenGL's debug message queue.
+    #
+    # Effectively calls:
+    # ```c
+    # glDebugMessageInsert(source, type, id, severity, length, message)
+    # ```
+    #
+    # Minimum required version: 4.3
+    def insert
+      checked do
+        LibGL.debug_message_insert(@source, @type, @id, @severity, @message.bytesize, @message)
+      end
     end
 
     # Produces a log-like string from the contents of the debug message.

@@ -59,6 +59,12 @@ module Gloop
       end
     end
 
+    # Sends a debug message to OpenGL's debug message queue.
+    # See: `Message#insert`
+    def insert(message : Message)
+      message.insert
+    end
+
     # Storage for the debug message callback.
     # Necessary to prevent garbage collection on it.
     @@callback : Pointer(Void)?

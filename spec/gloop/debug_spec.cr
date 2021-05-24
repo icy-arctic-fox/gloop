@@ -42,11 +42,22 @@ Spectator.describe Gloop::Debug do
     before_each { described_class.enable }
     after_each { described_class.disable }
 
-    xit "sets up a callback for debug messages" do
+    let(message) do
+      Gloop::Debug::Message.new(
+        Gloop::Debug::Source::Application,
+        Gloop::Debug::Type::Other,
+        12345,
+        Gloop::Debug::Severity::Notification,
+        "Test message"
+      )
+    end
+
+    it "sets up a callback for debug messages" do
       called = false
       Gloop::Debug.on_message do |message|
         called = true
       end
+      message.insert
       expect(called).to be_true
     end
   end
