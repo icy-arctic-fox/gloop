@@ -54,9 +54,7 @@ Spectator.describe Gloop::Debug do
 
     it "sets up a callback for debug messages" do
       called = false
-      Gloop::Debug.on_message do |message|
-        called = true
-      end
+      Gloop::Debug.on_message { called = true }
       message.insert
       expect(called).to be_true
     end
