@@ -5,6 +5,25 @@ require "./type"
 module Gloop::Debug
   # Debug information received from OpenGL.
   struct Message
+    extend ErrorHandling
+
+    # Retrieves the maximum length allowed for the `#message` string.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetIntegerv(GL_MAX_DEBUG_MESSAGE_LENGTH, &value)
+    # ```
+    #
+    # Minimum required version: 4.3
+    def self.max_size
+      # For some reason this isn't under `LibGL::GetPName`.
+      pname = LibGL::GetPName.new(LibGL::MAX_DEBUG_MESSAGE_LENGTH.to_u32)
+      checked do
+        LibGL.get_integer_v(pname, out length)
+        length
+      end
+    end
+
     # Source that produced the message.
     getter source : Source
 
