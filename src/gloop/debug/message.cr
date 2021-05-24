@@ -42,7 +42,7 @@ module Gloop::Debug
     # Builds a message with the raw data received from OpenGL.
     protected def initialize(source, type, @id, severity, length, string)
       @source = Source.from_value(source)
-      @type = Type.from_value(source)
+      @type = Type.from_value(type)
       @severity = Severity.from_value(severity)
       @message = String.new(string, length)
     end
