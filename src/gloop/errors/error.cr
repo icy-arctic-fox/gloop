@@ -1,5 +1,3 @@
-require "opengl"
-
 module Gloop
   # Error codes for known OpenGL errors.
   enum Error

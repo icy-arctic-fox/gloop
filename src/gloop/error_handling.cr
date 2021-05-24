@@ -1,3 +1,5 @@
+require "./errors"
+
 module Gloop
   # Mix-in providing error handling feautres to OpenGL calls.
   # Can be included or extended.

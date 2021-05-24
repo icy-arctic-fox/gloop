@@ -1,5 +1,3 @@
-require "opengl"
-
 module Gloop::Context
   # Profile an OpenGL context is utilizing.
   # See: https://www.khronos.org/opengl/wiki/OpenGL_Context#OpenGL_3.2_and_Profiles

@@ -1,6 +1,6 @@
-require "opengl"
 require "./context/*"
 require "./error_handling"
+require "./extension_list"
 require "./parameters"
 
 module Gloop

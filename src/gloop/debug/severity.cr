@@ -1,5 +1,3 @@
-require "opengl"
-
 module Gloop::Debug
   # Debug message severity (how important it is).
   enum Severity

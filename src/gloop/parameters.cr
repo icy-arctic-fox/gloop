@@ -1,4 +1,3 @@
-require "opengl"
 require "./error_handling"
 
 module Gloop
