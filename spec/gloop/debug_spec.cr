@@ -4,7 +4,7 @@ Spectator.describe Gloop::Debug do
   before_all { init_opengl }
   after_all { terminate_opengl }
 
-  describe "#enable" do
+  describe ".enable" do
     before_each { described_class.disable }
 
     it "enables debug output" do
@@ -12,7 +12,7 @@ Spectator.describe Gloop::Debug do
     end
   end
 
-  describe "#disable" do
+  describe ".disable" do
     before_each { described_class.enable }
 
     it "disables debug output" do
@@ -20,7 +20,7 @@ Spectator.describe Gloop::Debug do
     end
   end
 
-  describe "#enabled=" do
+  describe ".enabled=" do
     context "when true" do
       before_each { described_class.disable }
 
@@ -38,7 +38,7 @@ Spectator.describe Gloop::Debug do
     end
   end
 
-  describe "#on_message" do
+  describe ".on_message" do
     before_each { described_class.enable }
     after_each { described_class.disable }
 
