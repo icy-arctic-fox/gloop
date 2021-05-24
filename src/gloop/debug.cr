@@ -69,6 +69,13 @@ module Gloop
     # Subsequent calls to this method will overwrite the previous callback.
     # Only one callback (the latest) will be invoked.
     # The block will be given a `Message` instance containing the debug message.
+    #
+    # Effectively calls:
+    # ```c
+    # glDebugMessageCallback(callback, user_param)
+    # ```
+    #
+    # Minimum required version: 4.3
     def on_message(&block : Message -> _) : Nil
       # Pack up the client's callback and store.
       # The callback is passed as the user param.
