@@ -1,6 +1,6 @@
 module Gloop
   # Error codes for known OpenGL errors.
-  enum Error
+  enum Error : LibGL::Enum
     # No error reported by OpenGL.
     None = LibGL::ErrorCode::NoError
 
@@ -42,5 +42,10 @@ module Gloop
     #
     # This typically indicates a problem with code interacting with OpenGL.
     StackUnderflow = LibGL::ErrorCode::StackUnderflow
+
+    # Converts to an OpenGL enum.
+    def to_unsafe
+      LibGL::ErrorCode.new(value)
+    end
   end
 end

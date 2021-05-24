@@ -1,6 +1,6 @@
 module Gloop::Debug
   # Debug message sources.
-  enum Source
+  enum Source : LibGL::Enum
     # Used for filtering messages.
     DontCare = LibGL::DebugSource::DontCare
 
@@ -21,5 +21,10 @@ module Gloop::Debug
 
     # None of the above.
     Other = LibGL::DebugSource::DebugSourceOther
+
+    # Converts to an OpenGL enum.
+    def to_unsafe
+      LibGL::DebugSource.new(value)
+    end
   end
 end

@@ -19,5 +19,10 @@ module Gloop::Context
     # No errors will be reported by OpenGL except for out-of-memory errors.
     # Conflicts with `RobustAccess`.
     NoError = LibGL::ContextFlagMask::ContextFlagNoError
+
+    # Converts to an OpenGL enum.
+    def to_unsafe
+      LibGL::ContextFlagMask.new(value)
+    end
   end
 end

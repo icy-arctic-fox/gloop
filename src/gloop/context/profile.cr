@@ -9,5 +9,10 @@ module Gloop::Context
     # OpenGL specification with deprecated features.
     # Not available on all systems.
     Compatibility = LibGL::ContextProfileMask::ContextCompatibilityProfile
+
+    # Converts to an OpenGL enum.
+    def to_unsafe
+      LibGL::ContextProfileMask.new(value)
+    end
   end
 end

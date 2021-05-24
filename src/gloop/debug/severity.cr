@@ -1,6 +1,6 @@
 module Gloop::Debug
   # Debug message severity (how important it is).
-  enum Severity
+  enum Severity : LibGL::Enum
     # Used for filtering messages.
     DontCare = LibGL::DebugSeverity::DontCare
 
@@ -15,5 +15,10 @@ module Gloop::Debug
 
     # Informational, not an error or performance issue.
     Notification = LibGL::DebugSeverity::DebugSeverityNotification
+
+    # Converts to an OpenGL enum.
+    def to_unsafe
+      LibGL::DebugSeverity.new(value)
+    end
   end
 end
