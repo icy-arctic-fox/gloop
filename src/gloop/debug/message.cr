@@ -39,6 +39,12 @@ module Gloop::Debug
     # Text in the message.
     getter message : String
 
+    # Creates a new message intended to be sent to the OpenGL debug message queue.
+    # The *source* indicates where the message came from.
+    # It should be `Source::Application` or `Source::ThirdParty`.
+    def initialize(@source : Source, @type : Type, @id : UInt32, @severity : Severity, @message : String)
+    end
+
     # Builds a message with the raw data received from OpenGL.
     protected def initialize(source, type, @id, severity, length, string)
       @source = Source.from_value(source)
