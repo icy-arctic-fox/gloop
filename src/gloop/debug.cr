@@ -7,6 +7,58 @@ module Gloop
     extend self
     extend ErrorHandling
 
+    # Enables debug output functionality.
+    #
+    # Effectively calls:
+    # ```c
+    # glEnable(GL_DEBUG_OUTPUT)
+    # ```
+    #
+    # Minimum required version: 4.3
+    def enable
+      checked { LibGL.enable(LibGL::EnableCap::DebugOutput) }
+    end
+
+    # Disables debug output functionality.
+    #
+    # Effectively calls:
+    # ```c
+    # glDisable(GL_DEBUG_OUTPUT)
+    # ```
+    #
+    # Minimum required version: 4.3
+    def disable
+      checked { LibGL.disable(LibGL::EnableCap::DebugOutput) }
+    end
+
+    # Enables or disables debug output functionality.
+    # If *flag* is true, the capability will be enabled.
+    # Otherwise, the capability will be disabled.
+    #
+    # Minimum required version: 4.3
+    def enabled=(flag)
+      if flag
+        enable
+      else
+        disable
+      end
+    end
+
+    # Checks if debug output functionality is enabled.
+    #
+    # Effectively calls:
+    # ```c
+    # glIsEnabled(GL_DEBUG_OUTPUT)
+    # ```
+    #
+    # Minimum required version: 4.3
+    def enabled?
+      checked do
+        value = LibGL.is_enabled(LibGL::EnableCap::DebugOutput)
+        !value.false?
+      end
+    end
+
     # Storage for the debug message callback.
     # Necessary to prevent garbage collection on it.
     @@callback : Pointer(Void)?
