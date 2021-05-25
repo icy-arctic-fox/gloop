@@ -81,9 +81,9 @@ Spectator.describe Gloop::Debug do
       message = nil
       Gloop::Debug.on_message { |received| message = received }
       Gloop::Debug.log(:high,
-         type: :performance,
-         source: :application,
-         id: 12345) { "Test message" }
+        type: :performance,
+        source: :application,
+        id: 12345) { "Test message" }
 
       expect(message).to be_a(Gloop::Debug::Message)
       expect(message.not_nil!).to have_attributes(
