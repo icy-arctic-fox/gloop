@@ -74,6 +74,7 @@ Spectator.describe Gloop::Debug do
 
   describe ".log" do
     before_each { described_class.enable }
+    before_each { described_class.enable_sync }
     after_each { described_class.disable }
 
     it "produces a debug message" do
@@ -97,6 +98,7 @@ Spectator.describe Gloop::Debug do
 
   describe ".on_message" do
     before_each { described_class.enable }
+    before_each { described_class.enable_sync }
     after_each { described_class.disable }
 
     let(message) do
