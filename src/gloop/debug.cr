@@ -94,7 +94,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 4.3
-    def on_message(&block : Message -> _) : Nil
+    def on_message(&block : Message ->) : Nil
       # Pack up the client's callback and store.
       # The callback is passed as the user param.
       # Storing it in a class variable prevents it from being garbage collected.
