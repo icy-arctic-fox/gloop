@@ -60,6 +60,18 @@ module Gloop
     end
 
     # Sends a debug message to OpenGL's debug message queue.
+    # This method takes a block, which returns the message text.
+    #
+    # ```
+    # Gloop::Debug.log(:low, type: :performance) { "Shader program swapped repeatedly - possible performance loss." }
+    # ```
+    def log(severity : Severity, *, type : Type = :other, source : Source = :application, id : UInt32 = 0) : Nil
+      message = yield.to_s
+      message = Message.new(source, type, id, severity, message)
+      message.insert
+    end
+
+    # Sends a debug message to OpenGL's debug message queue.
     # See: `Message#insert`
     def insert(message : Message)
       message.insert

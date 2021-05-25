@@ -38,6 +38,29 @@ Spectator.describe Gloop::Debug do
     end
   end
 
+  describe ".log" do
+    before_each { described_class.enable }
+    after_each { described_class.disable }
+
+    it "produces a debug message" do
+      message = nil
+      Gloop::Debug.on_message { |received| message = received }
+      Gloop::Debug.log(:high,
+         type: :performance,
+         source: :application,
+         id: 12345) { "Test message" }
+
+      expect(message).to be_a(Gloop::Debug::Message)
+      expect(message.not_nil!).to have_attributes(
+        source: Gloop::Debug::Source::Application,
+        type: Gloop::Debug::Type::Performance,
+        id: 12345,
+        severity: Gloop::Debug::Severity::High,
+        message: "Test message"
+      )
+    end
+  end
+
   describe ".on_message" do
     before_each { described_class.enable }
     after_each { described_class.disable }
