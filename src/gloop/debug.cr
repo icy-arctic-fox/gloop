@@ -1,3 +1,4 @@
+require "./capabilities"
 require "./debug/*"
 require "./error_handling"
 
@@ -6,6 +7,9 @@ module Gloop
   module Debug
     extend self
     extend ErrorHandling
+    include Capabilities
+
+    capability DebugOutputSynchronous, sync
 
     # Enables debug output functionality.
     #

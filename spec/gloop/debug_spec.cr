@@ -38,6 +38,40 @@ Spectator.describe Gloop::Debug do
     end
   end
 
+  describe ".enable_sync" do
+    before_each { described_class.disable_sync }
+
+    it "enables synchronized debug output" do
+      expect { described_class.enable_sync }.to change(&.sync?).from(false).to(true)
+    end
+  end
+
+  describe ".disable_sync" do
+    before_each { described_class.enable_sync }
+
+    it "disables synchronized debug output" do
+      expect { described_class.disable_sync }.to change(&.sync?).from(true).to(false)
+    end
+  end
+
+  describe ".sync=" do
+    context "when true" do
+      before_each { described_class.disable_sync }
+
+      it "enables synchronized debug output" do
+        expect { described_class.sync = true }.to change(&.sync?).from(false).to(true)
+      end
+    end
+
+    context "when false" do
+      before_each { described_class.enable_sync }
+
+      it "disables synchronized debug output" do
+        expect { described_class.sync = false }.to change(&.sync?).from(true).to(false)
+      end
+    end
+  end
+
   describe ".log" do
     before_each { described_class.enable }
     after_each { described_class.disable }
