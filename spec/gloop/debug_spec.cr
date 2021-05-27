@@ -72,6 +72,47 @@ Spectator.describe Gloop::Debug do
     end
   end
 
+  describe ".allow" do
+    before_each { described_class.enable_sync }
+
+    before_each do
+      # Disable all message types.
+      described_class.reject(
+        source: :dont_care,
+        type: :dont_care,
+        severity: :dont_care
+      )
+    end
+
+    after_each do
+      # Re-enable all message types.
+      described_class.allow(
+        source: :dont_care,
+        type: :dont_care,
+        severity: :dont_care
+      )
+    end
+
+    it "allows messages to be received" do
+      # Track the messages received from OpenGL.
+      received = [] of Gloop::Debug::Message
+      described_class.on_message { |message| received << message }
+
+      # Allow one type of message.
+      # It should be the only message received.
+      described_class.allow(source: :application, type: :performance)
+
+      # This message should not be received.
+      described_class.log(:high, type: :undefined_behavior) { "Test Message" }
+
+      # This message should be received.
+      described_class.log(:high, source: :application, type: :performance) { "Test message" }
+
+      expected_message = Gloop::Debug::Message.new(:application, :performance, 0, :high, "Test message")
+      expect(received).to contain_exactly(expected_message)
+    end
+  end
+
   describe ".log" do
     before_each { described_class.enable }
     before_each { described_class.enable_sync }

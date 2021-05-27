@@ -81,6 +81,46 @@ module Gloop
       message.insert
     end
 
+    # Specifies debug messages to receive.
+    # Messages can be allowed by specifying any combination
+    # of *source*, *type*, and *severity* flags.
+    # Additionally, if specific IDs of messages can be allowed
+    # by specifying them in the *ids* array.
+    #
+    # See: `#reject`
+    #
+    # Effectively calls:
+    # ```c
+    # glDebugMessageControl(source, type, severity, count ids, GL_TRUE)
+    # ```
+    #
+    # Minimum required version: 4.3
+    def allow(*,
+      source : Source = :dont_care, type : Type = :dont_care,
+      severity : Severity = :dont_care, ids = [] of UInt32)
+      checked { LibGL.debug_message_control(source, type, severity, ids.size, ids, LibGL::Boolean::True) }
+    end
+
+    # Specifies debug messages to ignore.
+    # Messages can be ignored by specifying any combination
+    # of *source*, *type*, and *severity* flags.
+    # Additionally, if specific IDs of messages can be ignored
+    # by specifying them in the *ids* array.
+    #
+    # See: `#accept`
+    #
+    # Effectively calls:
+    # ```c
+    # glDebugMessageControl(source, type, severity, count ids, GL_FALSE)
+    # ```
+    #
+    # Minimum required version: 4.3
+    def reject(*,
+      source : Source = :dont_care, type : Type = :dont_care,
+      severity : Severity = :dont_care, ids = [] of UInt32)
+      checked { LibGL.debug_message_control(source, type, severity, ids.size, ids, LibGL::Boolean::False) }
+    end
+
     # Storage for the debug message callback.
     # Necessary to prevent garbage collection on it.
     @@callback : Pointer(Void)?
