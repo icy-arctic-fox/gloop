@@ -72,6 +72,57 @@ Spectator.describe Gloop::Debug do
     end
   end
 
+  describe ".reject" do
+    before_each { described_class.enable }
+    before_each { described_class.enable_sync }
+    after_each { described_class.disable }
+
+    after_each do
+      # Re-enable all message types.
+      described_class.allow(
+        source: :dont_care,
+        type: :dont_care,
+        severity: :dont_care
+      )
+    end
+
+    it "blocks messages of a specific source and type" do
+      # Track the messages received from OpenGL.
+      received = [] of Gloop::Debug::Message
+      described_class.on_message { |message| received << message }
+
+      # Block one type of message.
+      described_class.reject(source: :application, type: :performance, severity: :high)
+
+      # This message should not be received.
+      described_class.log(:high, source: :application, type: :performance) { "Test Message" }
+
+      # This message should be received.
+      described_class.log(:high, type: :undefined_behavior) { "Test Message" }
+
+      expected_message = Gloop::Debug::Message.new(:application, :undefined_behavior, 0, :high, "Test Message")
+      expect(received).to contain_exactly(expected_message)
+    end
+
+    it "blocks messages wight specifc IDs" do
+      # Track the messages received from OpenGL.
+      received = [] of Gloop::Debug::Message
+      described_class.on_message { |message| received << message }
+
+      # Allow one type of message.
+      described_class.reject(source: :application, type: :performance, ids: [12345_u32])
+
+      # This message should not be received.
+      described_class.log(:high, source: :application, type: :performance, id: 12345_u32) { "Test Message" }
+
+      # This message should be received.
+      described_class.log(:high, type: :undefined_behavior, id: 12345_u32) { "Test Message" }
+
+      expected_message = Gloop::Debug::Message.new(:application, :undefined_behavior, 12345_u32, :high, "Test Message")
+      expect(received).to contain_exactly(expected_message)
+    end
+  end
+
   describe ".allow" do
     before_each { described_class.enable }
     before_each { described_class.enable_sync }
