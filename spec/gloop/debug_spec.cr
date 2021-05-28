@@ -79,11 +79,7 @@ Spectator.describe Gloop::Debug do
 
     after_each do
       # Re-enable all message types.
-      described_class.allow(
-        source: :dont_care,
-        type: :dont_care,
-        severity: :dont_care
-      )
+      described_class.allow
     end
 
     it "blocks messages of a specific source and type" do
@@ -139,11 +135,7 @@ Spectator.describe Gloop::Debug do
 
     after_each do
       # Re-enable all message types.
-      described_class.allow(
-        source: :dont_care,
-        type: :dont_care,
-        severity: :dont_care
-      )
+      described_class.allow
     end
 
     it "allows messages of a specific source and type to be received" do
