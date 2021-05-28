@@ -73,7 +73,9 @@ Spectator.describe Gloop::Debug do
   end
 
   describe ".allow" do
+    before_each { described_class.enable }
     before_each { described_class.enable_sync }
+    after_each { described_class.disable }
 
     before_each do
       # Disable all message types.
@@ -93,14 +95,14 @@ Spectator.describe Gloop::Debug do
       )
     end
 
-    it "allows messages to be received" do
+    it "allows messages of a specific source and type to be received" do
       # Track the messages received from OpenGL.
       received = [] of Gloop::Debug::Message
       described_class.on_message { |message| received << message }
 
       # Allow one type of message.
       # It should be the only message received.
-      described_class.allow(source: :application, type: :performance)
+      described_class.allow(source: :application, type: :performance, severity: :high)
 
       # This message should not be received.
       described_class.log(:high, type: :undefined_behavior) { "Test Message" }
@@ -109,6 +111,25 @@ Spectator.describe Gloop::Debug do
       described_class.log(:high, source: :application, type: :performance) { "Test message" }
 
       expected_message = Gloop::Debug::Message.new(:application, :performance, 0, :high, "Test message")
+      expect(received).to contain_exactly(expected_message)
+    end
+
+    it "allows messages with specific IDs to be received" do
+      # Track the messages received from OpenGL.
+      received = [] of Gloop::Debug::Message
+      described_class.on_message { |message| received << message }
+
+      # Allow one type of message.
+      # It should be the only message received.
+      described_class.allow(source: :application, type: :performance, ids: [12345_u32])
+
+      # This message should not be received.
+      described_class.log(:high, type: :undefined_behavior, id: 12345_u32) { "Test Message" }
+
+      # This message should be received.
+      described_class.log(:high, source: :application, type: :performance, id: 12345_u32) { "Test message" }
+
+      expected_message = Gloop::Debug::Message.new(:application, :performance, 12345_u32, :high, "Test message")
       expect(received).to contain_exactly(expected_message)
     end
   end
