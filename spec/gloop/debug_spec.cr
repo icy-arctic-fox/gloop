@@ -1,9 +1,15 @@
 require "../spec_helper"
 
 private macro configure_debug_messaging
-  before_each { described_class.enable }
-  before_each { described_class.enable_sync }
-  after_each { described_class.disable }
+  before_each do
+    described_class.enable
+    described_class.enable_sync
+  end
+
+  after_each do
+    described_class.clear_message_listener
+    described_class.disable
+  end
 end
 
 private macro clear_debug_log
