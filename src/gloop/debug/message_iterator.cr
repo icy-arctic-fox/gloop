@@ -8,6 +8,14 @@ module Gloop::Debug
     include Iterator(Message)
 
     # Retrieves the next message in the log or returns a stop instance.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetIntegerv(GL_DEBUG_NEXT_LOGGED_MESSAGE_LENGTH, &buffer_size)
+    # glGetDebugMessageLog(1, buffer_size, &source, &type, &id, &severity, &length, buffer)
+    # ```
+    #
+    # Minimum required version: 4.3
     def next
       source = uninitialized LibGL::DebugSource
       type = uninitialized LibGL::DebugType
@@ -34,8 +42,27 @@ module Gloop::Debug
       )
     end
 
+    # Number of messages pending retrieval in the debug message log.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetIntegerv(GL_DEBUG_LOGGED_MESSAGES, &value)
+    # ```
+    #
+    # Minimum required version: 4.3
+    def size
+      Debug.message_count
+    end
+
     # Size of the next log message string in bytes.
     # This includes the null-terminator.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetIntegerv(GL_DEBUG_NEXT_LOGGED_MESSAGE_LENGTH, &value)
+    # ```
+    #
+    # Minimum required version: 4.3
     private def next_message_size
       pname = LibGL::GetPName.new(LibGL::DEBUG_NEXT_LOGGED_MESSAGE_LENGTH.to_u32)
       checked do
