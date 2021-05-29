@@ -126,6 +126,28 @@ Spectator.describe Gloop::Debug do
     end
   end
 
+  describe ".message_count" do
+    configure_debug_messaging
+
+    it "returns the number of messages in queue" do
+      expect { described_class.log(:high) { "Test message" } }.to change(&.message_count).from(0).to(1)
+    end
+  end
+
+  describe ".max_message_count" do
+    subject { super.max_message_count }
+
+    let(max_message_count) do
+      pname = LibGL::GetPName.new(LibGL::MAX_DEBUG_LOGGED_MESSAGES.to_u32)
+      LibGL.get_integer_v(pname, out value)
+      value
+    end
+
+    it "returns the maximum number of messages the queue can hold" do
+      is_expected.to eq(max_message_count)
+    end
+  end
+
   describe ".allow" do
     configure_debug_messaging
     track_debug_messages

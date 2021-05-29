@@ -11,6 +11,38 @@ module Gloop
 
     capability DebugOutputSynchronous, sync
 
+    # Retrieves the number of debug messages in queue.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetIntegerv(GL_DEBUG_LOGGED_MESSAGES, &value)
+    # ```
+    #
+    # Minimum required version: 4.3
+    def message_count : Int32
+      pname = LibGL::GetPName.new(LibGL::DEBUG_LOGGED_MESSAGES.to_u32)
+      checked do
+        LibGL.get_integer_v(pname, out value)
+        value
+      end
+    end
+
+    # Retrieves the maximum number of debug messages the queue can hold.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetIntegerv(GL_MAX_DEBUG_LOGGED_MESSAGES, &value)
+    # ```
+    #
+    # Minimum required version: 4.3
+    def max_message_count : Int32
+      pname = LibGL::GetPName.new(LibGL::MAX_DEBUG_LOGGED_MESSAGES.to_u32)
+      checked do
+        LibGL.get_integer_v(pname, out value)
+        value
+      end
+    end
+
     # Enables debug output functionality.
     #
     # Effectively calls:
