@@ -1,5 +1,19 @@
 require "../spec_helper"
 
+private macro configure_debug_messaging
+  before_each { described_class.enable }
+  before_each { described_class.enable_sync }
+  after_each { described_class.disable }
+end
+
+private macro track_debug_messages
+  getter received = [] of Gloop::Debug::Message
+
+  before_each do
+    described_class.on_message { |message| @received << message }
+  end
+end
+
 Spectator.describe Gloop::Debug do
   before_all { init_opengl }
   after_all { terminate_opengl }
@@ -73,9 +87,8 @@ Spectator.describe Gloop::Debug do
   end
 
   describe ".reject" do
-    before_each { described_class.enable }
-    before_each { described_class.enable_sync }
-    after_each { described_class.disable }
+    configure_debug_messaging
+    track_debug_messages
 
     after_each do
       # Re-enable all message types.
@@ -83,10 +96,6 @@ Spectator.describe Gloop::Debug do
     end
 
     it "blocks messages of a specific source and type" do
-      # Track the messages received from OpenGL.
-      received = [] of Gloop::Debug::Message
-      described_class.on_message { |message| received << message }
-
       # Block one type of message.
       described_class.reject(source: :application, type: :performance, severity: :high)
 
@@ -101,10 +110,6 @@ Spectator.describe Gloop::Debug do
     end
 
     it "blocks messages wight specifc IDs" do
-      # Track the messages received from OpenGL.
-      received = [] of Gloop::Debug::Message
-      described_class.on_message { |message| received << message }
-
       # Allow one type of message.
       described_class.reject(source: :application, type: :performance, ids: [12345_u32])
 
@@ -120,9 +125,8 @@ Spectator.describe Gloop::Debug do
   end
 
   describe ".allow" do
-    before_each { described_class.enable }
-    before_each { described_class.enable_sync }
-    after_each { described_class.disable }
+    configure_debug_messaging
+    track_debug_messages
 
     before_each do
       # Disable all message types.
@@ -139,10 +143,6 @@ Spectator.describe Gloop::Debug do
     end
 
     it "allows messages of a specific source and type to be received" do
-      # Track the messages received from OpenGL.
-      received = [] of Gloop::Debug::Message
-      described_class.on_message { |message| received << message }
-
       # Allow one type of message.
       # It should be the only message received.
       described_class.allow(source: :application, type: :performance, severity: :high)
@@ -158,10 +158,6 @@ Spectator.describe Gloop::Debug do
     end
 
     it "allows messages with specific IDs to be received" do
-      # Track the messages received from OpenGL.
-      received = [] of Gloop::Debug::Message
-      described_class.on_message { |message| received << message }
-
       # Allow one type of message.
       # It should be the only message received.
       described_class.allow(source: :application, type: :performance, ids: [12345_u32])
@@ -178,9 +174,7 @@ Spectator.describe Gloop::Debug do
   end
 
   describe ".log" do
-    before_each { described_class.enable }
-    before_each { described_class.enable_sync }
-    after_each { described_class.disable }
+    configure_debug_messaging
 
     it "produces a debug message" do
       message = nil
@@ -202,15 +196,10 @@ Spectator.describe Gloop::Debug do
   end
 
   describe ".push_group" do
-    before_each { described_class.enable }
-    before_each { described_class.enable_sync }
-    after_each { described_class.disable }
+    configure_debug_messaging
+    track_debug_messages
 
     it "sends a debug message" do
-      # Track the messages received from OpenGL.
-      received = [] of Gloop::Debug::Message
-      described_class.on_message { |message| received << message }
-
       expected_message = Gloop::Debug::Message.new(:third_party, :push_group, 12345_u32, :notification, "Start group")
       described_class.push_group("Start group", source: :third_party, id: 12345_u32)
 
@@ -224,32 +213,23 @@ Spectator.describe Gloop::Debug do
   end
 
   describe ".pop_group" do
-    before_each { described_class.enable }
-    before_each { described_class.enable_sync }
-    after_each { described_class.disable }
+    configure_debug_messaging
+    track_debug_messages
+
     before_each { described_class.push_group("End group", source: :third_party, id: 12345_u32) }
 
     it "sends a debug message" do
-      # Track the messages received from OpenGL.
-      received = [] of Gloop::Debug::Message
-      described_class.on_message { |message| received << message }
-
       expected_message = Gloop::Debug::Message.new(:third_party, :pop_group, 12345_u32, :notification, "End group")
       described_class.pop_group
-      expect(received).to contain_exactly(expected_message)
+      expect(received).to end_with(expected_message)
     end
   end
 
   describe ".group" do
-    before_each { described_class.enable }
-    before_each { described_class.enable_sync }
-    after_each { described_class.disable }
+    configure_debug_messaging
+    track_debug_messages
 
     it "pushes and pops debug groups" do
-      # Track the messages received from OpenGL.
-      received = [] of Gloop::Debug::Message
-      described_class.on_message { |message| received << message }
-
       push_message = Gloop::Debug::Message.new(:third_party, :push_group, 12345_u32, :notification, "Group")
       pop_message = Gloop::Debug::Message.new(:third_party, :pop_group, 12345_u32, :notification, "Group")
       described_class.group("Group", source: :third_party, id: 12345_u32) do
@@ -265,10 +245,6 @@ Spectator.describe Gloop::Debug do
     end
 
     it "ensures the group is popped" do
-      # Track the messages received from OpenGL.
-      received = [] of Gloop::Debug::Message
-      described_class.on_message { |message| received << message }
-
       pop_message = Gloop::Debug::Message.new(:third_party, :pop_group, 12345_u32, :notification, "Group")
       begin
         described_class.group("Group", source: :third_party, id: 12345_u32) do
@@ -282,9 +258,7 @@ Spectator.describe Gloop::Debug do
   end
 
   describe ".on_message" do
-    before_each { described_class.enable }
-    before_each { described_class.enable_sync }
-    after_each { described_class.disable }
+    configure_debug_messaging
 
     let(message) do
       Gloop::Debug::Message.new(
