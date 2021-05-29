@@ -87,7 +87,7 @@ module Gloop
     # Additionally, if specific IDs of messages can be allowed
     # by specifying them in the *ids* array.
     #
-    # See: `#reject`
+    # See: `.reject`
     #
     # Effectively calls:
     # ```c
@@ -105,7 +105,7 @@ module Gloop
     # Additionally, if specific IDs of messages can be allowed
     # by specifying them in the *ids* array.
     #
-    # See: `#reject`
+    # See: `.reject`
     #
     # Effectively calls:
     # ```c
@@ -123,7 +123,7 @@ module Gloop
     # Additionally, if specific IDs of messages can be ignored
     # by specifying them in the *ids* array.
     #
-    # See: `#accept`
+    # See: `.accept`
     #
     # Effectively calls:
     # ```c
@@ -141,7 +141,7 @@ module Gloop
     # Additionally, if specific IDs of messages can be ignored
     # by specifying them in the *ids* array.
     #
-    # See: `#accept`
+    # See: `.accept`
     #
     # Effectively calls:
     # ```c
