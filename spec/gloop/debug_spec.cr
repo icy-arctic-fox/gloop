@@ -293,7 +293,7 @@ Spectator.describe Gloop::Debug do
     let(count) { 3 }
 
     before_each do
-      count.times { |i| described_class.log(:high, id: i.to_u32) { "Test message" } }
+      count.times { |i| expected_message(i).insert }
     end
 
     def expected_message(index)
@@ -313,7 +313,7 @@ Spectator.describe Gloop::Debug do
     let(count) { 2 }
 
     before_each do
-      (count + 1).times { |i| described_class.log(:high, id: i.to_u32) { "Test message" } }
+      (count + 1).times { |i| expected_message(i).insert }
     end
 
     # Dump all remaining log messages afterwards.
