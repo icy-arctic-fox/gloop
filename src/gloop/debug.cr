@@ -333,5 +333,24 @@ module Gloop
       @@callback = nil
       checked { LibGL.debug_message_callback(nil, nil) }
     end
+
+    # Removes all pending debug messages from the log.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetDebugMessageLog(count, 0, &sources, &types, &ids, &severities, &lengths, NULL);
+    # ```
+    #
+    # Minimum required version: 4.3
+    def clear
+      # Fetch messages repeatedly until there's none left.
+      # Messages are fetched one at a time to avoid allocating excess memory for unused data.
+      loop do
+        count = expect_truthy do
+          LibGL.get_debug_message_log(1, 0, out _source, out _type, out _id, out _severity, out _length, nil)
+        end
+        break if count.zero?
+      end
+    end
   end
 end
