@@ -245,6 +245,8 @@ module Gloop
     #
     # Minimum required version: 4.3
     def messages(count)
+      return [] of Message if count < 1
+
       attributes = message_attribute_pointers(count)
 
       buffer_size = count * Message.max_size
