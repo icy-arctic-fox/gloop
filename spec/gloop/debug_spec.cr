@@ -316,6 +316,9 @@ Spectator.describe Gloop::Debug do
       (count + 1).times { |i| described_class.log(:high, id: i.to_u32) { "Test message" } }
     end
 
+    # Dump all remaining log messages afterwards.
+    after_each { described_class.messages }
+
     def expected_message(index)
       Gloop::Debug::Message.new(:application, :other, index.to_u32, :high, "Test message")
     end
