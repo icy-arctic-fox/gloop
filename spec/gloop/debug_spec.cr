@@ -201,6 +201,86 @@ Spectator.describe Gloop::Debug do
     end
   end
 
+  describe ".push_group" do
+    before_each { described_class.enable }
+    before_each { described_class.enable_sync }
+    after_each { described_class.disable }
+
+    it "sends a debug message" do
+      # Track the messages received from OpenGL.
+      received = [] of Gloop::Debug::Message
+      described_class.on_message { |message| received << message }
+
+      expected_message = Gloop::Debug::Message.new(:third_party, :push_group, 12345_u32, :notification, "Start group")
+      described_class.push_group("Start group", source: :third_party, id: 12345_u32)
+
+      begin
+        expect(received).to contain_exactly(expected_message)
+      ensure
+        # Make sure the group is popped to prevent stack problems.
+        described_class.pop_group
+      end
+    end
+  end
+
+  describe ".pop_group" do
+    before_each { described_class.enable }
+    before_each { described_class.enable_sync }
+    after_each { described_class.disable }
+    before_each { described_class.push_group("End group", source: :third_party, id: 12345_u32) }
+
+    it "sends a debug message" do
+      # Track the messages received from OpenGL.
+      received = [] of Gloop::Debug::Message
+      described_class.on_message { |message| received << message }
+
+      expected_message = Gloop::Debug::Message.new(:third_party, :pop_group, 12345_u32, :notification, "End group")
+      described_class.pop_group
+      expect(received).to contain_exactly(expected_message)
+    end
+  end
+
+  describe ".group" do
+    before_each { described_class.enable }
+    before_each { described_class.enable_sync }
+    after_each { described_class.disable }
+
+    it "pushes and pops debug groups" do
+      # Track the messages received from OpenGL.
+      received = [] of Gloop::Debug::Message
+      described_class.on_message { |message| received << message }
+
+      push_message = Gloop::Debug::Message.new(:third_party, :push_group, 12345_u32, :notification, "Group")
+      pop_message = Gloop::Debug::Message.new(:third_party, :pop_group, 12345_u32, :notification, "Group")
+      described_class.group("Group", source: :third_party, id: 12345_u32) do
+        # ...
+      end
+      expect(received).to contain_exactly(push_message, pop_message).in_order
+    end
+
+    it "yields" do
+      yielded = false
+      described_class.group("Start group") { yielded = true }
+      expect(yielded).to be_true
+    end
+
+    it "ensures the group is popped" do
+      # Track the messages received from OpenGL.
+      received = [] of Gloop::Debug::Message
+      described_class.on_message { |message| received << message }
+
+      pop_message = Gloop::Debug::Message.new(:third_party, :pop_group, 12345_u32, :notification, "Group")
+      begin
+        described_class.group("Group", source: :third_party, id: 12345_u32) do
+          raise "oops"
+        end
+      rescue
+        # ...
+      end
+      expect(received).to contain(pop_message)
+    end
+  end
+
   describe ".on_message" do
     before_each { described_class.enable }
     before_each { described_class.enable_sync }

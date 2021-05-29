@@ -153,6 +153,43 @@ module Gloop
       checked { LibGL.debug_message_control(source, type, LibGL::DebugSeverity::DontCare, ids.size, ids, LibGL::Boolean::False) }
     end
 
+    # Pushes a debug group onto the stack.
+    #
+    # Effectively calls:
+    # ```c
+    # glPushDebugGroup(source, id, length, message)
+    # ```
+    #
+    # Minimum required version: 4.3
+    def push_group(message, source : Source = :application, id = 0_u32)
+      checked { LibGL.push_debug_group(source, id, message.bytesize, message) }
+    end
+
+    # Pops a debug group off of the stack.
+    #
+    # Effectively calls:
+    # ```c
+    # glPopDebugGroup
+    # ```
+    #
+    # Minimum required version: 4.3
+    def pop_group
+      checked { LibGL.pop_debug_group }
+    end
+
+    # Pushes a debug group onto the stack and yields.
+    # Pops the debug group after the block completes.
+    #
+    # See: `.push_group`, `.pop_group`
+    def group(message, source : Source = :application, id = 0_u32)
+      push_group(message, source, id)
+      begin
+        yield
+      ensure
+        pop_group
+      end
+    end
+
     # Storage for the debug message callback.
     # Necessary to prevent garbage collection on it.
     @@callback : Pointer(Void)?
