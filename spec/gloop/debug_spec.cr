@@ -129,6 +129,11 @@ Spectator.describe Gloop::Debug do
   describe ".message_count" do
     configure_debug_messaging
 
+    after_each do
+      # Clear out the message from the log so that other tests aren't affected.
+      LibGL.get_debug_message_log(1, 0, out source, out type, out id, out severity, out length, nil)
+    end
+
     it "returns the number of messages in queue" do
       expect { described_class.log(:high) { "Test message" } }.to change(&.message_count).from(0).to(1)
     end
@@ -278,6 +283,46 @@ Spectator.describe Gloop::Debug do
         # ...
       end
       expect(received).to contain(pop_message)
+    end
+  end
+
+  describe ".messages" do
+    configure_debug_messaging
+
+    subject { super.messages }
+    let(count) { 3 }
+
+    before_each do
+      count.times { |i| described_class.log(:high, id: i.to_u32) { "Test message" } }
+    end
+
+    def expected_message(index)
+      Gloop::Debug::Message.new(:application, :other, index.to_u32, :high, "Test message")
+    end
+
+    it "retrieves all available debug messages" do
+      expected_log = Array.new(count) { |i| expected_message(i) }
+      is_expected.to match_array(expected_log)
+    end
+  end
+
+  describe ".messages(count)" do
+    configure_debug_messaging
+
+    subject { super.messages(count) }
+    let(count) { 2 }
+
+    before_each do
+      (count + 1).times { |i| described_class.log(:high, id: i.to_u32) { "Test message" } }
+    end
+
+    def expected_message(index)
+      Gloop::Debug::Message.new(:application, :other, index.to_u32, :high, "Test message")
+    end
+
+    it "retrieves the specified debug messages" do
+      expected_log = Array.new(count) { |i| expected_message(i) }
+      is_expected.to match_array(expected_log)
     end
   end
 

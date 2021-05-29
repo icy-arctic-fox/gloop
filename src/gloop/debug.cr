@@ -222,6 +222,65 @@ module Gloop
       end
     end
 
+    # Retrieves all available messages from the debug log.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetIntegerv(GL_DEBUG_LOGGED_MESSAGES, &count);
+    # glGetDebugMessageLog(count, buffer_size, &sources, &types, &ids, &severities, &lengths, &messageLog);
+    # ```
+    #
+    # Minimum required version: 4.3
+    def messages
+      messages(message_count)
+    end
+
+    # Retrieves the first available message from the debug log.
+    # At most *count* are retrieved.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetDebugMessageLog(count, buffer_size, &sources, &types, &ids, &severities, &lengths, &messageLog);
+    # ```
+    #
+    # Minimum required version: 4.3
+    def messages(count)
+      attributes = message_attribute_pointers(count)
+
+      buffer_size = count * Message.max_size
+      buffer = Pointer(UInt8).malloc(buffer_size)
+      count = expect_truthy do
+        LibGL.get_debug_message_log(count, buffer_size, *attributes, buffer)
+      end
+
+      extract_messages(count, buffer, *attributes)
+    end
+
+    # Allocates memory for *count* number of messages with their attributes in parallel arrays.
+    # Returns the pointers of each attribute array.
+    private def message_attribute_pointers(count)
+      sources = Pointer(LibGL::DebugSource).malloc(count)
+      types = Pointer(LibGL::DebugType).malloc(count)
+      ids = Pointer(UInt32).malloc(count)
+      severities = Pointer(LibGL::DebugSeverity).malloc(count)
+      lengths = Pointer(Int32).malloc(count)
+
+      {sources, types, ids, severities, lengths}
+    end
+
+    # Constructs messages from their attributes and a buffer containing log text.
+    private def extract_messages(count, buffer, *attributes)
+      sources, types, ids, severities, lengths = attributes
+
+      offset = 0
+      Array.new(count) do |i|
+        length = lengths[i]
+        message = Message.new(sources[i], types[i], ids[i], severities[i], length - 1, buffer + offset)
+        offset += length
+        message
+      end
+    end
+
     # Storage for the debug message callback.
     # Necessary to prevent garbage collection on it.
     @@callback : Pointer(Void)?
