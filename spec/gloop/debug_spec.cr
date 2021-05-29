@@ -12,6 +12,8 @@ private macro track_debug_messages
   before_each do
     described_class.on_message { |message| @received << message }
   end
+
+  after_each { described_class.clear_message_listener }
 end
 
 Spectator.describe Gloop::Debug do
@@ -272,9 +274,21 @@ Spectator.describe Gloop::Debug do
 
     it "sets up a callback for debug messages" do
       called = false
-      Gloop::Debug.on_message { called = true }
+      described_class.on_message { called = true }
       message.insert
       expect(called).to be_true
+    end
+  end
+
+  describe ".clear_message_listener" do
+    configure_debug_messaging
+
+    it "stops messages from being sent to the callback" do
+      called = false
+      described_class.on_message { called = true }
+      described_class.clear_message_listener
+      described_class.log(:high) { "Test message" }
+      expect(called).to be_false
     end
   end
 end

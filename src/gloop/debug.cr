@@ -227,5 +227,18 @@ module Gloop
         }, callback)
       end
     end
+
+    # Removes the callback that is invoked when OpenGL sends a debug message.
+    #
+    # Effectively calls:
+    # ```c
+    # glDebugMessageCallback(NULL, NULL)
+    # ```
+    #
+    # Minimum required version: 4.3
+    def clear_message_listener
+      @@callback = nil
+      checked { LibGL.debug_message_callback(nil, nil) }
+    end
   end
 end
