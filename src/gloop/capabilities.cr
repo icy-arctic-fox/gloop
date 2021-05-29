@@ -56,10 +56,10 @@ module Gloop
       # glIsEnabled(GL_{{cap.id.underscore.upcase}})
       # ```
       def {{name.id}}?
-        checked do
-          value = LibGL.is_enabled(LibGL::EnableCap::{{cap.id}})
-          !value.false?
+        value = checked do
+          LibGL.is_enabled(LibGL::EnableCap::{{cap.id}})
         end
+        !value.false?
       end
     end
   end
