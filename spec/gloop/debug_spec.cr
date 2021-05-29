@@ -6,6 +6,11 @@ private macro configure_debug_messaging
   after_each { described_class.disable }
 end
 
+private macro clear_debug_log
+  before_each { Gloop::Debug.clear }
+  after_each { Gloop::Debug.clear }
+end
+
 private macro track_debug_messages
   getter received = [] of Gloop::Debug::Message
 
@@ -90,16 +95,12 @@ Spectator.describe Gloop::Debug do
 
   describe ".message_count" do
     configure_debug_messaging
+    clear_debug_log
 
     subject { super.message_count }
 
     before_each do
       described_class.log(:high) { ".message_count" }
-    end
-
-    after_each do
-      # Clear out the message from the log so that other tests aren't affected.
-      LibGL.get_debug_message_log(1, 0, out source, out type, out id, out severity, out length, nil)
     end
 
     it "returns the number of messages in queue" do
@@ -124,11 +125,10 @@ Spectator.describe Gloop::Debug do
   describe ".reject" do
     configure_debug_messaging
     track_debug_messages
+    clear_debug_log
 
-    after_each do
-      # Re-enable all message types.
-      described_class.allow
-    end
+    # Re-enable all message types.
+    after_each { described_class.allow }
 
     it "blocks messages of a specific source and type" do
       # Block one type of message.
@@ -162,6 +162,7 @@ Spectator.describe Gloop::Debug do
   describe ".allow" do
     configure_debug_messaging
     track_debug_messages
+    clear_debug_log
 
     before_each do
       # Disable all message types.
@@ -172,10 +173,8 @@ Spectator.describe Gloop::Debug do
       )
     end
 
-    after_each do
-      # Re-enable all message types.
-      described_class.allow
-    end
+    # Re-enable all message types.
+    after_each { described_class.allow }
 
     it "allows messages of a specific source and type to be received" do
       # Allow one type of message.
@@ -210,6 +209,7 @@ Spectator.describe Gloop::Debug do
 
   describe ".log" do
     configure_debug_messaging
+    clear_debug_log
 
     it "produces a debug message" do
       message = nil
@@ -233,6 +233,7 @@ Spectator.describe Gloop::Debug do
   describe ".push_group" do
     configure_debug_messaging
     track_debug_messages
+    clear_debug_log
 
     it "sends a debug message" do
       expected_message = Gloop::Debug::Message.new(:third_party, :push_group, 12345_u32, :notification, ".push_group")
@@ -250,6 +251,7 @@ Spectator.describe Gloop::Debug do
   describe ".pop_group" do
     configure_debug_messaging
     track_debug_messages
+    clear_debug_log
 
     before_each { described_class.push_group(".pop_group", source: :third_party, id: 12345_u32) }
 
@@ -263,6 +265,7 @@ Spectator.describe Gloop::Debug do
   describe ".group" do
     configure_debug_messaging
     track_debug_messages
+    clear_debug_log
 
     it "pushes and pops debug groups" do
       push_message = Gloop::Debug::Message.new(:third_party, :push_group, 12345_u32, :notification, ".group")
@@ -294,6 +297,7 @@ Spectator.describe Gloop::Debug do
 
   describe ".messages" do
     configure_debug_messaging
+    clear_debug_log
 
     subject { super.messages }
     let(count) { 3 }
@@ -314,6 +318,7 @@ Spectator.describe Gloop::Debug do
 
   describe ".messages(count)" do
     configure_debug_messaging
+    clear_debug_log
 
     subject { super.messages(count) }
     let(count) { 2 }
@@ -321,9 +326,6 @@ Spectator.describe Gloop::Debug do
     before_each do
       (count + 1).times { |i| expected_message(i).insert }
     end
-
-    # Dump all remaining log messages afterwards.
-    after_each { described_class.messages }
 
     def expected_message(index)
       Gloop::Debug::Message.new(:application, :other, index.to_u32, :high, ".messages(count)")
@@ -358,11 +360,7 @@ Spectator.describe Gloop::Debug do
 
   describe ".clear_message_listener" do
     configure_debug_messaging
-
-    after_each do
-      # Clear out the message from the log so that other tests aren't affected.
-      LibGL.get_debug_message_log(1, 0, out source, out type, out id, out severity, out length, nil)
-    end
+    clear_debug_log
 
     it "stops messages from being sent to the callback" do
       called = false

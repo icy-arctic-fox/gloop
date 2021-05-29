@@ -1,9 +1,19 @@
 require "../../spec_helper"
 
 Spectator.describe Gloop::Debug::MessageIterator do
-  before_each { Gloop::Debug.enable }
-  before_each { Gloop::Debug.enable_sync }
-  after_each { Gloop::Debug.disable }
+  before_all { init_opengl }
+  after_all { terminate_opengl }
+
+  before_each do
+    Gloop::Debug.enable
+    Gloop::Debug.enable_sync
+    Gloop::Debug.clear
+  end
+
+  after_each do
+    Gloop::Debug.clear
+    Gloop::Debug.disable
+  end
 
   describe "#next" do
     subject { super.next }
@@ -16,7 +26,7 @@ Spectator.describe Gloop::Debug::MessageIterator do
     end
 
     it "returns a stop instance when there are no more messages" do
-      described_class.new.next # Remove existing message.
+      Gloop::Debug.clear # Remove existing message.
       is_expected.to be_a(Iterator::Stop)
     end
   end
@@ -24,8 +34,9 @@ Spectator.describe Gloop::Debug::MessageIterator do
   describe "#size" do
     subject { super.size }
     let(count) { 2 }
-    before_each { count.times { Gloop::Debug.log(:high) { "#size" } } }
-    after_each { Gloop::Debug.messages } # Dump messages from log after testing.
+    before_each do
+      count.times { Gloop::Debug.log(:high) { "#size" } }
+    end
 
     it "is the number of messages in the debug log" do
       is_expected.to eq(count)
