@@ -8,7 +8,7 @@ Spectator.describe Gloop::Debug::MessageIterator do
   describe "#next" do
     subject { super.next }
 
-    let(expected_message) { Gloop::Debug::Message.new(:third_party, :performance, 12345_u32, :high, "Test message") }
+    let(expected_message) { Gloop::Debug::Message.new(:third_party, :performance, 12345_u32, :high, "#next") }
     before_each { expected_message.insert }
 
     it "retrieves the next message" do
@@ -24,7 +24,7 @@ Spectator.describe Gloop::Debug::MessageIterator do
   describe "#size" do
     subject { super.size }
     let(count) { 2 }
-    before_each { count.times { Gloop::Debug.log(:high) { "Test message" } } }
+    before_each { count.times { Gloop::Debug.log(:high) { "#size" } } }
     after_each { Gloop::Debug.messages } # Dump messages from log after testing.
 
     it "is the number of messages in the debug log" do

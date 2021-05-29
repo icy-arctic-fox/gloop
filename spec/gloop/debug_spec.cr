@@ -88,46 +88,14 @@ Spectator.describe Gloop::Debug do
     end
   end
 
-  describe ".reject" do
-    configure_debug_messaging
-    track_debug_messages
-
-    after_each do
-      # Re-enable all message types.
-      described_class.allow
-    end
-
-    it "blocks messages of a specific source and type" do
-      # Block one type of message.
-      described_class.reject(source: :application, type: :performance, severity: :high)
-
-      # This message should not be received.
-      described_class.log(:high, source: :application, type: :performance) { "Test Message" }
-
-      # This message should be received.
-      described_class.log(:high, type: :undefined_behavior) { "Test Message" }
-
-      expected_message = Gloop::Debug::Message.new(:application, :undefined_behavior, 0, :high, "Test Message")
-      expect(received).to contain_exactly(expected_message)
-    end
-
-    it "blocks messages wight specifc IDs" do
-      # Allow one type of message.
-      described_class.reject(source: :application, type: :performance, ids: [12345_u32])
-
-      # This message should not be received.
-      described_class.log(:high, source: :application, type: :performance, id: 12345_u32) { "Test Message" }
-
-      # This message should be received.
-      described_class.log(:high, type: :undefined_behavior, id: 12345_u32) { "Test Message" }
-
-      expected_message = Gloop::Debug::Message.new(:application, :undefined_behavior, 12345_u32, :high, "Test Message")
-      expect(received).to contain_exactly(expected_message)
-    end
-  end
-
   describe ".message_count" do
     configure_debug_messaging
+
+    subject { super.message_count }
+
+    before_each do
+      described_class.log(:high) { ".message_count" }
+    end
 
     after_each do
       # Clear out the message from the log so that other tests aren't affected.
@@ -135,7 +103,7 @@ Spectator.describe Gloop::Debug do
     end
 
     it "returns the number of messages in queue" do
-      expect { described_class.log(:high) { "Test message" } }.to change(&.message_count).from(0).to(1)
+      is_expected.to eq(1)
     end
   end
 
@@ -150,6 +118,44 @@ Spectator.describe Gloop::Debug do
 
     it "returns the maximum number of messages the queue can hold" do
       is_expected.to eq(max_message_count)
+    end
+  end
+
+  describe ".reject" do
+    configure_debug_messaging
+    track_debug_messages
+
+    after_each do
+      # Re-enable all message types.
+      described_class.allow
+    end
+
+    it "blocks messages of a specific source and type" do
+      # Block one type of message.
+      described_class.reject(source: :application, type: :performance, severity: :high)
+
+      # This message should not be received.
+      described_class.log(:high, source: :application, type: :performance) { ".reject" }
+
+      # This message should be received.
+      described_class.log(:high, type: :undefined_behavior) { ".reject" }
+
+      expected_message = Gloop::Debug::Message.new(:application, :undefined_behavior, 0, :high, ".reject")
+      expect(received).to contain_exactly(expected_message)
+    end
+
+    it "blocks messages wight specifc IDs" do
+      # Allow one type of message.
+      described_class.reject(source: :application, type: :performance, ids: [12345_u32])
+
+      # This message should not be received.
+      described_class.log(:high, source: :application, type: :performance, id: 12345_u32) { ".reject IDs" }
+
+      # This message should be received.
+      described_class.log(:high, type: :undefined_behavior, id: 12345_u32) { ".reject IDs" }
+
+      expected_message = Gloop::Debug::Message.new(:application, :undefined_behavior, 12345_u32, :high, ".reject IDs")
+      expect(received).to contain_exactly(expected_message)
     end
   end
 
@@ -177,12 +183,12 @@ Spectator.describe Gloop::Debug do
       described_class.allow(source: :application, type: :performance, severity: :high)
 
       # This message should not be received.
-      described_class.log(:high, type: :undefined_behavior) { "Test Message" }
+      described_class.log(:high, type: :undefined_behavior) { ".allow" }
 
       # This message should be received.
-      described_class.log(:high, source: :application, type: :performance) { "Test message" }
+      described_class.log(:high, source: :application, type: :performance) { ".allow" }
 
-      expected_message = Gloop::Debug::Message.new(:application, :performance, 0, :high, "Test message")
+      expected_message = Gloop::Debug::Message.new(:application, :performance, 0, :high, ".allow")
       expect(received).to contain_exactly(expected_message)
     end
 
@@ -192,12 +198,12 @@ Spectator.describe Gloop::Debug do
       described_class.allow(source: :application, type: :performance, ids: [12345_u32])
 
       # This message should not be received.
-      described_class.log(:high, type: :undefined_behavior, id: 12345_u32) { "Test Message" }
+      described_class.log(:high, type: :undefined_behavior, id: 12345_u32) { ".allow IDs" }
 
       # This message should be received.
-      described_class.log(:high, source: :application, type: :performance, id: 12345_u32) { "Test message" }
+      described_class.log(:high, source: :application, type: :performance, id: 12345_u32) { ".allow IDs" }
 
-      expected_message = Gloop::Debug::Message.new(:application, :performance, 12345_u32, :high, "Test message")
+      expected_message = Gloop::Debug::Message.new(:application, :performance, 12345_u32, :high, ".allow IDs")
       expect(received).to contain_exactly(expected_message)
     end
   end
@@ -211,7 +217,7 @@ Spectator.describe Gloop::Debug do
       Gloop::Debug.log(:high,
         type: :performance,
         source: :application,
-        id: 12345) { "Test message" }
+        id: 12345) { ".log" }
 
       expect(message).to be_a(Gloop::Debug::Message)
       expect(message.not_nil!).to have_attributes(
@@ -219,7 +225,7 @@ Spectator.describe Gloop::Debug do
         type: Gloop::Debug::Type::Performance,
         id: 12345,
         severity: Gloop::Debug::Severity::High,
-        message: "Test message"
+        message: ".log"
       )
     end
   end
@@ -229,8 +235,8 @@ Spectator.describe Gloop::Debug do
     track_debug_messages
 
     it "sends a debug message" do
-      expected_message = Gloop::Debug::Message.new(:third_party, :push_group, 12345_u32, :notification, "Start group")
-      described_class.push_group("Start group", source: :third_party, id: 12345_u32)
+      expected_message = Gloop::Debug::Message.new(:third_party, :push_group, 12345_u32, :notification, ".push_group")
+      described_class.push_group(".push_group", source: :third_party, id: 12345_u32)
 
       begin
         expect(received).to contain_exactly(expected_message)
@@ -245,10 +251,10 @@ Spectator.describe Gloop::Debug do
     configure_debug_messaging
     track_debug_messages
 
-    before_each { described_class.push_group("End group", source: :third_party, id: 12345_u32) }
+    before_each { described_class.push_group(".pop_group", source: :third_party, id: 12345_u32) }
 
     it "sends a debug message" do
-      expected_message = Gloop::Debug::Message.new(:third_party, :pop_group, 12345_u32, :notification, "End group")
+      expected_message = Gloop::Debug::Message.new(:third_party, :pop_group, 12345_u32, :notification, ".pop_group")
       described_class.pop_group
       expect(received).to end_with(expected_message)
     end
@@ -259,9 +265,9 @@ Spectator.describe Gloop::Debug do
     track_debug_messages
 
     it "pushes and pops debug groups" do
-      push_message = Gloop::Debug::Message.new(:third_party, :push_group, 12345_u32, :notification, "Group")
-      pop_message = Gloop::Debug::Message.new(:third_party, :pop_group, 12345_u32, :notification, "Group")
-      described_class.group("Group", source: :third_party, id: 12345_u32) do
+      push_message = Gloop::Debug::Message.new(:third_party, :push_group, 12345_u32, :notification, ".group")
+      pop_message = Gloop::Debug::Message.new(:third_party, :pop_group, 12345_u32, :notification, ".group")
+      described_class.group(".group", source: :third_party, id: 12345_u32) do
         # ...
       end
       expect(received).to contain_exactly(push_message, pop_message).in_order
@@ -274,9 +280,9 @@ Spectator.describe Gloop::Debug do
     end
 
     it "ensures the group is popped" do
-      pop_message = Gloop::Debug::Message.new(:third_party, :pop_group, 12345_u32, :notification, "Group")
+      pop_message = Gloop::Debug::Message.new(:third_party, :pop_group, 12345_u32, :notification, ".group")
       begin
-        described_class.group("Group", source: :third_party, id: 12345_u32) do
+        described_class.group(".group", source: :third_party, id: 12345_u32) do
           raise "oops"
         end
       rescue
@@ -297,7 +303,7 @@ Spectator.describe Gloop::Debug do
     end
 
     def expected_message(index)
-      Gloop::Debug::Message.new(:application, :other, index.to_u32, :high, "Test message")
+      Gloop::Debug::Message.new(:application, :other, index.to_u32, :high, ".messages")
     end
 
     it "retrieves all available debug messages" do
@@ -320,7 +326,7 @@ Spectator.describe Gloop::Debug do
     after_each { described_class.messages }
 
     def expected_message(index)
-      Gloop::Debug::Message.new(:application, :other, index.to_u32, :high, "Test message")
+      Gloop::Debug::Message.new(:application, :other, index.to_u32, :high, ".messages(count)")
     end
 
     it "retrieves the specified debug messages" do
@@ -338,7 +344,7 @@ Spectator.describe Gloop::Debug do
         Gloop::Debug::Type::Other,
         12345,
         Gloop::Debug::Severity::Notification,
-        "Test message"
+        ".on_message"
       )
     end
 
@@ -353,11 +359,16 @@ Spectator.describe Gloop::Debug do
   describe ".clear_message_listener" do
     configure_debug_messaging
 
+    after_each do
+      # Clear out the message from the log so that other tests aren't affected.
+      LibGL.get_debug_message_log(1, 0, out source, out type, out id, out severity, out length, nil)
+    end
+
     it "stops messages from being sent to the callback" do
       called = false
       described_class.on_message { called = true }
       described_class.clear_message_listener
-      described_class.log(:high) { "Test message" }
+      described_class.log(:high) { ".clear_message_listener" }
       expect(called).to be_false
     end
   end
