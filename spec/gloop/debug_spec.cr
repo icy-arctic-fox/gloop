@@ -381,7 +381,7 @@ Spectator.describe Gloop::Debug do
     configure_debug_messaging
 
     before_each do
-      3.times { described_class.log(:high) { ".clear"} }
+      3.times { described_class.log(:high) { ".clear" } }
     end
 
     it "removes all debug messages from the log" do
