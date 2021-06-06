@@ -67,7 +67,7 @@ module Gloop
     #
     # Effectively calls:
     # ```c
-    # glGetString(GL_VENDOR)
+    # glGetString(GL_RENDERER)
     # ```
     #
     # Minimum required version: 2.0
