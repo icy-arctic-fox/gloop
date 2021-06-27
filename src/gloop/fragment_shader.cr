@@ -1,11 +1,9 @@
-require "./error_handling"
 require "./shader"
 
 module Gloop
+  # Shader processing rasterization in the graphics pipeline.
   struct FragmentShader < Shader
-    extend ErrorHandling
-
-    # Indicates that this is a fragment shader.
+    # Indicates this is a fragment shader.
     def self.type
       Shader::Type::Fragment
     end
