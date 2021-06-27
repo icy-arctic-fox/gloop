@@ -15,6 +15,21 @@ module Gloop
       extend ClassMethods
     end
 
+    # Releases resources held by the OpenGL implementation shader compiler.
+    # This method hints that resources held by the compiler can be released.
+    # Additional shaders can be compiled after calling this method,
+    # and the resources will be reallocated first.
+    #
+    # Effectively calls:
+    # ```c
+    # glReleaseShaderCompiler()
+    # ```
+    #
+    # Minimum required version: 4.1
+    def self.release_compiler
+      LibGL.release_shader_compiler
+    end
+
     # Checks if the shader compilation was successful.
     #
     # Effectively calls:
