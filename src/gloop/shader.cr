@@ -15,6 +15,35 @@ module Gloop
       extend ClassMethods
     end
 
+    # Retrieves the type of an existing shader by its name.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetShaderiv(shader, GL_SHADER_TYPE, &value)
+    # ```
+    #
+    # Minimum required version: 2.0
+    def self.type_of(name)
+      value = checked do
+        LibGL.get_shader_iv(name, LibGL::ShaderParameterName::ShaderType, out value)
+        value
+      end
+      Type.from_value(value)
+    end
+
+    # Checks if a shader with the specified *name* (object ID) is known to the graphics driver.
+    #
+    # Effectively calls:
+    # ```c
+    # glIsShader(shader)
+    # ```
+    #
+    # Minimum required version: 2.0
+    def self.exists?(name)
+      value = checked { LibGL.is_shader(name) }
+      !value.false?
+    end
+
     # Releases resources held by the OpenGL implementation shader compiler.
     # This method hints that resources held by the compiler can be released.
     # Additional shaders can be compiled after calling this method,
@@ -82,15 +111,6 @@ module Gloop
       self.class.type
     end
 
-    # Retrieves the type of an existing shader by its name.
-    def self.type_of(name)
-      value = checked do
-        LibGL.get_shader_iv(name, LibGL::ShaderParameterName::ShaderType, out value)
-        value
-      end
-      Type.from_value(value)
-    end
-
     # Indicates that this is a shader object.
     def object_type
       Object::Type::Shader
@@ -123,19 +143,6 @@ module Gloop
     # Minimum required version: 2.0
     def exists?
       value = checked { LibGL.is_shader(self) }
-      !value.false?
-    end
-
-    # Checks if a shader with the specified *name* (object ID) is known to the graphics driver.
-    #
-    # Effectively calls:
-    # ```c
-    # glIsShader(shader)
-    # ```
-    #
-    # Minimum required version: 2.0
-    def self.exists?(name)
-      value = checked { LibGL.is_shader(name) }
       !value.false?
     end
 
