@@ -1,6 +1,6 @@
 require "../spec_helper"
 
-Spectator.describe Gloop::FragmentShader do
+Spectator.describe Gloop::VertexShader do
   before_all { init_opengl }
   after_all { terminate_opengl }
 
@@ -10,10 +10,11 @@ Spectator.describe Gloop::FragmentShader do
 
   VALID_SHADER =<<-END_SHADER
     #version 460 core
-    out vec4 FragColor;
-    in vec4 VertColor;
+    in vec3 Position;
+    out vec4 Color;
     void main() {
-      FragColor = VertColor;
+      gl_Position = vec4(Position, 1.0);
+      Color = vec4(0.03, 0.39, 0.57, 1.0);
     }
   END_SHADER
 
@@ -24,16 +25,16 @@ Spectator.describe Gloop::FragmentShader do
   describe ".type" do
     subject { described_class.type }
 
-    it "is Fragment" do
-      is_expected.to eq(Gloop::Shader::Type::Fragment)
+    it "is Vertex" do
+      is_expected.to eq(Gloop::Shader::Type::Vertex)
     end
   end
 
   describe "#type" do
     subject { super.type }
 
-    it "is Fragment" do
-      is_expected.to eq(Gloop::Shader::Type::Fragment)
+    it "is Vertex" do
+      is_expected.to eq(Gloop::Shader::Type::Vertex)
     end
   end
 
