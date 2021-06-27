@@ -70,6 +70,17 @@ Spectator.describe Gloop::FragmentShader do
       end
     end
 
+    context "multiple source strings" do
+      before_each do
+        subject.sources = VALID_FRAGMENT_SHADER.lines(false)
+        subject.compile
+      end
+
+      it "compiles successfully" do
+        expect(&.compiled?).to be_true
+      end
+    end
+
     context "with an invalid shader" do
       before_each do
         subject.source = INVALID_FRAGMENT_SHADER
@@ -86,10 +97,21 @@ Spectator.describe Gloop::FragmentShader do
     context "with a valid shader" do
       before_each do
         subject.source = VALID_FRAGMENT_SHADER
-        subject.compile!
       end
 
       it "compiles successfully" do
+        subject.compile!
+        expect(&.compiled?).to be_true
+      end
+    end
+
+    context "multiple source strings" do
+      before_each do
+        subject.sources = VALID_FRAGMENT_SHADER.lines(false)
+      end
+
+      it "compiles successfully" do
+        subject.compile!
         expect(&.compiled?).to be_true
       end
     end
