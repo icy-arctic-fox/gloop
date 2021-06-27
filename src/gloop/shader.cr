@@ -163,17 +163,9 @@ module Gloop
     #
     # Minimum required version: 2.0
     def source
-      capacity = source_size
-      return "" if capacity.zero?
-
-      # Subtract one from capacity here because String adds a null-terminator.
-      String.new(capacity - 1) do |buffer|
-        byte_size = checked do
-          LibGL.get_shader_source(self, capacity, out length, buffer)
-          length
-        end
-        # Don't subtract one here because OpenGL provides the length without the null-terminator.
-        {byte_size, 0}
+      shader_string(source_size) do |buffer, capacity|
+        LibGL.get_shader_source(self, capacity, out length, buffer)
+        length
       end
     end
 
@@ -271,22 +263,32 @@ module Gloop
     #
     # Minimum required version: 2.0
     def info_log
-      capacity = info_log_size
-      return "" if capacity.zero?
-
-      # Subtract one from capacity here because String adds a null-terminator.
-      String.new(capacity - 1) do |buffer|
-        byte_size = checked do
-          LibGL.get_shader_info_log(self, capacity, out length, buffer)
-          length
-        end
-        # Don't subtract one here because OpenGL provides the length without the null-terminator.
-        {byte_size, 0}
+      shader_string(info_log_size) do |buffer, capacity|
+        LibGL.get_shader_info_log(self, capacity, out length, buffer)
+        length
       end
     end
 
     def binary=
       raise NotImplementedError.new("#binary=")
+    end
+
+    # Wrapper for fetching strings related to shaders from OpenGL.
+    # Accepts the maximum *capacity* for the string.
+    # A new string will be allocated.
+    # The buffer (pointer to the string contents) and capacity are yielded.
+    # The block must call an OpenGL method to retrieve the string and return the final length.
+    # The returned length must not include the null-terminator.
+    # This method returns the string.
+    private def shader_string(capacity)
+      return "" if capacity.zero?
+
+      # Subtract one from capacity here because String adds a null-terminator.
+      String.new(capacity - 1) do |buffer|
+        length = checked { yield buffer, capacity }
+        # Don't subtract one here because OpenGL provides the length without the null-terminator.
+        {length, 0}
+      end
     end
   end
 end
