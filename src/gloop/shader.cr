@@ -105,7 +105,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    parameter ShaderSourceLength, shader_source_size
+    parameter ShaderSourceLength, source_size
 
     # Shader type.
     def type
@@ -147,8 +147,34 @@ module Gloop
       !value.false?
     end
 
+    # Retrieves the shader's source code.
+    # An empty string will be returned if there's no log available.
+    #
+    # The information log is OpenGL's mechanism
+    # for conveying information about the compilation to application developers.
+    # Even if the compilation was successful, some useful information may be in it.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetShaderiv(shader, GL_SHADER_SOURCE_LENGTH, &capacity)
+    # char *buffer = (char *)malloc(capacity)
+    # glGetShaderSource(shader, capacity, &length, buffer)
+    # ```
+    #
+    # Minimum required version: 2.0
     def source
-      raise NotImplementedError.new("#source")
+      capacity = source_size
+      return "" if capacity.zero?
+
+      # Subtract one from capacity here because String adds a null-terminator.
+      String.new(capacity - 1) do |buffer|
+        byte_size = checked do
+          LibGL.get_shader_source(self, capacity, out length, buffer)
+          length
+        end
+        # Don't subtract one here because OpenGL provides the length without the null-terminator.
+        {byte_size, 0}
+      end
     end
 
     # Updates the source code for the shader.

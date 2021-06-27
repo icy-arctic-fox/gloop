@@ -126,4 +126,30 @@ Spectator.describe Gloop::FragmentShader do
       expect(&.info_log_size).to eq(subject.info_log.size + 1) # +1 for null-terminator byte.
     end
   end
+
+  describe "#source" do
+    let(shader) { uncompiled_shader }
+    subject { shader.source }
+
+    before_each do
+      shader.source = VALID_FRAGMENT_SHADER
+    end
+
+    it "contains the source code" do
+      is_expected.to eq(VALID_FRAGMENT_SHADER)
+    end
+  end
+
+  describe "#source_size" do
+    let(shader) { uncompiled_shader }
+    subject { shader.source_size }
+
+    before_each do
+      shader.source = VALID_FRAGMENT_SHADER
+    end
+
+    it "is the size of the source code" do
+      is_expected.to eq(shader.source.size + 1) # +1 for null-terminator byte.
+    end
+  end
 end
