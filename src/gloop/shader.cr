@@ -1,5 +1,6 @@
 require "./error_handling"
 require "./object"
+require "./shader_compilation_error"
 require "./shader/*"
 
 module Gloop
@@ -150,13 +151,41 @@ module Gloop
       raise NotImplementedError.new("#source")
     end
 
+    # Updates the source code for the shader.
+    # This does not compile the shader, it merely stores the source code.
+    # Any existing source code will be replaced.
+    # The *source* must be a type that can be stringified (or already a string).
+    #
+    # Effectively calls:
+    # ```c
+    # glShaderSource(shader, 1, &source, &source_length)
+    # ```
+    #
+    # Minimum required version: 2.0
     def source=(source)
       self.sources = StaticArray[source]
-      source # Prevent accidentally returning static array.
     end
 
+    # Updates the source code for the shader.
+    # This does not compile the shader, it merely stores the source code.
+    # Any existing source code will be replaced.
+    # The *sources* must be a collection of items that can be stringified (or already strings).
+    #
+    # Effectively calls:
+    # ```c
+    # glShaderSource(shader, sizeof(sources), &sources, NULL)
+    # ```
+    #
+    # Minimum required version: 2.0
     def sources=(sources)
-      raise NotImplementedError.new("#sources=")
+      # Retrieve a pointer to each string source.
+      references = sources.map(&.to_s.to_unsafe)
+
+      # Some enumerable types allow unsafe direct access to their internals.
+      # If available, use that, as it is much faster.
+      # Otherwise, convert to an array, which allows direct access via `#to_unsafe`.
+      references = references.to_a unless references.responds_to?(:to_unsafe)
+      checked { LibGL.shader_source(self, references.size, references, nil) }
     end
 
     # Attempts to compile the shader.
@@ -192,11 +221,42 @@ module Gloop
     #
     # See also: `#compile`
     def compile!
-      raise NotImplementedError.new("#compile!")
+      compile.tap do
+        break if compiled?
+
+        message = info_log.each_line.first
+        raise ShaderCompilationError.new(message)
+      end
     end
 
+    # Retrieves information about the shader's compilation.
+    # An empty string will be returned if there's no log available.
+    #
+    # The information log is OpenGL's mechanism
+    # for conveying information about the compilation to application developers.
+    # Even if the compilation was successful, some useful information may be in it.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &capacity)
+    # char *buffer = (char *)malloc(capacity)
+    # glGetShaderInfoLog(shader, capacity, &length, buffer)
+    # ```
+    #
+    # Minimum required version: 2.0
     def info_log
-      raise NotImplementedError.new("#info_log")
+      capacity = info_log_size
+      return "" if capacity.zero?
+
+      # Subtract one from capacity here because String adds a null-terminator.
+      String.new(capacity - 1) do |buffer|
+        byte_size = checked do
+          LibGL.get_shader_info_log(self, capacity, out length, buffer)
+          length
+        end
+        # Don't subtract one here because OpenGL provides the length without the null-terminator.
+        {byte_size, 0}
+      end
     end
 
     def binary=
