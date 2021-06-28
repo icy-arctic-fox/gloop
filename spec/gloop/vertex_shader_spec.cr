@@ -8,7 +8,7 @@ Spectator.describe Gloop::VertexShader do
   subject(invalid_shader) { described_class.compile(INVALID_SHADER) }
   subject(uncompiled_shader) { described_class.create }
 
-  VALID_SHADER =<<-END_SHADER
+  VALID_SHADER = <<-END_SHADER
     #version 460 core
     in vec3 Position;
     out vec4 Color;
@@ -18,7 +18,7 @@ Spectator.describe Gloop::VertexShader do
     }
   END_SHADER
 
-  INVALID_SHADER =<<-END_SHADER
+  INVALID_SHADER = <<-END_SHADER
     asdf;
   END_SHADER
 

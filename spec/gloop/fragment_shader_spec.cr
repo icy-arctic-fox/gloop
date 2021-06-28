@@ -8,7 +8,7 @@ Spectator.describe Gloop::FragmentShader do
   subject(invalid_shader) { described_class.compile(INVALID_SHADER) }
   subject(uncompiled_shader) { described_class.create }
 
-  VALID_SHADER =<<-END_SHADER
+  VALID_SHADER = <<-END_SHADER
     #version 460 core
     out vec4 FragColor;
     in vec4 VertColor;
@@ -17,7 +17,7 @@ Spectator.describe Gloop::FragmentShader do
     }
   END_SHADER
 
-  INVALID_SHADER =<<-END_SHADER
+  INVALID_SHADER = <<-END_SHADER
     asdf;
   END_SHADER
 
