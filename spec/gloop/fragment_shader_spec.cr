@@ -172,4 +172,13 @@ Spectator.describe Gloop::FragmentShader do
       is_expected.to eq(shader.source.size + 1) # +1 for null-terminator byte.
     end
   end
+
+  context "Labelable" do
+    subject { uncompiled_shader }
+
+    it "can be labeled" do
+      subject.label = "Test label"
+      expect(&.label).to eq("Test label")
+    end
+  end
 end
