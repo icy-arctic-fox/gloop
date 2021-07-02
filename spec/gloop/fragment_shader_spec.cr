@@ -181,4 +181,66 @@ Spectator.describe Gloop::FragmentShader do
       expect(&.label).to eq("Test label")
     end
   end
+
+  context "PrecisionMethods" do
+    def precision_info(type)
+      range = uninitialized Int32[2]
+      LibGL.get_shader_precision_format(LibGL::ShaderType::FragmentShader, type, range, out precision)
+      {range[0], range[1], precision}
+    end
+
+    describe ".low_float_precision" do
+      subject { described_class.low_float_precision }
+
+      it "matches the expected values" do
+        min, max, precision = precision_info(LibGL::PrecisionType::LowFloat)
+        is_expected.to have_attributes(min: min, max: max, precision: precision)
+      end
+    end
+
+    describe ".medium_float_precision" do
+      subject { described_class.medium_float_precision }
+
+      it "matches the expected values" do
+        min, max, precision = precision_info(LibGL::PrecisionType::MediumFloat)
+        is_expected.to have_attributes(min: min, max: max, precision: precision)
+      end
+    end
+
+    describe ".high_float_precision" do
+      subject { described_class.high_float_precision }
+
+      it "matches the expected values" do
+        min, max, precision = precision_info(LibGL::PrecisionType::HighFloat)
+        is_expected.to have_attributes(min: min, max: max, precision: precision)
+      end
+    end
+
+    describe ".low_int_precision" do
+      subject { described_class.low_int_precision }
+
+      it "matches the expected values" do
+        min, max, precision = precision_info(LibGL::PrecisionType::LowInt)
+        is_expected.to have_attributes(min: min, max: max, precision: precision)
+      end
+    end
+
+    describe ".medium_int_precision" do
+      subject { described_class.medium_int_precision }
+
+      it "matches the expected values" do
+        min, max, precision = precision_info(LibGL::PrecisionType::MediumInt)
+        is_expected.to have_attributes(min: min, max: max, precision: precision)
+      end
+    end
+
+    describe ".high_int_precision" do
+      subject { described_class.high_int_precision }
+
+      it "matches the expected values" do
+        min, max, precision = precision_info(LibGL::PrecisionType::HighInt)
+        is_expected.to have_attributes(min: min, max: max, precision: precision)
+      end
+    end
+  end
 end
