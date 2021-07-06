@@ -26,6 +26,26 @@ Spectator.describe Gloop::Program do
     end
   end
 
+  describe "#attach" do
+    let(shader) { Gloop::VertexShader.create }
+
+    it "attaches a shader" do
+      program.attach(shader)
+      expect(&.shaders).to contain(shader)
+    end
+  end
+
+  describe "#detach" do
+    let(shader) { Gloop::VertexShader.create }
+
+    before_each { program.attach(shader) }
+
+    it "detaches a shader" do
+      program.detach(shader)
+      expect(&.shaders).to_not contain(shader)
+    end
+  end
+
   describe "#info_log" do
     it "contains information after a failed compilation"
   end

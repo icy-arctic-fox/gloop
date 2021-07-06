@@ -1,6 +1,7 @@
 require "./error_handling"
 require "./object"
 require "./program/*"
+require "./shader"
 
 module Gloop
   # Represents one or more shaders.
@@ -272,9 +273,38 @@ module Gloop
     #
     # Effectively calls:
     # ```c
-    #
+    # glGetProgramiv(program, GL_ATTACHED_SHADERS, &max_shaders)
+    # glGetAttachedShaders(program, max_shaders, &count, &shaders)
     # ```
+    #
+    # Minimum required version: 2.0
     def shaders
+      # Fetch the number of shaders and their names.
+      count = shader_count
+      names = Slice(UInt32).new(count)
+      count = checked do
+        LibGL.get_attached_shaders(self, count, out actual, names)
+        actual
+      end
+
+      # Use the number of shaders reported by OpenGL.
+      # Fetch the type of each shader and construct it.
+      names[0, count].map do |name|
+        type = Shader.type_of(name)
+        create_shader(type, name)
+      end
+    end
+
+    # Creates a single shader from its name and type.
+    private def create_shader(type, name)
+      case type
+      in Shader::Type::Fragment               then FragmentShader.new(name)
+      in Shader::Type::Vertex                 then VertexShader.new(name)
+      in Shader::Type::Geometry               then GeometryShader.new(name)
+      in Shader::Type::TessellationEvaluation then TessellationEvaluationShader.new(name)
+      in Shader::Type::TessellationControl    then TessellationControlShader.new(name)
+      in Shader::Type::Compute                then ComputeShader.new(name)
+      end
     end
   end
 end
