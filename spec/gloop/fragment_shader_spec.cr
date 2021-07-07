@@ -143,7 +143,7 @@ Spectator.describe Gloop::FragmentShader do
     subject { shader.info_log_size }
 
     it "is the size of the info log" do
-      is_expected.to eq(shader.info_log.size)
+      is_expected.to eq(shader.info_log.not_nil!.size)
     end
   end
 
@@ -169,7 +169,7 @@ Spectator.describe Gloop::FragmentShader do
     end
 
     it "is the size of the source code" do
-      is_expected.to eq(shader.source.size)
+      is_expected.to eq(shader.source.not_nil!.size)
     end
   end
 

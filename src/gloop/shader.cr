@@ -149,7 +149,7 @@ module Gloop
     end
 
     # Retrieves the shader's source code.
-    # An empty string will be returned if there's no log available.
+    # Nil is returned if the source is not available.
     #
     # The information log is OpenGL's mechanism
     # for conveying information about the compilation to application developers.
@@ -243,13 +243,13 @@ module Gloop
       compile.tap do
         break if compiled?
 
-        message = info_log.each_line.first
+        message = info_log.try(&.each_line.first)
         raise ShaderCompilationError.new(message)
       end
     end
 
     # Retrieves information about the shader's compilation.
-    # An empty string will be returned if there's no log available.
+    # Nil will be returned if there's no log available.
     #
     # The information log is OpenGL's mechanism
     # for conveying information about the compilation to application developers.

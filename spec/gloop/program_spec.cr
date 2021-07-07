@@ -134,7 +134,7 @@ Spectator.describe Gloop::Program do
       subject { super.info_log_size }
 
       it "is the size of the info log" do
-        is_expected.to eq(program.info_log.size)
+        is_expected.to eq(program.info_log.not_nil!.size)
       end
     end
   end

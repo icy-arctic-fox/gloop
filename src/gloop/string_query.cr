@@ -7,9 +7,10 @@ module Gloop
     # A new string will be allocated.
     # The buffer (pointer to the string contents) and capacity are yielded.
     # The block must call an OpenGL method to retrieve the string and return the final length.
-    # The returned length must not include the null-terminator.
-    # This method returns the string.
+    # The returned length *must not* include the null-terminator.
+    # This method returns the string or nil if *capacity* is less than zero.
     private def string_query(capacity)
+      return nil if capacity < 0
       return "" if capacity.zero?
 
       String.new(capacity) do |buffer|
