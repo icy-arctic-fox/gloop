@@ -42,11 +42,7 @@ module Gloop
       # If *flag* is true, the capability will be enabled.
       # Otherwise, the capability will be disabled.
       def {{name.id}}=(flag)
-        if flag
-          enable_{{name.id}}
-        else
-          disable_{{name.id}}
-        end
+        flag ? enable_{{name.id}} : disable_{{name.id}}
       end
 
       # Checks if the {{name.id}} capability is enabled.

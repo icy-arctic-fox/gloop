@@ -73,11 +73,7 @@ module Gloop
     #
     # Minimum required version: 4.3
     def enabled=(flag)
-      if flag
-        enable
-      else
-        disable
-      end
+      flag ? enable : disable
     end
 
     # Checks if debug output functionality is enabled.
