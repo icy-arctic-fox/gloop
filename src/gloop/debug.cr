@@ -85,10 +85,10 @@ module Gloop
     #
     # Minimum required version: 4.3
     def enabled?
-      checked do
-        value = LibGL.is_enabled(LibGL::EnableCap::DebugOutput)
-        !value.false?
+      value = checked do
+        LibGL.is_enabled(LibGL::EnableCap::DebugOutput)
       end
+      !value.false?
     end
 
     # Sends a debug message to OpenGL's debug message queue.
