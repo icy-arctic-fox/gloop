@@ -2,6 +2,7 @@ require "./error_handling"
 require "./object"
 require "./program/*"
 require "./shader"
+require "./string_query"
 
 module Gloop
   # Represents one or more shaders.
@@ -10,6 +11,7 @@ module Gloop
     extend ErrorHandling
     include ErrorHandling
     include Parameters
+    include StringQuery
 
     # Creates a new program.
     #
@@ -292,6 +294,40 @@ module Gloop
       names[0, count].map do |name|
         type = Shader.type_of(name)
         create_shader(type, name)
+      end
+    end
+
+    # Attempts to link the shaders together to build the final program.
+    #
+    # Effectively calls:
+    # ```c
+    # glLinkProgram(program)
+    # ```
+    #
+    # Minimum required version: 2.0
+    def link
+      checked { LibGL.link_program(self) }
+    end
+
+    # Retrieves information about the program's link process.
+    # An empty string will be returned if there's no log available.
+    #
+    # The information log is OpenGL's mechanism
+    # for conveying information about the linking process to application developers.
+    # Even if the linkage was successful, some useful information may be in it.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetProgramiv(program, GL_INFO_LOG_LENGTH, &capacity)
+    # char *buffer = (char *)malloc(capacity)
+    # glGetProgramInfoLog(program, capacity, &length, buffer)
+    # ```
+    #
+    # Minimum required version: 2.0
+    def info_log
+      string_query(info_log_size) do |buffer, capacity|
+        LibGL.get_program_info_log(self, capacity, out length, buffer)
+        length
       end
     end
 

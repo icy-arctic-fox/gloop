@@ -46,12 +46,97 @@ Spectator.describe Gloop::Program do
     end
   end
 
-  describe "#info_log" do
-    it "contains information after a failed compilation"
+  describe "#link" do
+    context "with a valid program" do
+      let(vertex_shader) do
+        Gloop::VertexShader.compile!(<<-END_SHADER
+            #version 460 core
+            in vec3 Position;
+            out vec4 VertColor;
+            void main() {
+              gl_Position = vec4(Position, 1.0);
+              VertColor = vec4(0.03, 0.39, 0.57, 1.0);
+            }
+          END_SHADER
+        )
+      end
+
+      let(fragment_shader) do
+        Gloop::FragmentShader.compile!(<<-END_SHADER
+            #version 460 core
+            out vec4 FragColor;
+            in vec4 VertColor;
+            void main() {
+              FragColor = VertColor;
+            }
+          END_SHADER
+        )
+      end
+
+      before_each do
+        program.attach(vertex_shader)
+        program.attach(fragment_shader)
+      end
+
+      it "succeeds" do
+        subject.link
+        expect(&.linked?).to be_true
+      end
+    end
+
+    context "with an invalid program" do
+      it "fails" do
+        subject.link
+        expect(&.linked?).to be_false
+      end
+    end
   end
 
-  describe "#info_log_size" do
-    it "is the size of the info log"
+  context "link error" do
+    let(invalid_vertex_shader) do
+      Gloop::VertexShader.compile!(<<-END_SHADER
+          #version 460 core
+          in vec3 Position;
+          out vec4 VertColor;
+          void main() {
+            gl_Position = vec4(Position, 1.0);
+            VertColor = vec4(0.03, 0.39, 0.57, 1.0);
+          }
+        END_SHADER
+      )
+    end
+
+    let(invalid_fragment_shader) do
+      Gloop::FragmentShader.compile!(<<-END_SHADER
+          #version 460 core
+          out vec4 FragColor;
+          in vec4 BadVertColor;
+          void main() {
+            FragColor = BadVertColor;
+          }
+        END_SHADER
+      )
+    end
+
+    before_each do
+      program.attach(invalid_vertex_shader)
+      program.attach(invalid_fragment_shader)
+      program.link
+    end
+
+    describe "#info_log" do
+      it "contains information after a failed link" do
+        expect(&.info_log).to_not be_empty
+      end
+    end
+
+    describe "#info_log_size" do
+      subject { super.info_log_size }
+
+      it "is the size of the info log" do
+        is_expected.to eq(program.info_log.size + 1) # +1 for null-terminator byte.
+      end
+    end
   end
 
   context "Labelable" do
