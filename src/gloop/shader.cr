@@ -86,8 +86,7 @@ module Gloop
     parameter? DeleteStatus, deleted
 
     # Retrieves the number of bytes in the shader's compilation log.
-    # This includes the null-termination character.
-    # If the log isn't available, zero is returned.
+    # If the log isn't available, -1 is returned.
     #
     # Effectively calls:
     # ```c
@@ -95,11 +94,11 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    parameter InfoLogLength, info_log_size
+    parameter InfoLogLength, info_log_size, &.-(1)
 
     # Retrieves the number of bytes in the shader's source code.
-    # This includes the null-termination character.
-    # If the source code isn't available, zero is returned.
+    # This *does not* include the null-terminator byte.
+    # If the source code isn't available, -1 is returned.
     #
     # Effectively calls:
     # ```c
@@ -107,7 +106,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    parameter ShaderSourceLength, source_size
+    parameter ShaderSourceLength, source_size, &.-(1)
 
     # Shader type.
     def type

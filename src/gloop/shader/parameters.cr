@@ -37,12 +37,21 @@ module Gloop
       # ```
       #
       # The `#name` method is used to get the shader's name.
-      private macro parameter(pname, name)
+      #
+      # An optional block can be provided to modify the value before returning it.
+      # The original value is yielded to the block.
+      private macro parameter(pname, name, &block)
         def {{name.id}}
-          checked do
+          %value = checked do
             LibGL.get_shader_iv(name, LibGL::ShaderParameterName::{{pname.id}}, out value)
             value
           end
+
+          {% if block %}
+            %value.tap do |{{block.args.splat}}|
+              return {{yield}}
+            end
+          {% end %}
         end
       end
     end

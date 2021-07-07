@@ -12,10 +12,9 @@ module Gloop
     private def string_query(capacity)
       return "" if capacity.zero?
 
-      # Subtract one from capacity here because String adds a null-terminator.
-      String.new(capacity - 1) do |buffer|
-        length = checked { yield buffer, capacity }
-        # Don't subtract one here because OpenGL provides the length without the null-terminator.
+      String.new(capacity) do |buffer|
+        # Add 1 to capacity because `String.new` adds a byte for the null-terminator.
+        length = checked { yield buffer, capacity + 1 }
         {length, 0}
       end
     end

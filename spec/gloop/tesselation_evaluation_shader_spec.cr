@@ -159,7 +159,7 @@ Spectator.describe Gloop::TessellationEvaluationShader do
     subject { shader.info_log_size }
 
     it "is the size of the info log" do
-      is_expected.to eq(shader.info_log.size + 1) # +1 for null-terminator byte.
+      is_expected.to eq(shader.info_log.size)
     end
   end
 
@@ -185,7 +185,7 @@ Spectator.describe Gloop::TessellationEvaluationShader do
     end
 
     it "is the size of the source code" do
-      is_expected.to eq(shader.source.size + 1) # +1 for null-terminator byte.
+      is_expected.to eq(shader.source.size)
     end
   end
 

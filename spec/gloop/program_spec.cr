@@ -134,7 +134,7 @@ Spectator.describe Gloop::Program do
       subject { super.info_log_size }
 
       it "is the size of the info log" do
-        is_expected.to eq(program.info_log.size + 1) # +1 for null-terminator byte.
+        is_expected.to eq(program.info_log.size)
       end
     end
   end

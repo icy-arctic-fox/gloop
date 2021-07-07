@@ -61,8 +61,8 @@ module Gloop
     parameter? ValidateStatus, valid
 
     # Retrieves the number of bytes in the program's compilation log.
-    # This includes the null-termination character.
-    # If the log isn't available, zero is returned.
+    # This *does not* include the null-terminator byte.
+    # If the log isn't available, -1 is returned.
     #
     # Effectively calls:
     # ```c
@@ -70,7 +70,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    parameter InfoLogLength, info_log_size
+    parameter InfoLogLength, info_log_size, &.-(1)
 
     # Gets the number of shaders currently attached to the program.
     # See `#shaders`
@@ -105,7 +105,7 @@ module Gloop
 
     # Gets the number of bytes needed to store the name
     # of the longest active attribute in the program.
-    # This includes the null-terminator byte.
+    # This *does not* include the null-terminator byte.
     #
     # Effectively calls:
     # ```c
@@ -113,7 +113,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    parameter ActiveAttributeMaxLength, max_attribute_name_size
+    parameter ActiveAttributeMaxLength, max_attribute_name_size, &.-(1)
 
     # Gets the number of active uniforms in the program.
     #
@@ -127,7 +127,7 @@ module Gloop
 
     # Gets the number of bytes needed to store the name
     # of the longest active uniform in the program.
-    # This includes the null-terminator byte.
+    # This *does not* include the null-terminator byte.
     #
     # Effectively calls:
     # ```c
@@ -135,7 +135,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    parameter ActiveUniformMaxLength, max_uniform_name_size
+    parameter ActiveUniformMaxLength, max_uniform_name_size, &.-(1)
 
     # Gets the number of active uniform blocks in the program.
     #
@@ -149,7 +149,7 @@ module Gloop
 
     # Gets the number of bytes needed to store the name
     # of the longest active uniform block in the program.
-    # This includes the null-terminator byte.
+    # This *does not* include the null-terminator byte.
     #
     # Effectively calls:
     # ```c
@@ -157,7 +157,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 3.1
-    parameter ActiveUniformBlockMaxLength, max_uniform_block_name_size
+    parameter ActiveUniformBlockMaxLength, max_uniform_block_name_size, &.-(1)
 
     # Gets the length, in bytes, of the program's binary.
     # If linking failed, this will be zero.
@@ -183,7 +183,7 @@ module Gloop
 
     # Gets the number of bytes needed to store the name
     # of the longest variable name used for transform feedback in the program.
-    # This includes the null-terminator byte.
+    # This *does not* include the null-terminator byte.
     #
     # Effectively calls:
     # ```c
@@ -191,7 +191,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    parameter TransformFeedbackVaryingMaxLength, max_transform_feedback_varying_name_size
+    parameter TransformFeedbackVaryingMaxLength, max_transform_feedback_varying_name_size, &.-(1)
 
     # Gets the maximum number of vertices
     # that the geometry shader in the program will output.
