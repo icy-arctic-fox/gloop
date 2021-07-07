@@ -27,11 +27,11 @@ module Gloop
     #
     # Minimum required version: 2.0
     def self.type_of(name)
-      value = checked do
+      type = checked do
         LibGL.get_shader_iv(name, LibGL::ShaderParameterName::ShaderType, out value)
         value
       end
-      Type.from_value(value)
+      Type.from_value(type)
     end
 
     # Checks if a shader with the specified *name* (object ID) is known to the graphics driver.
