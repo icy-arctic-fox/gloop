@@ -298,15 +298,39 @@ module Gloop
     end
 
     # Attempts to link the shaders together to build the final program.
+    # Returns true if the link process was successful, false otherwise.
     #
     # Effectively calls:
     # ```c
     # glLinkProgram(program)
+    # glGetProgramiv(program, GL_LINK_STATUS, &value)
     # ```
     #
     # Minimum required version: 2.0
+    #
+    # See: `#link!`
     def link
       checked { LibGL.link_program(self) }
+      linked?
+    end
+
+    # Attempts to link the shaders together to build the final program.
+    # Raises `ProgramLinkError` if the link process fails.
+    #
+    # Effectively calls:
+    # ```c
+    # glLinkProgram(program)
+    # glGetProgramiv(program, GL_LINK_STATUS, &value)
+    # ```
+    #
+    # Minimum required version: 2.0
+    #
+    # See: `#link`
+    def link!
+      return if link
+
+      message = info_log.try(&.each_line.first)
+      raise ProgramLinkError.new(message)
     end
 
     # Retrieves information about the program's link process.

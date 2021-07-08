@@ -208,6 +208,7 @@ module Gloop
     end
 
     # Attempts to compile the shader.
+    # Returns true if the compilation was successful, false otherwise.
     #
     # The source of the shader must be previously set by calling `#source=` or `#sources=`.
     # The result of the compilation can be checked with `#compiled?`.
@@ -216,6 +217,7 @@ module Gloop
     # Effectively calls:
     # ```c
     # glCompileShader(shader)
+    # glGetShaderiv(shader, GL_COMPILE_STATUS, &value)
     # ```
     #
     # Minimum required version: 2.0
@@ -223,10 +225,11 @@ module Gloop
     # See also: `#compile!`
     def compile
       checked { LibGL.compile_shader(self) }
+      compiled?
     end
 
     # Attempts to compile the shader.
-    # If the compilation fails, then `ShaderCompilationError` is raised.
+    # Raises `ShaderCompilationError` if the compilation fails.
     #
     # The source of the shader must be previously set by calling `#source=` or `#sources=`.
     #
@@ -240,12 +243,10 @@ module Gloop
     #
     # See also: `#compile`
     def compile!
-      compile.tap do
-        break if compiled?
+      return if compile
 
-        message = info_log.try(&.each_line.first)
-        raise ShaderCompilationError.new(message)
-      end
+      message = info_log.try(&.each_line.first)
+      raise ShaderCompilationError.new(message)
     end
 
     # Retrieves information about the shader's compilation.

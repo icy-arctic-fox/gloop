@@ -79,15 +79,13 @@ Spectator.describe Gloop::Program do
       end
 
       it "succeeds" do
-        subject.link
-        expect(&.linked?).to be_true
+        expect(&.link).to be_true
       end
     end
 
     context "with an invalid program" do
       it "fails" do
-        subject.link
-        expect(&.linked?).to be_false
+        expect(&.link).to be_false
       end
     end
   end

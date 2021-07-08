@@ -72,44 +72,33 @@ Spectator.describe Gloop::TessellationControlShader do
 
   describe "#compile" do
     context "with a valid shader" do
-      before_each do
-        subject.source = VALID_SHADER
-        subject.compile
-      end
+      before_each { subject.source = VALID_SHADER }
 
       it "compiles successfully" do
-        expect(&.compiled?).to be_true
+        expect(&.compile).to be_true
       end
     end
 
     context "multiple source strings" do
-      before_each do
-        subject.sources = VALID_SHADER.lines(false)
-        subject.compile
-      end
+      before_each { subject.sources = VALID_SHADER.lines(false) }
 
       it "compiles successfully" do
-        expect(&.compiled?).to be_true
+        expect(&.compile).to be_true
       end
     end
 
     context "with an invalid shader" do
-      before_each do
-        subject.source = INVALID_SHADER
-        subject.compile
-      end
+      before_each { subject.source = INVALID_SHADER }
 
       it "fails to compile" do
-        expect(&.compiled?).to be_false
+        expect(&.compile).to be_false
       end
     end
   end
 
   describe "#compile!" do
     context "with a valid shader" do
-      before_each do
-        subject.source = VALID_SHADER
-      end
+      before_each { subject.source = VALID_SHADER }
 
       it "compiles successfully" do
         subject.compile!
@@ -118,9 +107,7 @@ Spectator.describe Gloop::TessellationControlShader do
     end
 
     context "multiple source strings" do
-      before_each do
-        subject.sources = VALID_SHADER.lines(false)
-      end
+      before_each { subject.sources = VALID_SHADER.lines(false) }
 
       it "compiles successfully" do
         subject.compile!
@@ -129,9 +116,7 @@ Spectator.describe Gloop::TessellationControlShader do
     end
 
     context "with an invalid shader" do
-      before_each do
-        subject.source = INVALID_SHADER
-      end
+      before_each { subject.source = INVALID_SHADER }
 
       it "raises an error" do
         expect(&.compile!).to raise_error(Gloop::ShaderCompilationError)
