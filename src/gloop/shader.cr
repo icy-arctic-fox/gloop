@@ -11,7 +11,7 @@ module Gloop
   abstract struct Shader < Object
     extend ErrorHandling
     include ErrorHandling
-    include Parameters
+    include ShaderParameters
     include StringQuery
 
     macro inherited
@@ -70,7 +70,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    parameter? CompileStatus, compiled
+    shader_parameter? CompileStatus, compiled
 
     # Checks if the shader has been deleted.
     #
@@ -83,7 +83,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    parameter? DeleteStatus, deleted
+    shader_parameter? DeleteStatus, deleted
 
     # Retrieves the number of bytes in the shader's compilation log.
     # If the log isn't available, -1 is returned.
@@ -94,7 +94,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    parameter InfoLogLength, info_log_size, &.-(1)
+    shader_parameter InfoLogLength, info_log_size, &.-(1)
 
     # Retrieves the number of bytes in the shader's source code.
     # This *does not* include the null-terminator byte.
@@ -106,7 +106,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    parameter ShaderSourceLength, source_size, &.-(1)
+    shader_parameter ShaderSourceLength, source_size, &.-(1)
 
     # Shader type.
     def type

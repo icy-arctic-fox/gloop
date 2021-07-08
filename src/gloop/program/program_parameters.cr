@@ -5,7 +5,7 @@ module Gloop
     # Mix-in providing macros to generate getters for retrieving OpenGL program parameters.
     # These wrap calls to `glGetProgram`.
     # All calls are wrapped with error checking.
-    private module Parameters
+    private module ProgramParameters
       include ErrorHandling
 
       # Defines a boolean getter method that retrieves an OpenGL program parameter.
@@ -18,7 +18,7 @@ module Gloop
       # ```
       #
       # The `#name` method is used to get the program's name.
-      private macro parameter?(pname, name)
+      private macro program_parameter?(pname, name)
         def {{name.id}}?
           checked do
             LibGL.get_program_iv(name, LibGL::ProgramPropertyARB::{{pname.id}}, out value)
@@ -40,7 +40,7 @@ module Gloop
       #
       # An optional block can be provided to modify the value before returning it.
       # The original value is yielded to the block.
-      private macro parameter(pname, name, &block)
+      private macro program_parameter(pname, name, &block)
         def {{name.id}}
           %value = checked do
             LibGL.get_program_iv(name, LibGL::ProgramPropertyARB::{{pname.id}}, out value)

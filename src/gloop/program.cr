@@ -10,7 +10,7 @@ module Gloop
   struct Program < Object
     extend ErrorHandling
     include ErrorHandling
-    include Parameters
+    include ProgramParameters
     include StringQuery
 
     # Creates a new program.
@@ -37,7 +37,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    parameter? DeleteStatus, deleted
+    program_parameter? DeleteStatus, deleted
 
     # Checks if the program has been linked successfully.
     #
@@ -47,7 +47,7 @@ module Gloop
     # ```
     #
     # Minimum version required: 2.0
-    parameter? LinkStatus, linked
+    program_parameter? LinkStatus, linked
 
     # Checks the result of the last validation.
     # See: `#validate`
@@ -58,7 +58,7 @@ module Gloop
     # ```
     #
     # Minimum version required: 2.0
-    parameter? ValidateStatus, valid
+    program_parameter? ValidateStatus, valid
 
     # Retrieves the number of bytes in the program's compilation log.
     # This *does not* include the null-terminator byte.
@@ -70,7 +70,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    parameter InfoLogLength, info_log_size, &.-(1)
+    program_parameter InfoLogLength, info_log_size, &.-(1)
 
     # Gets the number of shaders currently attached to the program.
     # See `#shaders`
@@ -81,7 +81,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    parameter AttachedShaders, shader_count
+    program_parameter AttachedShaders, shader_count
 
     # Gets the number of active attribute atomic counter buffers used by the program.
     #
@@ -91,7 +91,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    parameter ActiveAtomicCounterBuffers, atomic_counter_buffer_count
+    program_parameter ActiveAtomicCounterBuffers, atomic_counter_buffer_count
 
     # Gets the number of active attributes in the program.
     #
@@ -101,7 +101,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    parameter ActiveAttributes, attribute_count
+    program_parameter ActiveAttributes, attribute_count
 
     # Gets the number of bytes needed to store the name
     # of the longest active attribute in the program.
@@ -113,7 +113,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    parameter ActiveAttributeMaxLength, max_attribute_name_size, &.-(1)
+    program_parameter ActiveAttributeMaxLength, max_attribute_name_size, &.-(1)
 
     # Gets the number of active uniforms in the program.
     #
@@ -123,7 +123,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    parameter ActiveUniforms, uniform_count
+    program_parameter ActiveUniforms, uniform_count
 
     # Gets the number of bytes needed to store the name
     # of the longest active uniform in the program.
@@ -135,7 +135,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    parameter ActiveUniformMaxLength, max_uniform_name_size, &.-(1)
+    program_parameter ActiveUniformMaxLength, max_uniform_name_size, &.-(1)
 
     # Gets the number of active uniform blocks in the program.
     #
@@ -145,7 +145,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 3.1
-    parameter ActiveUniformBlocks, uniform_block_count
+    program_parameter ActiveUniformBlocks, uniform_block_count
 
     # Gets the number of bytes needed to store the name
     # of the longest active uniform block in the program.
@@ -157,7 +157,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 3.1
-    parameter ActiveUniformBlockMaxLength, max_uniform_block_name_size, &.-(1)
+    program_parameter ActiveUniformBlockMaxLength, max_uniform_block_name_size, &.-(1)
 
     # Gets the length, in bytes, of the program's binary.
     # If linking failed, this will be zero.
@@ -168,7 +168,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    parameter ProgramBinaryLength, binary_size
+    program_parameter ProgramBinaryLength, binary_size
 
     # Gets the number of varying variables
     # to capture in transform feedback mode for the program.
@@ -179,7 +179,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    parameter TransformFeedbackVaryings, transform_feedback_varying_count
+    program_parameter TransformFeedbackVaryings, transform_feedback_varying_count
 
     # Gets the number of bytes needed to store the name
     # of the longest variable name used for transform feedback in the program.
@@ -191,7 +191,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    parameter TransformFeedbackVaryingMaxLength, max_transform_feedback_varying_name_size, &.-(1)
+    program_parameter TransformFeedbackVaryingMaxLength, max_transform_feedback_varying_name_size, &.-(1)
 
     # Gets the maximum number of vertices
     # that the geometry shader in the program will output.
@@ -202,7 +202,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 3.2
-    parameter GeometryVerticesOut, max_geometry_vertices_output
+    program_parameter GeometryVerticesOut, max_geometry_vertices_output
 
     # TODO: GL_COMPUTE_WORK_GROUP_SIZE
 
