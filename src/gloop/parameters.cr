@@ -55,115 +55,142 @@ module Gloop
     # ```
     # parameter Vendor, vendor : String
     # ```
-    private macro parameter(pname, name)
+    #
+    # An optional block can be provided to modify the value before returning it.
+    # The original value is yielded to the block.
+    private macro parameter(pname, name, &block)
       {% if name.is_a?(TypeDeclaration) %}
         {% type = name.type.resolve %}
         def {{name.var.id}} : {{type}}
           {% if type < Enum %}
-            value = checked do
+            %value = checked do
               LibGL.get_integer_v(LibGL::GetPName::{{pname.id}}, out value)
               value
             end
-            {{type}}.from_value(value)
+            %value = {{type}}.from_value(%value)
           {% elsif type <= Int32 %}
-            checked do
+            %value = checked do
               LibGL.get_integer_v(LibGL::GetPName::{{pname.id}}, out value)
               value
             end
           {% elsif type <= Int64 %}
-            checked do
+            %value = checked do
               LibGL.get_integer_64v(LibGL::GetPName::{{pname.id}}, out value)
               value
             end
           {% elsif type <= Float32 %}
-            checked do
+            %value = checked do
               LibGL.get_float_v(LibGL::GetPName::{{pname.id}}, out value)
               value
             end
           {% elsif type <= Float64 %}
-            checked do
+            %value = checked do
               LibGL.get_float_64v(LibGL::GetPName::{{pname.id}}, out value)
               value
             end
           {% elsif type <= Bool %}
-            checked do
+            %value = checked do
               LibGL.get_boolean_v(LibGL::GetPName::{{pname.id}}, out value)
               !value.false?
             end
           {% elsif type <= String %}
-            ptr = expect_truthy { LibGL.get_string(LibGL::StringName::{{pname.id}}) }
-            String.new(ptr)
+            %ptr = expect_truthy { LibGL.get_string(LibGL::StringName::{{pname.id}}) }
+            %value = String.new(%ptr)
           {% else %}
-            value = checked do
+            %value = checked do
               LibGL.get_integer_v(LibGL::GetPName::{{pname.id}}, out value)
               value
             end
-            {{type}}.new(value)
+            %value = {{type}}.new(%value)
+          {% end %}
+
+          {% if block %}
+            %value.tap do |{{block.args.splat}}|
+              return {{yield}}
+            end
           {% end %}
         end
       {% else %}
         def {{name.id}}
-          checked do
+          %value = checked do
             LibGL.get_integer_v(LibGL::GetPName::{{pname.id}}, out value)
             value
           end
+
+          {% if block %}
+            %value.tap do |{{block.args.splat}}|
+              return {{yield}}
+            end
+          {% end %}
         end
       {% end %}
     end
 
     # Does the same as `#parameter`, but defines it as a class method.
-    private macro class_parameter(pname, name)
+    private macro class_parameter(pname, name, &block)
       {% if name.is_a?(TypeDeclaration) %}
         {% type = name.type.resolve %}
         def self.{{name.var.id}} : {{type}}
           {% if type < Enum %}
-            value = checked do
+            %value = checked do
               LibGL.get_integer_v(LibGL::GetPName::{{pname.id}}, out value)
               value
             end
-            {{type}}.from_value(value)
+            %value = {{type}}.from_value(%value)
           {% elsif type <= Int32 %}
-            checked do
+            %value = checked do
               LibGL.get_integer_v(LibGL::GetPName::{{pname.id}}, out value)
               value
             end
           {% elsif type <= Int64 %}
-            checked do
+            %value = checked do
               LibGL.get_integer_64v(LibGL::GetPName::{{pname.id}}, out value)
               value
             end
           {% elsif type <= Float32 %}
-            checked do
+            %value = checked do
               LibGL.get_float_v(LibGL::GetPName::{{pname.id}}, out value)
               value
             end
           {% elsif type <= Float64 %}
-            checked do
+            %value = checked do
               LibGL.get_float_64v(LibGL::GetPName::{{pname.id}}, out value)
               value
             end
           {% elsif type <= Bool %}
-            checked do
+            %value = checked do
               LibGL.get_boolean_v(LibGL::GetPName::{{pname.id}}, out value)
               !value.false?
             end
           {% elsif type <= String %}
-            ptr = expect_truthy { LibGL.get_string(LibGL::StringName::{{pname.id}}) }
-            String.new(ptr)
+            %ptr = expect_truthy { LibGL.get_string(LibGL::StringName::{{pname.id}}) }
+            %value = String.new(%ptr)
           {% else %}
-            value = checked do
+            %value = checked do
               LibGL.get_integer_v(LibGL::GetPName::{{pname.id}}, out value)
               value
             end
-            {{type}}.new(value)
+            %value = {{type}}.new(%value)
+          {% end %}
+
+          {% if block %}
+            %value.tap do |{{block.args.splat}}|
+              return {{yield}}
+            end
           {% end %}
         end
       {% else %}
         def self.{{name.id}}
-          checked do
+          %value = checked do
             LibGL.get_integer_v(LibGL::GetPName::{{pname.id}}, out value)
             value
           end
+
+          {% if block %}
+            %value.tap do |{{block.args.splat}}|
+              return {{yield}}
+            end
+          {% end %}
         end
       {% end %}
     end
