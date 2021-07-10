@@ -1,6 +1,7 @@
 require "./error_handling"
 require "./object"
 require "./program/*"
+require "./program_link_error"
 require "./shader"
 require "./string_query"
 
