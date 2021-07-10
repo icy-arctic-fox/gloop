@@ -1,5 +1,6 @@
 require "./error_handling"
 require "./object"
+require "./parameters"
 require "./program/*"
 require "./program_link_error"
 require "./shader"
@@ -11,6 +12,7 @@ module Gloop
   struct Program < Object
     extend ErrorHandling
     include ErrorHandling
+    include Parameters
     include ProgramParameters
     include StringQuery
 
@@ -25,6 +27,19 @@ module Gloop
     def self.create
       name = expect_truthy { LibGL.create_program }
       new(name)
+    end
+
+    # Retrieves the current active program.
+    # Returns nil if there isn't a program in use.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetIntegerv(GL_CURRENT_PROGRAM, &program)
+    # ```
+    class_parameter(CurrentProgram, current) do |name|
+      return if name.zero? # No active program.
+
+      new(name.to_u32!)
     end
 
     # Checks if the program has been deleted.
@@ -354,6 +369,54 @@ module Gloop
         LibGL.get_program_info_log(self, capacity, out length, buffer)
         length
       end
+    end
+
+    # Indicates this program should be used for the rendering pipeline.
+    #
+    # Effectively calls:
+    # ```c
+    # glUseProgram(program)
+    # ```
+    #
+    # Minimum required version: 2.0
+    def activate
+      checked { LibGL.use_program(self) }
+    end
+
+    # Indicates this program should be used for the rendering pipeline.
+    # Restores the previous program after the block completes.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetIntegerv(GL_CURRENT_PROGRAM, &previous)
+    # glUseProgram(program)
+    # glUseProgram(previous)
+    # ```
+    #
+    # Minimum required version: 2.0
+    def activate
+      previous = checked do
+        LibGL.get_integer_v(LibGL::GetPName::CurrentProgram, out name)
+        name
+      end
+
+      begin
+        yield
+      ensure
+        checked { LibGL.use_program(previous) }
+      end
+    end
+
+    # Detaches an existing program from the OpenGL state.
+    #
+    # Effectively calls:
+    # ```c
+    # glUseProgram(0)
+    # ```
+    #
+    # Minimum required version: 2.0
+    def self.deactivate
+      checked { LibGL.use_program(0_u32) }
     end
 
     # Creates a single shader from its name and type.

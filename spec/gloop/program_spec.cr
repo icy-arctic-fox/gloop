@@ -6,6 +6,31 @@ Spectator.describe Gloop::Program do
 
   subject(program) { described_class.create }
 
+  let(vertex_shader) do
+    Gloop::VertexShader.compile!(<<-END_SHADER
+        #version 460 core
+        in vec3 Position;
+        out vec4 VertColor;
+        void main() {
+          gl_Position = vec4(Position, 1.0);
+          VertColor = vec4(0.03, 0.39, 0.57, 1.0);
+        }
+      END_SHADER
+    )
+  end
+
+  let(fragment_shader) do
+    Gloop::FragmentShader.compile!(<<-END_SHADER
+        #version 460 core
+        out vec4 FragColor;
+        in vec4 VertColor;
+        void main() {
+          FragColor = VertColor;
+        }
+      END_SHADER
+    )
+  end
+
   describe "#delete" do
     it "deletes a program" do
       subject.delete
@@ -48,31 +73,6 @@ Spectator.describe Gloop::Program do
 
   describe "#link" do
     context "with a valid program" do
-      let(vertex_shader) do
-        Gloop::VertexShader.compile!(<<-END_SHADER
-            #version 460 core
-            in vec3 Position;
-            out vec4 VertColor;
-            void main() {
-              gl_Position = vec4(Position, 1.0);
-              VertColor = vec4(0.03, 0.39, 0.57, 1.0);
-            }
-          END_SHADER
-        )
-      end
-
-      let(fragment_shader) do
-        Gloop::FragmentShader.compile!(<<-END_SHADER
-            #version 460 core
-            out vec4 FragColor;
-            in vec4 VertColor;
-            void main() {
-              FragColor = VertColor;
-            }
-          END_SHADER
-        )
-      end
-
       before_each do
         program.attach(vertex_shader)
         program.attach(fragment_shader)
@@ -134,6 +134,62 @@ Spectator.describe Gloop::Program do
       it "is the size of the info log" do
         is_expected.to eq(program.info_log.not_nil!.size)
       end
+    end
+  end
+
+  describe "#activate" do
+    before_each do
+      program.attach(vertex_shader)
+      program.attach(fragment_shader)
+      program.link!
+    end
+
+    it "uses the program" do
+      program.activate
+      expect(described_class.current).to eq(program)
+    end
+
+    context "block syntax" do
+      let(previous) { described_class.create }
+
+      before_each do
+        previous.attach(vertex_shader)
+        previous.attach(fragment_shader)
+        previous.link!
+      end
+
+      it "resets to the previous program" do
+        previous.activate
+        program.activate { }
+        expect(described_class.current).to eq(previous)
+      end
+
+      it "resets to the previous program on error" do
+        previous.activate
+        begin
+          program.activate { raise "oops" }
+        rescue Exception
+          expect(described_class.current).to eq(previous)
+        else
+          fail "#activate did not yield"
+        end
+      end
+    end
+  end
+
+  describe ".deactivate" do
+    subject { described_class.current }
+
+    before_each do
+      program.attach(vertex_shader)
+      program.attach(fragment_shader)
+      program.link!
+    end
+
+    it "clears the current program" do
+      program.activate
+      described_class.deactivate
+      is_expected.to be_nil
     end
   end
 
