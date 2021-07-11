@@ -193,6 +193,12 @@ Spectator.describe Gloop::Program do
     end
   end
 
+  describe "#validate" do
+    it "validates the program" do
+      expect { program.validate }.to eq(program.valid?)
+    end
+  end
+
   context "Labelable" do
     it "can be labeled" do
       subject.label = "Test label"

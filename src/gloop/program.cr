@@ -419,6 +419,22 @@ module Gloop
       checked { LibGL.use_program(0_u32) }
     end
 
+    # Checks if the program can be used in OpenGL's current state.
+    # Returns true if the program is valid.
+    # Stores information about validation in `#info_log`.
+    # See: `#valid?`
+    #
+    # Effectively calls:
+    # ```c
+    # glValidateProgram(program)
+    # ```
+    #
+    # Minimum required version: 2.0
+    def validate
+      checked { LibGL.validate_program(self) }
+      valid?
+    end
+
     # Creates a single shader from its name and type.
     private def create_shader(type, name)
       case type
