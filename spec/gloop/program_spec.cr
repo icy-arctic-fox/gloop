@@ -194,8 +194,66 @@ Spectator.describe Gloop::Program do
   end
 
   describe "#validate" do
+    before_each do
+      program.attach(vertex_shader)
+      program.attach(fragment_shader)
+      program.link!
+    end
+
     it "validates the program" do
       expect { program.validate }.to eq(program.valid?)
+    end
+  end
+
+  describe "#binary" do
+    subject { program.binary }
+
+    before_each do
+      program.attach(vertex_shader)
+      program.attach(fragment_shader)
+      program.link!
+    end
+
+    it "retrieves the program binary" do
+      LibGL.get_program_iv(program, LibGL::ProgramPropertyARB::ProgramBinaryLength, out capacity)
+      buffer = Bytes.new(capacity)
+      LibGL.get_program_binary(program, capacity, out size, out format, buffer)
+      expect(&.bytes).to eq(buffer)
+      expect(&.format).to eq(format)
+    end
+  end
+
+  describe "#binary=" do
+    let(source_program) do
+      described_class.create.tap do |program|
+        program.attach(vertex_shader)
+        program.attach(fragment_shader)
+        program.link!
+      end
+    end
+
+    let(source_binary) { source_program.binary }
+
+    it "loads the program from binary data" do
+      program.binary = source_binary
+      expect(&.binary).to eq(source_program.binary)
+    end
+  end
+
+  describe ".from_binary" do
+    let(source_program) do
+      described_class.create.tap do |program|
+        program.attach(vertex_shader)
+        program.attach(fragment_shader)
+        program.link!
+      end
+    end
+
+    let(source_binary) { source_program.binary }
+
+    it "loads the program from binary data" do
+      program = described_class.from_binary(source_binary)
+      expect(program.binary).to eq(source_binary)
     end
   end
 

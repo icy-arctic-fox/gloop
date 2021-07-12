@@ -435,6 +435,54 @@ module Gloop
       valid?
     end
 
+    # Retrieves the binary data representing the compiled and linked program.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetProgramiv(program, GL_PROGRAM_BINARY_LENGTH, &capacity);
+    # buffer = malloc(capacity);
+    # glGetProgramBinary(program, capacity, &size, &format, buffer);
+    # ```
+    #
+    # Minimum required version: 4.1
+    def binary
+      size = binary_size
+      buffer = Bytes.new(size, read_only: true)
+      format = checked do
+        LibGL.get_program_binary(self, size, pointerof(size), out format, buffer)
+        format
+      end
+      buffer = buffer[0, size] # Adjust size if needed.
+      Binary.new(buffer, format)
+    end
+
+    # Load an existing program binary.
+    #
+    # Effectively calls:
+    # ```c
+    # glProgramBinary(program, format, buffer, size)
+    # ```
+    #
+    # Minimum required version: 4.1
+    def binary=(binary)
+      checked { LibGL.program_binary(self, binary.format, binary, binary.size) }
+    end
+
+    # Creates a program from an existing binary.
+    #
+    # Effectively calls:
+    # ```c
+    # program = glCreateProgram();
+    # glProgramBinary(program, format, buffer, size);
+    # ```
+    #
+    # Minimum required version: 4.1
+    def self.from_binary(binary)
+      create.tap do |program|
+        program.binary = binary
+      end
+    end
+
     # Creates a single shader from its name and type.
     private def create_shader(type, name)
       case type
