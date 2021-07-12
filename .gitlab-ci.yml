@@ -14,12 +14,12 @@ before_script:
 format:
   script:
     - shards
-    - crystal tool format --check
+    - crystal tool format --check src/ spec/
 
 style:
   script:
     - shards
-    - bin/ameba
+    - bin/ameba src/
 
 pages:
   stage: deploy

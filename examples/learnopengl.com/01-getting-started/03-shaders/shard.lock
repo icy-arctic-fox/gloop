@@ -1,0 +1,14 @@
+version: 2.0
+shards:
+  glfw:
+    git: https://gitlab.com/arctic-fox/glfw.cr.git
+    version: 3.3.1
+
+  gloop:
+    path: ../../../../
+    version: 0.2.0
+
+  opengl:
+    git: https://gitlab.com/arctic-fox/opengl.cr.git
+    version: 4.6.0+git.commit.5d9c884c7fc7a62edfa7883dc16365d6b2dfa487
+
