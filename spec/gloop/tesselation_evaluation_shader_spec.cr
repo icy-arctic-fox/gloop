@@ -1,9 +1,6 @@
 require "../spec_helper"
 
 Spectator.describe Gloop::TessellationEvaluationShader do
-  before_all { init_opengl }
-  after_all { terminate_opengl }
-
   subject(valid_shader) { described_class.compile(VALID_SHADER) }
   subject(invalid_shader) { described_class.compile(INVALID_SHADER) }
   subject(uncompiled_shader) { described_class.create }

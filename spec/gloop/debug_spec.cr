@@ -28,9 +28,6 @@ private macro track_debug_messages
 end
 
 Spectator.describe Gloop::Debug do
-  before_all { init_opengl }
-  after_all { terminate_opengl }
-
   describe ".enable" do
     before_each { described_class.disable }
 

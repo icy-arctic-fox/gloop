@@ -1,9 +1,6 @@
 require "../spec_helper"
 
 Spectator.describe Gloop::Labelable do
-  before_all { init_opengl }
-  after_all { terminate_opengl }
-
   describe ".max_label_size" do
     subject { super.max_label_size }
 

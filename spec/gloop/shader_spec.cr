@@ -1,9 +1,6 @@
 require "../spec_helper"
 
 Spectator.describe Gloop::Shader do
-  before_all { init_opengl }
-  after_all { terminate_opengl }
-
   let(shader) { Gloop::FragmentShader.create }
 
   describe ".type_of" do

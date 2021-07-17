@@ -1,9 +1,6 @@
 require "../spec_helper"
 
 Spectator.describe Gloop::ExtensionList do
-  before_all { init_opengl }
-  after_all { terminate_opengl }
-
   describe "#size" do
     subject { super.size }
 

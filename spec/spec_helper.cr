@@ -29,3 +29,8 @@ private def checked
   description = String.new(description)
   raise "GLFW Error - #{description} (#{error})"
 end
+
+Spectator.configure do |config|
+  config.before_suite { init_opengl }
+  config.after_suite { terminate_opengl }
+end

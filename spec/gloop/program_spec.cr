@@ -1,9 +1,6 @@
 require "../spec_helper"
 
 Spectator.describe Gloop::Program do
-  before_all { init_opengl }
-  after_all { terminate_opengl }
-
   subject(program) { described_class.create }
 
   let(vertex_shader) do

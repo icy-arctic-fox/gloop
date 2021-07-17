@@ -1,9 +1,6 @@
 require "../../spec_helper"
 
 Spectator.describe Gloop::Debug::MessageIterator do
-  before_all { init_opengl }
-  after_all { terminate_opengl }
-
   before_each do
     Gloop::Debug.enable
     Gloop::Debug.enable_sync

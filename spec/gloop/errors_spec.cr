@@ -1,9 +1,6 @@
 require "../spec_helper"
 
 Spectator.describe Gloop do
-  before_all { init_opengl }
-  after_all { terminate_opengl }
-
   describe ".error_code" do
     subject { Gloop.error_code }
 
