@@ -28,6 +28,8 @@ Spectator.describe Gloop::Program do
     )
   end
 
+  # TODO: Test program parameters.
+
   describe "#delete" do
     it "deletes a program" do
       subject.delete

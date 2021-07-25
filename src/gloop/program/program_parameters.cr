@@ -14,7 +14,7 @@ module Gloop
       # The *name* will be the name of the generated method, with a question mark appended to it.
       #
       # ```
-      # parameter? LinkStatus, linked
+      # program_parameter? LinkStatus, linked
       # ```
       #
       # The `#name` method is used to get the program's name.
@@ -33,7 +33,7 @@ module Gloop
       # The *name* will be the name of the generated method.
       #
       # ```
-      # parameter InfoLogLength, info_log_size
+      # program_parameter InfoLogLength, info_log_size
       # ```
       #
       # The `#name` method is used to get the program's name.

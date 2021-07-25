@@ -14,6 +14,7 @@ module Gloop
     include ErrorHandling
     include Parameters
     include ProgramParameters
+    include ProgramStageParameters
     include StringQuery
 
     # Creates a new program.
@@ -227,6 +228,63 @@ module Gloop
     # TODO: GL_GEOMETRY_INPUT_TYPE
 
     # TODO: GL_GEOMETRY_OUTPUT_TYPE
+
+    # Retrieves the number of active subroutines
+    # for the specified *stage* of the program.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetProgramStageiv(program, stage, GL_ACTIVE_SUBROUTINES, &value)
+    # ```
+    #
+    # Minimum required version: 4.0
+    program_stage_parameter ActiveSubroutines, active_subroutines
+
+    # Retrieves the number of active subroutine uniforms
+    # for the specified *stage* of the program.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetProgramStageiv(program, stage, GL_ACTIVE_SUBROUTINE_UNIFORMS, &value)
+    # ```
+    #
+    # Minimum required version: 4.0
+    program_stage_parameter ActiveSubroutineUniforms, active_subroutine_uniforms
+
+    # Retrieves the number of active subroutine variable locations
+    # for the specified *stage* of the program.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetProgramStageiv(program, stage, GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS, &value)
+    # ```
+    #
+    # Minimum required version: 4.0
+    program_stage_parameter ActiveSubroutineUniformLocations, active_subroutine_uniform_locations
+
+    # Retrieves the length of the longest subroutine name
+    # for the specified *stage* of the program.
+    # This *does not* include the null-terminator byte.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetProgramStageiv(program, stage, GL_ACTIVE_SUBROUTINE_MAX_LENGTH, &value)
+    # ```
+    #
+    # Minimum required version: 4.0
+    program_stage_parameter ActiveSubroutineMaxLength, active_subroutine_max_size, &.-(1)
+
+    # Retrieves the length of the longest subroutine uniform name
+    # for the specified *stage* of the program.
+    # This *does not* include the null-terminator byte.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetProgramStageiv(program, stage, GL_ACTIVE_SUBROUTINE_UNIFORM_MAX_LENGTH, &value)
+    # ```
+    #
+    # Minimum required version: 4.0
+    program_stage_parameter ActiveSubroutineUniformMaxLength, active_subroutine_uniform_max_size, &.-(1)
 
     # Indicates that this is a program object.
     def object_type
