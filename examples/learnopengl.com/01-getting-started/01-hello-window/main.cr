@@ -7,7 +7,7 @@ require "glfw"
 require "gloop"
 
 # settings
-SCR_WIDTH = 800
+SCR_WIDTH  = 800
 SCR_HEIGHT = 600
 
 # process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
@@ -34,7 +34,7 @@ LibGLFW.window_hint(LibGLFW::WindowHint::ContextVersionMinor, 3)
 LibGLFW.window_hint(LibGLFW::WindowHint::OpenGLProfile, LibGLFW::OpenGLProfile::Core)
 
 {% if flag?(:darwin) %}
-LibGLFW.window_hint(LibGLFW::WindowHint::OpenGLForwardCompat, LibGLFW::Bool::True)
+  LibGLFW.window_hint(LibGLFW::WindowHint::OpenGLForwardCompat, LibGLFW::Bool::True)
 {% end %}
 
 # glfw window creation

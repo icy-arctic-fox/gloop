@@ -35,20 +35,24 @@ class Shader
     vertex.delete
     fragment.delete
   end
+
   # activate the shader
   # ------------------------------------------------------------------------
   def use
     @program.activate
   end
+
   # utility uniform functions
   # ------------------------------------------------------------------------
   def set_bool(name, value)
     LibGL.uniform_1i(LibGL.get_uniform_location(@program, name), value.to_i32)
   end
+
   # ------------------------------------------------------------------------
   def set_int(name, value)
     LibGL.uniform_1i(LibGL.get_uniform_location(@program, name), value)
   end
+
   # ------------------------------------------------------------------------
   def set_float(name, value)
     LibGL.uniform_1f(LibGL.get_uniform_location(@program, name), value)

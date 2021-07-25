@@ -8,7 +8,7 @@ require "gloop"
 require "./shader"
 
 # settings
-SCR_WIDTH = 800
+SCR_WIDTH  = 800
 SCR_HEIGHT = 600
 
 # process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
@@ -35,7 +35,7 @@ LibGLFW.window_hint(LibGLFW::WindowHint::ContextVersionMinor, 3)
 LibGLFW.window_hint(LibGLFW::WindowHint::OpenGLProfile, LibGLFW::OpenGLProfile::Core)
 
 {% if flag?(:darwin) %}
-LibGLFW.window_hint(LibGLFW::WindowHint::OpenGLForwardCompat, LibGLFW::Bool::True)
+  LibGLFW.window_hint(LibGLFW::WindowHint::OpenGLForwardCompat, LibGLFW::Bool::True)
 {% end %}
 
 # glfw window creation
@@ -49,8 +49,6 @@ end
 LibGLFW.make_context_current(window)
 LibGLFW.set_framebuffer_size_callback(window, ->framebuffer_size_callback)
 
-
-
 # build and compile our shader program
 # ------------------------------------
 our_shader = Shader.new("shader.vs", "shader.fs") # you can name your shader files however you like
@@ -59,9 +57,9 @@ our_shader = Shader.new("shader.vs", "shader.fs") # you can name your shader fil
 # ------------------------------------------------------------------
 vertices = Float32.static_array(
   # positions       # colors
-   0.5, -0.5, 0.0,  1.0, 0.0, 0.0,  # bottom right
-  -0.5, -0.5, 0.0,  0.0, 1.0, 0.0,  # bottom left
-   0.0,  0.5, 0.0,  0.0, 0.0, 1.0   # top
+  0.5, -0.5, 0.0, 1.0, 0.0, 0.0,  # bottom right
+  -0.5, -0.5, 0.0, 0.0, 1.0, 0.0, # bottom left
+  0.0, 0.5, 0.0, 0.0, 0.0, 1.0    # top
 )
 
 LibGL.gen_vertex_arrays(1, out vao)
@@ -85,7 +83,6 @@ LibGL.bind_buffer(LibGL::BufferTargetARB::ArrayBuffer, 0)
 # You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
 # VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
 # LibGL.bind_vertex_array(0)
-
 
 # render loop
 # -----------

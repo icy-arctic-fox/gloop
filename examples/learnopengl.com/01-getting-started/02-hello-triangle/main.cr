@@ -7,7 +7,7 @@ require "glfw"
 require "gloop"
 
 # settings
-SCR_WIDTH = 800
+SCR_WIDTH  = 800
 SCR_HEIGHT = 600
 
 VERTEX_SHADER_SOURCE = <<-SHADER
@@ -52,7 +52,7 @@ LibGLFW.window_hint(LibGLFW::WindowHint::ContextVersionMinor, 3)
 LibGLFW.window_hint(LibGLFW::WindowHint::OpenGLProfile, LibGLFW::OpenGLProfile::Core)
 
 {% if flag?(:darwin) %}
-LibGLFW.window_hint(LibGLFW::WindowHint::OpenGLForwardCompat, LibGLFW::Bool::True)
+  LibGLFW.window_hint(LibGLFW::WindowHint::OpenGLForwardCompat, LibGLFW::Bool::True)
 {% end %}
 
 # glfw window creation
@@ -102,14 +102,14 @@ fragment_shader.delete
 # set up vertex data (and buffer(s)) and configure vertex attributes
 # ------------------------------------------------------------------
 vertices = Float32.static_array(
-   0.5,  0.5, 0.0,  # top right
-   0.5, -0.5, 0.0,  # bottom right
-  -0.5, -0.5, 0.0,  # bottom left
-  -0.5,  0.5, 0.0   # top left
+  0.5, 0.5, 0.0,   # top right
+  0.5, -0.5, 0.0,  # bottom right
+  -0.5, -0.5, 0.0, # bottom left
+  -0.5, 0.5, 0.0   # top left
 )
 indices = UInt32.static_array( # note that we start from 0!
-  0, 1, 3,  # first Triangle
-  1, 2, 3   # second Triangle
+0, 1, 3,                       # first Triangle
+  1, 2, 3                      # second Triangle
 )
 LibGL.gen_vertex_arrays(1, out vao)
 LibGL.gen_buffers(1, out vbo)
@@ -130,15 +130,14 @@ LibGL.enable_vertex_attrib_array(0)
 LibGL.bind_buffer(LibGL::BufferTargetARB::ArrayBuffer, 0)
 
 # remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
-#LibGL.bind_buffer(LibGL::BufferTargetARB::ElementArrayBuffer, 0)
+# LibGL.bind_buffer(LibGL::BufferTargetARB::ElementArrayBuffer, 0)
 
 # You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
 # VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
 LibGL.bind_vertex_array(0)
 
-
 # uncomment this call to draw in wireframe polygons.
-#LibGL.polygon_mode(LibGL::MaterialFace::FrontAndBack, LibGL::PolygonMode::Line)
+# LibGL.polygon_mode(LibGL::MaterialFace::FrontAndBack, LibGL::PolygonMode::Line)
 
 # render loop
 # -----------
@@ -155,9 +154,9 @@ while LibGLFW.window_should_close(window).false?
   # draw our first triangle
   shader_program.activate
   LibGL.bind_vertex_array(vao) # seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-  #LibGL.draw_arrays(LibGL::PrimitiveType::Triangles, 0, 6)
+  # LibGL.draw_arrays(LibGL::PrimitiveType::Triangles, 0, 6)
   LibGL.draw_elements(LibGL::PrimitiveType::Triangles, 6, LibGL::DrawElementsType::UnsignedInt, nil)
-  #LibGL.bind_vertex_array(0) # no need to unbind it every time
+  # LibGL.bind_vertex_array(0) # no need to unbind it every time
 
   # glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
   # -------------------------------------------------------------------------------
