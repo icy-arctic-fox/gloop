@@ -1,3 +1,5 @@
+require "./context"
+
 module Gloop
   # Identifier for an toggleable OpenGL capability.
   enum Capability : UInt32
@@ -56,7 +58,7 @@ module Gloop
     #
     # Minimum required version: 2.0
     def enable
-      Gloop.enable(self)
+      Gloop::Context.enable(self)
     end
 
     # Disables the capability.
@@ -68,7 +70,7 @@ module Gloop
     #
     # Minimum required version: 2.0
     def disable
-      Gloop.disable(self)
+      Gloop::Context.disable(self)
     end
 
     # Checks if the capability is enabled.
@@ -80,7 +82,7 @@ module Gloop
     #
     # Minimum required version: 2.0
     def enabled?
-      Gloop.enabled?(self)
+      Gloop::Context.enabled?(self)
     end
 
     # Converts to an OpenGL enum.

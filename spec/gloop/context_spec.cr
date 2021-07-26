@@ -38,4 +38,20 @@ Spectator.describe Gloop::Context do
   describe ".extensions" do
     specify { expect(&.extensions).to be_a(Enumerable(Gloop::Extension)) }
   end
+
+  let(capability) { Gloop::Capability::Blend }
+
+  describe ".enable" do
+    it "enables capabilities" do
+      described_class.enable(capability)
+      expect(&.enabled?(capability)).to be_true
+    end
+  end
+
+  describe ".disable" do
+    it "disables capabilities" do
+      described_class.disable(capability)
+      expect(&.enabled?(capability)).to be_false
+    end
+  end
 end
