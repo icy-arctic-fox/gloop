@@ -10,5 +10,5 @@ shards:
 
   opengl:
     git: https://gitlab.com/arctic-fox/opengl.cr.git
-    version: 4.6.0+git.commit.5d9c884c7fc7a62edfa7883dc16365d6b2dfa487
+    version: 4.6.0+git.commit.bebdf5888e17909d7b717f53fb3f040f2c438c35
 
