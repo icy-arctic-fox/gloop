@@ -62,52 +62,6 @@ module Gloop
       LibGL.release_shader_compiler
     end
 
-    # Checks if the shader compilation was successful.
-    #
-    # Effectively calls:
-    # ```c
-    # glGetShaderiv(shader, GL_COMPILE_STATUS, &value)
-    # ```
-    #
-    # Minimum required version: 2.0
-    shader_parameter? CompileStatus, compiled
-
-    # Checks if the shader has been deleted.
-    #
-    # Note: This property only returns true if the shader is deleted, but still exists.
-    # If it doesn't exist (all resources freed), then this property can return false.
-    #
-    # Effectively calls:
-    # ```c
-    # glGetShaderiv(shader, GL_DELETE_STATUS, &value)
-    # ```
-    #
-    # Minimum required version: 2.0
-    shader_parameter? DeleteStatus, deleted
-
-    # Retrieves the number of bytes in the shader's compilation log.
-    # If the log isn't available, -1 is returned.
-    #
-    # Effectively calls:
-    # ```c
-    # glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &value)
-    # ```
-    #
-    # Minimum required version: 2.0
-    shader_parameter InfoLogLength, info_log_size, &.-(1)
-
-    # Retrieves the number of bytes in the shader's source code.
-    # This *does not* include the null-terminator byte.
-    # If the source code isn't available, -1 is returned.
-    #
-    # Effectively calls:
-    # ```c
-    # glGetShaderiv(shader, GL_SHADER_SOURCE_LENGTH, &value)
-    # ```
-    #
-    # Minimum required version: 2.0
-    shader_parameter ShaderSourceLength, source_size, &.-(1)
-
     # Shader type.
     def type
       self.class.type
