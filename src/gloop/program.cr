@@ -15,6 +15,7 @@ module Gloop
     include Parameters
     include ProgramParameters
     include ProgramStageParameters
+    include ProgramStages
     include StringQuery
 
     # Creates a new program.
