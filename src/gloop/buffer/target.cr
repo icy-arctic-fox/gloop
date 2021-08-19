@@ -23,6 +23,14 @@ module Gloop
         buffer.bind(self)
       end
 
+      def data(data, usage)
+        Buffer.data(self, data, usage)
+      end
+
+      def data=(data)
+        self.data(data, usage)
+      end
+
       # Converts to an OpenGL enum.
       def to_unsafe
         LibGL::BufferTargetARB.new(value)

@@ -80,5 +80,17 @@ module Gloop
     def bind(target : Target)
       checked { LibGL.bind_buffer(target, self) }
     end
+
+    def self.data(target : Target, data, usage : Usage)
+      checked { LibGL.buffer_data(target, size, data, usage) }
+    end
+
+    def data(data, usage : Usage)
+      checked { LibGL.named_buffer_data(self, size, data, usage) }
+    end
+
+    def data=(data)
+      self.data(data, usage)
+    end
   end
 end
