@@ -13,3 +13,7 @@
 # Dependencies will be locked in applications that use them
 /shard.lock
 /shard.override.yml
+
+# Ignore test output
+output.xml
+output.html
