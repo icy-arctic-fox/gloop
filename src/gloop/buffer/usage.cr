@@ -1,0 +1,21 @@
+module Gloop
+  struct Buffer < Object
+    # Hints indicating how a buffer's data will be used.
+    enum Usage : UInt32
+        StreamDraw = LibGL::VertexBufferObjectUsage::StreamDraw
+        StreamRead = LibGL::VertexBufferObjectUsage::StreamRead
+        StreamCopy = LibGL::VertexBufferObjectUsage::StreamCopy
+        StaticDraw = LibGL::VertexBufferObjectUsage::StaticDraw
+        StaticRead = LibGL::VertexBufferObjectUsage::StaticRead
+        StaticCopy = LibGL::VertexBufferObjectUsage::StaticCopy
+        DynamicDraw = LibGL::VertexBufferObjectUsage::DynamicDraw
+        DynamicRead = LibGL::VertexBufferObjectUsage::DynamicRead
+        DynamicCopy = LibGL::VertexBufferObjectUsage::DynamicCopy
+
+      # Converts to an OpenGL enum.
+      def to_unsafe
+        LibGL::VertexBufferObjectUsage.new(value)
+      end
+    end
+  end
+end

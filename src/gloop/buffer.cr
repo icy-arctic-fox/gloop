@@ -5,8 +5,30 @@ module Gloop
   # GPU-hosted storage for arbitrary data.
   # See: https://www.khronos.org/opengl/wiki/Buffer_Object
   struct Buffer < Object
+    include BufferParameters
     extend ErrorHandling
     include ErrorHandling
+
+    # Indicates whether the buffer is immutable.
+    buffer_parameter? BufferImmutableStorage, immutable
+
+    # Indicates whether the buffer is currently mapped.
+    buffer_parameter? BufferMapped, mapped
+
+    # Size of the buffer's contents in bytes.
+    buffer_parameter BufferSize, size
+
+    # Retrieves the flags previously set for the buffer's immutable storage.
+    # See: `#storage`
+    buffer_parameter BufferStorageFlags, storage_flags do |value|
+      Storage.new(value.to_u32)
+    end
+
+    # Retrieves the usage hints previously provided for the buffer's data.
+    # See: `#data`
+    buffer_parameter BufferUsage, usage do |value|
+      Usage.new(value.to_u32)
+    end
 
     # Creates a new buffer.
     # Unlike `.generate`, resources are created in advance instead of on the first binding.
@@ -81,16 +103,58 @@ module Gloop
       checked { LibGL.bind_buffer(target, self) }
     end
 
+    # Stores data in the specified buffer target.
+    # The *data* must have `#bytesize` and `#to_unsafe` methods.
+    # The `Bytes` (`Slice`) type is ideal for this.
     def self.data(target : Target, data, usage : Usage)
+      size = data.bytesize
       checked { LibGL.buffer_data(target, size, data, usage) }
     end
 
+    # Stores data in this buffer.
+    # The *data* must have `#bytesize` and `#to_unsafe` methods.
+    # The `Bytes` (`Slice`) type is ideal for this.
     def data(data, usage : Usage)
+      size = data.bytesize
       checked { LibGL.named_buffer_data(self, size, data, usage) }
     end
 
+    # Stores data in this buffer.
+    # The *data* must have `#bytesize` and `#to_unsafe` methods.
+    # The `Bytes` (`Slice`) type is ideal for this.
+    # Previously set `#usage` hint is reapplied for this data.
     def data=(data)
       self.data(data, usage)
+    end
+
+    # Retrieves all data in the buffer.
+    def data
+      bytes = Bytes.new(size)
+      checked { LibGL.get_named_buffer_sub_data(self, 0, bytes.bytesize, bytes) }
+      bytes
+    end
+
+    # Retrieves a subset of data from the buffer.
+    def []?(start : Int, count : Int) : Bytes?
+      start, count = normalize_start_and_count(start, count) { return nil }
+      bytes = Bytes.new(count)
+      checked { LibGL.get_named_buffer_sub_data(self, start, count, bytes) }
+      bytes
+    end
+
+    # Retrieves a subset of data from the buffer.
+    def [](start : Int, count : Int) : Bytes
+      self[start, count]? || raise IndexError.new
+    end
+
+    # Retrieves a range of data from the buffer.
+    def []?(range : Range) : Bytes?
+      self[*Indexable.range_to_index_and_count(range, size) || return nil]?
+    end
+
+    # Retrieves a range of data from the buffer.
+    def [](range : Range) : Bytes
+      self[*Indexable.range_to_index_and_count(range, size) || raise IndexError.new]
     end
   end
 end

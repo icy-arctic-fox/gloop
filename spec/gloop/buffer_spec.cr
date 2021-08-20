@@ -3,6 +3,10 @@ require "../spec_helper"
 Spectator.describe Gloop::Buffer do
   subject(buffer) { described_class.create }
 
+  let(data) do
+    Bytes.new(8) { |i| i.to_u8 }
+  end
+
   describe ".create" do
     it "creates a buffer" do
       buffer = described_class.create
@@ -60,6 +64,37 @@ Spectator.describe Gloop::Buffer do
   describe "#delete" do
     it "deletes the buffer" do
       expect { buffer.delete }.to change(&.exists?).from(true).to(false)
+    end
+  end
+
+  describe "#usage" do
+    subject { buffer.usage }
+
+    it "retrieves the usage hints" do
+      buffer.data(Bytes.empty, :dynamic_draw)
+      is_expected.to eq(Gloop::Buffer::Usage::DynamicDraw)
+    end
+  end
+
+  describe "#data" do
+    subject { buffer.data }
+
+    it "stores data in the buffer" do
+      buffer.data(data, :static_draw)
+      is_expected.to eq(data)
+    end
+  end
+
+  describe "#data=" do
+    it "stores data in the buffer" do
+      buffer.data = data
+      expect(buffer.data).to eq(data)
+    end
+
+    it "retains the usage hint" do
+      buffer.data(data, :dynamic_draw)
+      buffer.data = data
+      expect(buffer.usage).to eq(Gloop::Buffer::Usage::DynamicDraw)
     end
   end
 
