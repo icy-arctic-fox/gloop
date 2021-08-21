@@ -112,22 +112,22 @@ indices = UInt32.static_array( # note that we start from 0!
   1, 2, 3                      # second Triangle
 )
 LibGL.gen_vertex_arrays(1, out vao)
-LibGL.gen_buffers(1, out vbo)
-LibGL.gen_buffers(1, out ebo)
+vbo = Gloop::Buffer.generate
+ebo = Gloop::Buffer.generate
 # bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
 LibGL.bind_vertex_array(vao)
 
-LibGL.bind_buffer(LibGL::BufferTargetARB::ArrayBuffer, vbo)
-LibGL.buffer_data(LibGL::BufferTargetARB::ArrayBuffer, sizeof(typeof(vertices)), vertices, LibGL::BufferUsageARB::StaticDraw)
+Gloop::Buffers.array.bind(vbo)
+Gloop::Buffers.array.data(vertices, :static_draw)
 
-LibGL.bind_buffer(LibGL::BufferTargetARB::ElementArrayBuffer, ebo)
-LibGL.buffer_data(LibGL::BufferTargetARB::ElementArrayBuffer, sizeof(typeof(indices)), indices, LibGL::BufferUsageARB::StaticDraw)
+Gloop::Buffers.element_array.bind(ebo)
+Gloop::Buffers.element_array.data(indices, :static_draw)
 
 LibGL.vertex_attrib_pointer(0, 3, LibGL::VertexAttribPointerType::Float, LibGL::Boolean::False, 3 * sizeof(Float32), nil)
 LibGL.enable_vertex_attrib_array(0)
 
 # note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-LibGL.bind_buffer(LibGL::BufferTargetARB::ArrayBuffer, 0)
+Gloop::Buffers.array.unbind
 
 # remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
 # LibGL.bind_buffer(LibGL::BufferTargetARB::ElementArrayBuffer, 0)
@@ -167,8 +167,8 @@ end
 # optional: de-allocate all resources once they've outlived their purpose:
 # ------------------------------------------------------------------------
 LibGL.delete_vertex_arrays(1, pointerof(vao))
-LibGL.delete_buffers(1, pointerof(vbo))
-LibGL.delete_buffers(1, pointerof(ebo))
+vbo.delete
+ebo.delete
 shader_program.delete
 
 # glfw: terminate, clearing all previously allocated GLFW resources.
