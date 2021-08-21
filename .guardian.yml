@@ -8,7 +8,7 @@ files: ./spec/**/*.cr
 run: crystal spec %file%
 ---
 files: ./**/*.cr
-run: crystal tool format --check %file%
+run: crystal tool format %file%
 ---
 files: ./shard.yml
 run: shards
