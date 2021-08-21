@@ -48,9 +48,8 @@ module Gloop
           end
 
           {% if block %}
-            %value.tap do |{{block.args.splat}}|
-              return {{yield}}
-            end
+            {{block.args.splat}} = %value
+            {{yield}}
           {% end %}
         end
       end
