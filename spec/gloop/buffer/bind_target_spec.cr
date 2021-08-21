@@ -41,6 +41,18 @@ Spectator.describe Gloop::Buffer::BindTarget do
     end
   end
 
+  describe "#allocate_data" do
+    it "allocates space for the buffer" do
+      target.allocate_data(64)
+      expect(target.size).to eq(64)
+    end
+
+    it "sets the usage hints" do
+      target.allocate_data(64, :dynamic_draw)
+      expect(target.usage).to eq(Gloop::Buffer::Usage::DynamicDraw)
+    end
+  end
+
   describe "#data=" do
     it "stores data in the buffer" do
       target.data = data

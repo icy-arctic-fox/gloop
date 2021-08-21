@@ -79,10 +79,15 @@ module Gloop
       # Stores data in the buffer currently bound to this target.
       # The *data* must have a `#to_slice` method.
       # The `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
-      def data(data, usage : Usage)
+      def data(data, usage : Usage = :static_draw)
         slice = data.to_slice
         size = slice.bytesize
         checked { LibGL.buffer_data(self, size, slice, usage) }
+      end
+
+      # Initializes the currently bound buffer to a given size with undefined contents.
+      def allocate_data(size : Int, usage : Usage = :static_draw)
+        checked { LibGL.buffer_data(self, size, nil, usage) }
       end
 
       # Stores data in the buffer currently bound to this target.

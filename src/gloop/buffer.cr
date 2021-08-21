@@ -110,16 +110,21 @@ module Gloop
 
     # Stores data in this buffer.
     # The *data* must have a `#to_slice` method.
-    # The `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
-    def data(data, usage : Usage)
+    # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
+    def data(data, usage : Usage = :static_draw)
       slice = data.to_slice
       size = slice.bytesize
       checked { LibGL.named_buffer_data(self, size, slice, usage.named_to_unsafe) }
     end
 
+    # Initializes the buffer of a given size with undefined contents.
+    def allocate_data(size : Int, usage : Usage = :static_draw)
+      checked { LibGL.named_buffer_data(self, size, nil, usage.named_to_unsafe) }
+    end
+
     # Stores data in this buffer.
     # The *data* must have a `#to_slice` method.
-    # The `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
+    # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
     # Previously set `#usage` hint is reapplied for this data.
     def data=(data)
       self.data(data, usage)
