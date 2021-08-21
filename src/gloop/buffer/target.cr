@@ -18,19 +18,6 @@ module Gloop
       Query             = LibGL::BufferTargetARB::QueryBuffer
       Parameter         = LibGL::BufferTargetARB::ParameterBuffer
 
-      # Binds the buffer to this target.
-      def bind(buffer)
-        buffer.bind(self)
-      end
-
-      def data(data, usage)
-        Buffer.data(self, data, usage)
-      end
-
-      def data=(data)
-        self.data(data, usage)
-      end
-
       # Converts to an OpenGL enum.
       def to_unsafe
         LibGL::BufferTargetARB.new(value)
