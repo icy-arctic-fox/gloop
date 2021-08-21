@@ -105,6 +105,22 @@ module Gloop
         end
       end
 
+      # Stores data in this buffer.
+      # This makes the buffer have a fixed size (immutable).
+      # The *data* must have a `#to_slice` method.
+      # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
+      def storage(data, flags : Storage)
+        slice = data.to_slice
+        size = slice.bytesize
+        checked { LibGL.buffer_storage(storage_target, size, slice, flags) }
+      end
+
+      # Initializes the currently bound buffer to a given size with undefined contents.
+      # This makes the buffer have a fixed size (immutable).
+      def allocate_storage(size : Int, flags : Storage)
+        checked { LibGL.buffer_storage(storage_target, size, nil, flags) }
+      end
+
       # Retrieves a subset of data from the buffer currently bound to this target.
       def []?(start : Int, count : Int) : Bytes?
         start, count = Indexable.normalize_start_and_count(start, count, size) { return nil }
@@ -136,6 +152,12 @@ module Gloop
       # Returns an OpenGL enum representing this buffer binding target.
       def to_unsafe
         @target.to_unsafe
+      end
+
+      # Returns an OpenGL enum representing this buffer binding target.
+      # This intended to be used with `glBufferStorage` since it uses a different enum group.
+      private def storage_target
+        LibGL::BufferStorageTarget.new(@target.value)
       end
     end
   end

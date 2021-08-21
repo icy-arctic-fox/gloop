@@ -82,12 +82,27 @@ Spectator.describe Gloop::Buffer do
     end
   end
 
+  describe "#storage_flags" do
+    subject { buffer.storage_flags }
+    let(flags) { Gloop::Buffer::Storage.flags(MapRead, MapPersistent, MapCoherent) }
+    before_each { buffer.storage(data, flags) }
+
+    it "retrieves the storage flags" do
+      is_expected.to eq(flags)
+    end
+  end
+
   describe "#data" do
     subject { buffer.data }
 
     it "stores data in the buffer" do
       buffer.data(data, :static_draw)
       is_expected.to eq(data)
+    end
+
+    it "makes the buffer mutable" do
+      buffer.data(data)
+      expect(buffer.immutable?).to be_false
     end
   end
 
@@ -101,6 +116,11 @@ Spectator.describe Gloop::Buffer do
       buffer.allocate_data(64, :dynamic_draw)
       expect(buffer.usage).to eq(Gloop::Buffer::Usage::DynamicDraw)
     end
+
+    it "makes the buffer mutable" do
+      buffer.allocate_data(64)
+      expect(buffer.immutable?).to be_false
+    end
   end
 
   describe "#data=" do
@@ -113,6 +133,40 @@ Spectator.describe Gloop::Buffer do
       buffer.data(data, :dynamic_draw)
       buffer.data = data
       expect(buffer.usage).to eq(Gloop::Buffer::Usage::DynamicDraw)
+    end
+
+    it "makes the buffer mutable" do
+      buffer.data = data
+      expect(buffer.immutable?).to be_false
+    end
+  end
+
+  describe "#storage" do
+    it "stores data in the buffer" do
+      buffer.storage(data, :none)
+      expect(buffer.data).to eq(data)
+    end
+
+    it "makes the buffer immutable" do
+      buffer.storage(data, :none)
+      expect(buffer.immutable?).to be_true
+    end
+  end
+
+  describe "#allocate_storage" do
+    it "allocates space for the buffer" do
+      buffer.allocate_storage(64, :none)
+      expect(buffer.size).to eq(64)
+    end
+
+    it "sets the storage flags" do
+      buffer.allocate_storage(64, :map_read)
+      expect(buffer.storage_flags).to eq(Gloop::Buffer::Storage::MapRead)
+    end
+
+    it "makes the buffer immutable" do
+      buffer.allocate_storage(64, :none)
+      expect(buffer.immutable?).to be_true
     end
   end
 

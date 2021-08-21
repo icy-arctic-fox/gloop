@@ -32,12 +32,27 @@ Spectator.describe Gloop::Buffer::BindTarget do
     end
   end
 
+  describe "#storage_flags" do
+    subject { target.storage_flags }
+    let(flags) { Gloop::Buffer::Storage.flags(MapRead, MapPersistent, MapCoherent) }
+    before_each { target.storage(data, flags) }
+
+    it "retrieves the storage flags" do
+      is_expected.to eq(flags)
+    end
+  end
+
   describe "#data" do
     subject { target.data }
 
     it "stores data in the buffer" do
       target.data(data, :static_draw)
       is_expected.to eq(data)
+    end
+
+    it "makes the buffer mutable" do
+      target.data(data)
+      expect(target.immutable?).to be_false
     end
   end
 
@@ -51,6 +66,11 @@ Spectator.describe Gloop::Buffer::BindTarget do
       target.allocate_data(64, :dynamic_draw)
       expect(target.usage).to eq(Gloop::Buffer::Usage::DynamicDraw)
     end
+
+    it "makes the buffer mutable" do
+      target.allocate_data(64)
+      expect(target.immutable?).to be_false
+    end
   end
 
   describe "#data=" do
@@ -63,6 +83,40 @@ Spectator.describe Gloop::Buffer::BindTarget do
       target.data(data, :dynamic_draw)
       target.data = data
       expect(target.usage).to eq(Gloop::Buffer::Usage::DynamicDraw)
+    end
+
+    it "makes the buffer mutable" do
+      target.data = data
+      expect(target.immutable?).to be_false
+    end
+  end
+
+  describe "#storage" do
+    it "stores data in the buffer" do
+      target.storage(data, :none)
+      expect(target.data).to eq(data)
+    end
+
+    it "makes the buffer immutable" do
+      target.storage(data, :none)
+      expect(target.immutable?).to be_true
+    end
+  end
+
+  describe "#allocate_storage" do
+    it "allocates space for the buffer" do
+      target.allocate_storage(64, :none)
+      expect(target.size).to eq(64)
+    end
+
+    it "sets the storage flags" do
+      target.allocate_storage(64, :map_read)
+      expect(target.storage_flags).to eq(Gloop::Buffer::Storage::MapRead)
+    end
+
+    it "makes the buffer immutable" do
+      target.allocate_storage(64, :none)
+      expect(target.immutable?).to be_true
     end
   end
 

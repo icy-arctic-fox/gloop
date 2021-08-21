@@ -137,6 +137,22 @@ module Gloop
       end
     end
 
+    # Stores data in this buffer.
+    # This makes the buffer have a fixed size (immutable).
+    # The *data* must have a `#to_slice` method.
+    # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
+    def storage(data, flags : Storage)
+      slice = data.to_slice
+      size = slice.bytesize
+      checked { LibGL.named_buffer_storage(self, size, slice, flags) }
+    end
+
+    # Initializes the buffer of a given size with undefined contents.
+    # This makes the buffer have a fixed size (immutable).
+    def allocate_storage(size : Int, flags : Storage)
+      checked { LibGL.named_buffer_storage(self, size, nil, flags) }
+    end
+
     # Retrieves a subset of data from the buffer.
     def []?(start : Int, count : Int) : Bytes?
       start, count = Indexable.normalize_start_and_count(start, count, size) { return nil }
