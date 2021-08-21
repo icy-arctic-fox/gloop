@@ -39,5 +39,9 @@ module Gloop
     buffer_target :query
 
     buffer_target :parameter
+
+    def [](target : Buffer::Target)
+      Buffer::BindTarget.new(target)
+    end
   end
 end
