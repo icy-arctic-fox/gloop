@@ -34,9 +34,46 @@ module Gloop
       protected def initialize(@target : Target)
       end
 
+      # Retrieves the buffer currently bound to this target.
+      # If there is no buffer bound, nil is returned.
+      def buffer : Buffer?
+        pname = binding_pname
+        name = checked do
+          LibGL.get_integer_v(pname, out name)
+          name
+        end
+        Buffer.new(name.to_u32!) unless name.zero?
+      end
+
+      # Retrieves the corresponding parameter value for `glGet` for this target.
+      private def binding_pname # ameba:disable Metrics/CyclomaticComplexity
+        case @target
+        in Target::Array             then LibGL::GetPName::ArrayBufferBinding
+        in Target::ElementArray      then LibGL::GetPName::ElementArrayBufferBinding
+        in Target::PixelPack         then LibGL::GetPName::PixelPackBufferBinding
+        in Target::PixelUnpack       then LibGL::GetPName::PixelUnpackBufferBinding
+        in Target::TransformFeedback then LibGL::GetPName::TransformFeedbackBufferBinding
+        in Target::Texture           then LibGL::GetPName.new(LibGL::TEXTURE_BUFFER_BINDING.to_u32!)
+        in Target::CopyRead          then LibGL::GetPName.new(LibGL::COPY_READ_BUFFER_BINDING.to_u32!)
+        in Target::CopyWrite         then LibGL::GetPName.new(LibGL::COPY_WRITE_BUFFER_BINDING.to_u32!)
+        in Target::Uniform           then LibGL::GetPName::UniformBufferBinding
+        in Target::DrawIndirect      then LibGL::GetPName.new(LibGL::DRAW_INDIRECT_BUFFER_BINDING.to_u32!)
+        in Target::AtomicCounter     then LibGL::GetPName.new(LibGL::AtomicCounterBufferPName::AtomicCounterBufferBinding.to_u32!)
+        in Target::DispatchIndirect  then LibGL::GetPName::DispatchIndirectBufferBinding
+        in Target::ShaderStorage     then LibGL::GetPName::ShaderStorageBufferBinding
+        in Target::Query             then LibGL::GetPName.new(LibGL::QUERY_BUFFER_BINDING.to_u32!)
+        in Target::Parameter         then LibGL::GetPName.new(LibGL::PARAMETER_BUFFER_BINDING.to_u32!)
+        end
+      end
+
       # Binds a buffer to this target.
       def bind(buffer)
         checked { LibGL.bind_buffer(self, buffer) }
+      end
+
+      # Unbinds any previously bound buffer from this target.
+      def unbind
+        checked { LibGL.bind_buffer(self, 0) }
       end
 
       # Stores data in the buffer currently bound to this target.

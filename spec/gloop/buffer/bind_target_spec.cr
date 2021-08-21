@@ -9,6 +9,20 @@ Spectator.describe Gloop::Buffer::BindTarget do
     Bytes.new(8) { |i| i.to_u8 }
   end
 
+  describe "#bind" do
+    before_each { target.unbind }
+
+    it "binds a buffer to the target" do
+      expect { target.bind(buffer) }.to change(&.buffer).from(nil).to(buffer)
+    end
+  end
+
+  describe "#unbind" do
+    it "removes a previously bound buffer" do
+      expect { target.unbind }.to change(&.buffer).from(buffer).to(nil)
+    end
+  end
+
   describe "#usage" do
     subject { target.usage }
 

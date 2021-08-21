@@ -67,6 +67,12 @@ Spectator.describe Gloop::Buffer do
     end
   end
 
+  describe "#bind" do
+    it "binds the buffer to a target" do
+      expect { buffer.bind(:array) }.to change { Gloop::Buffers.array.buffer }.to(buffer)
+    end
+  end
+
   describe "#usage" do
     subject { buffer.usage }
 
