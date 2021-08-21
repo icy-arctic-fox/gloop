@@ -98,6 +98,78 @@ Spectator.describe Gloop::Buffer do
     end
   end
 
+  describe "#[]" do
+    before_each { buffer.data = data }
+
+    context "with a Range" do
+      it "retrieves a subset of data from the buffer" do
+        expect(buffer[1..3]).to eq(Bytes[1, 2, 3])
+      end
+
+      it "supports negative offsets" do
+        expect(buffer[-5..-1]).to eq(Bytes[3, 4, 5, 6, 7])
+      end
+
+      it "raises on out-of-range values" do
+        expect { buffer[-100..100] }.to raise_error(IndexError)
+      end
+    end
+
+    context "with start and count" do
+      it "retrieves a subset of data from the buffer" do
+        expect(buffer[3, 4]).to eq(Bytes[3, 4, 5, 6])
+      end
+
+      it "supports negative offsets" do
+        expect(buffer[-6, 2]).to eq(Bytes[2, 3])
+      end
+
+      it "raises on negative counts" do
+        expect { buffer[-1, -2] }.to raise_error(ArgumentError)
+      end
+
+      it "raises on out-of-range values" do
+        expect { buffer[-100, 100] }.to raise_error(IndexError)
+      end
+    end
+  end
+
+  describe "#[]?" do
+    before_each { buffer.data = data }
+
+    context "with a Range" do
+      it "retrieves a subset of data from the buffer" do
+        expect(buffer[1..3]?).to eq(Bytes[1, 2, 3])
+      end
+
+      it "supports negative offsets" do
+        expect(buffer[-5..-1]?).to eq(Bytes[3, 4, 5, 6, 7])
+      end
+
+      it "returns nil on out-of-range values" do
+        expect(buffer[-100..100]?).to be_nil
+      end
+    end
+
+    context "with start and count" do
+      it "retrieves a subset of data from the buffer" do
+        expect(buffer[3, 4]?).to eq(Bytes[3, 4, 5, 6])
+      end
+
+      it "supports negative offsets" do
+        expect(buffer[-6, 2]?).to eq(Bytes[2, 3])
+      end
+
+      it "raises on negative counts" do
+        expect { buffer[-1, -2]? }.to raise_error(ArgumentError)
+      end
+
+      it "raises on out-of-range values" do
+        expect(buffer[-100, 100]?).to be_nil
+      end
+    end
+  end
+
   context "Labelable" do
     it "can be labeled" do
       subject.label = "Test label"

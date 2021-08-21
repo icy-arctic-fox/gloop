@@ -103,12 +103,9 @@ module Gloop
       checked { LibGL.bind_buffer(target, self) }
     end
 
-    # Stores data in the specified buffer target.
-    # The *data* must have `#bytesize` and `#to_unsafe` methods.
-    # The `Bytes` (`Slice`) type is ideal for this.
-    def self.data(target : Target, data, usage : Usage)
-      size = data.bytesize
-      checked { LibGL.buffer_data(target, size, data, usage) }
+    # Binds this buffer to the specified target.
+    def bind(target : BindTarget)
+      checked { LibGL.bind_buffer(target, self) }
     end
 
     # Stores data in this buffer.
@@ -129,17 +126,17 @@ module Gloop
 
     # Retrieves all data in the buffer.
     def data
-      bytes = Bytes.new(size)
-      checked { LibGL.get_named_buffer_sub_data(self, 0, bytes.bytesize, bytes) }
-      bytes
+      Bytes.new(size).tap do |bytes|
+        checked { LibGL.get_named_buffer_sub_data(self, 0, bytes.bytesize, bytes) }
+      end
     end
 
     # Retrieves a subset of data from the buffer.
     def []?(start : Int, count : Int) : Bytes?
-      start, count = normalize_start_and_count(start, count) { return nil }
-      bytes = Bytes.new(count)
-      checked { LibGL.get_named_buffer_sub_data(self, start, count, bytes) }
-      bytes
+      start, count = Indexable.normalize_start_and_count(start, count, size) { return nil }
+      Bytes.new(count).tap do |bytes|
+        checked { LibGL.get_named_buffer_sub_data(self, start, count, bytes) }
+      end
     end
 
     # Retrieves a subset of data from the buffer.
@@ -149,12 +146,17 @@ module Gloop
 
     # Retrieves a range of data from the buffer.
     def []?(range : Range) : Bytes?
-      self[*Indexable.range_to_index_and_count(range, size) || return nil]?
+      size = self.size
+      start, count = Indexable.range_to_index_and_count(range, size) || return nil
+      start, count = Indexable.normalize_start_and_count(start, count, size) { return nil }
+      Bytes.new(count).tap do |bytes|
+        checked { LibGL.get_named_buffer_sub_data(self, start, count, bytes) }
+      end
     end
 
     # Retrieves a range of data from the buffer.
     def [](range : Range) : Bytes
-      self[*Indexable.range_to_index_and_count(range, size) || raise IndexError.new]
+      self[range]? || raise IndexError.new
     end
   end
 end
