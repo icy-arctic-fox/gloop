@@ -113,7 +113,7 @@ module Gloop
     # The `Bytes` (`Slice`) type is ideal for this.
     def data(data, usage : Usage)
       size = data.bytesize
-      checked { LibGL.named_buffer_data(self, size, data, usage) }
+      checked { LibGL.named_buffer_data(self, size, data, usage.named_to_unsafe) }
     end
 
     # Stores data in this buffer.

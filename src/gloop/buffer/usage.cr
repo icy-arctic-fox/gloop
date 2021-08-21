@@ -14,6 +14,15 @@ module Gloop
 
       # Converts to an OpenGL enum.
       def to_unsafe
+        LibGL::BufferUsageARB.new(value)
+      end
+
+      # Converts to an OpenGL enum.
+      #
+      # For some reason, the OpenGL API specifies some "named" variant methods
+      # with `VertexBufferObjectUsage` instead of `BufferUsageARB`.
+      # They're literally the same underlying values, but in a different enum group.
+      protected def named_to_unsafe
         LibGL::VertexBufferObjectUsage.new(value)
       end
     end
