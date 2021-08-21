@@ -109,16 +109,17 @@ module Gloop
     end
 
     # Stores data in this buffer.
-    # The *data* must have `#bytesize` and `#to_unsafe` methods.
-    # The `Bytes` (`Slice`) type is ideal for this.
+    # The *data* must have a `#to_slice` method.
+    # The `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
     def data(data, usage : Usage)
-      size = data.bytesize
-      checked { LibGL.named_buffer_data(self, size, data, usage.named_to_unsafe) }
+      slice = data.to_slice
+      size = slice.bytesize
+      checked { LibGL.named_buffer_data(self, size, slice, usage.named_to_unsafe) }
     end
 
     # Stores data in this buffer.
-    # The *data* must have `#bytesize` and `#to_unsafe` methods.
-    # The `Bytes` (`Slice`) type is ideal for this.
+    # The *data* must have a `#to_slice` method.
+    # The `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
     # Previously set `#usage` hint is reapplied for this data.
     def data=(data)
       self.data(data, usage)
