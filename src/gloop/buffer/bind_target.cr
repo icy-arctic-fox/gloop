@@ -36,13 +36,24 @@ module Gloop
 
       # Retrieves the buffer currently bound to this target.
       # If there is no buffer bound, nil is returned.
-      def buffer : Buffer?
+      def buffer? : Buffer?
         pname = binding_pname
         name = checked do
           LibGL.get_integer_v(pname, out name)
           name
         end
         Buffer.new(name.to_u32!) unless name.zero?
+      end
+
+      # Retrieves the buffer currently bound to this target.
+      # If there is no buffer bound, `Buffer.none` is returned.
+      def buffer : Buffer
+        pname = binding_pname
+        name = checked do
+          LibGL.get_integer_v(pname, out name)
+          name
+        end
+        Buffer.new(name.to_u32!)
       end
 
       # Retrieves the corresponding parameter value for `glGet` for this target.
@@ -80,7 +91,7 @@ module Gloop
         begin
           yield
         ensure
-          bind(previous || Buffer.none)
+          bind(previous)
         end
       end
 

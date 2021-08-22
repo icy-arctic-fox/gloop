@@ -80,6 +80,11 @@ module Gloop
       new(0_u32)
     end
 
+    # Checks if this is a null object for a buffer.
+    def none?
+      @name.zero?
+    end
+
     # Creates a mutable buffer with initial contents.
     # This effectively combines `.create` and `#data`.
     def self.mutable(data, usage : Usage = :static_draw)
@@ -140,7 +145,7 @@ module Gloop
       begin
         yield
       ensure
-        target.bind(previous || self.class.none)
+        target.bind(previous)
       end
     end
 

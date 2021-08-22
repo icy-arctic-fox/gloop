@@ -9,11 +9,24 @@ Spectator.describe Gloop::Buffer::BindTarget do
     Bytes.new(8) { |i| i.to_u8 }
   end
 
+  describe "#buffer" do
+    subject { target.buffer }
+
+    it "is the currently bound buffer" do
+      is_expected.to eq(buffer)
+    end
+
+    it "is the null object when no buffer is bound to the target" do
+      target.unbind
+      is_expected.to be_none
+    end
+  end
+
   describe "#bind" do
     before_each { target.unbind }
 
     it "binds a buffer to the target" do
-      expect { target.bind(buffer) }.to change(&.buffer).from(nil).to(buffer)
+      expect { target.bind(buffer) }.to change(&.buffer?).from(nil).to(buffer)
     end
 
     context "with a block" do
@@ -43,14 +56,14 @@ Spectator.describe Gloop::Buffer::BindTarget do
         target.bind(buffer) do
           expect(&.buffer).to eq(buffer)
         end
-        expect(&.buffer).to be_nil
+        expect(&.buffer?).to be_nil
       end
     end
   end
 
   describe "#unbind" do
     it "removes a previously bound buffer" do
-      expect { target.unbind }.to change(&.buffer).from(buffer).to(nil)
+      expect { target.unbind }.to change(&.buffer?).from(buffer).to(nil)
     end
   end
 

@@ -49,8 +49,16 @@ Spectator.describe Gloop::Buffer do
     end
   end
 
+  describe ".none" do
+    subject { described_class.none }
+
+    it "is a null object" do
+      expect(&.none?).to be_true
+    end
+  end
+
   describe ".mutable" do
-    subject(buffer) { Gloop::Buffer.mutable(data, :dynamic_draw) }
+    subject(buffer) { described_class.mutable(data, :dynamic_draw) }
 
     it "populates the data" do
       expect(buffer.data).to eq(data)
@@ -66,7 +74,7 @@ Spectator.describe Gloop::Buffer do
   end
 
   describe ".immutable" do
-    subject(buffer) { Gloop::Buffer.immutable(data, :map_read) }
+    subject(buffer) { described_class.immutable(data, :map_read) }
 
     it "populates the data" do
       expect(buffer.data).to eq(data)
@@ -101,7 +109,7 @@ Spectator.describe Gloop::Buffer do
 
   describe "#bind" do
     def bound_buffer
-      Gloop::Buffers.array.buffer
+      Gloop::Buffers.array.buffer?
     end
 
     it "binds the buffer to a target" do
