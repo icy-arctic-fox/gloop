@@ -105,7 +105,7 @@ module Gloop
         end
       end
 
-      # Stores data in this buffer.
+      # Stores data in the buffer currently bound to this target.
       # This makes the buffer have a fixed size (immutable).
       # The *data* must have a `#to_slice` method.
       # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
@@ -147,6 +147,39 @@ module Gloop
       # Retrieves a range of data from the buffer currently bound to this target
       def [](range : Range) : Bytes
         self[range]? || raise IndexError.new
+      end
+
+      # Updates a subset of the currently bound buffer's data store.
+      # The number of bytes updated in the buffer is equal to the byte-size of *data*.
+      # The *data* must have a `#to_slice`.
+      # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
+      def update(offset : Int, data)
+        slice = data.to_slice
+        self[offset, slice.bytesize] = slice
+      end
+
+      # Updates a subset of the currently bound buffer's data store.
+      # The *data* must have a `#to_unsafe` method or be a `Pointer`.
+      # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
+      #
+      # NOTE: Any length *data* might have is ignored.
+      # Be sure that *count* is less than or equal to the byte-size length of *data*.
+      def []=(start : Int, count : Int, data)
+        start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
+        checked { LibGL.buffer_sub_data(self, start, count, data) }
+      end
+
+      # Updates a subset of the currently bound buffer's data store.
+      # The *data* must have a `#to_unsafe` method or be a `Pointer`.
+      # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
+      #
+      # NOTE: Any length *data* might have is ignored.
+      # Be sure that *count* is less than or equal to the byte-size length of *data*.
+      def []=(range : Range, data)
+        size = self.size
+        start, count = Indexable.range_to_index_and_count(range, size) || raise IndexError.new
+        start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
+        checked { LibGL.buffer_sub_data(self, start, count, data) }
       end
 
       # Returns an OpenGL enum representing this buffer binding target.

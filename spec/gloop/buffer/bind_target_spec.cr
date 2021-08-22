@@ -191,4 +191,30 @@ Spectator.describe Gloop::Buffer::BindTarget do
       end
     end
   end
+
+  describe "#update" do
+    let(sub_data) { Bytes[5, 4, 3, 2] }
+    before_each { target.data = data }
+
+    it "updates a subset of the buffer" do
+      expect { target.update(2, sub_data) }.to change(&.data).to(Bytes[0, 1, 5, 4, 3, 2, 6, 7])
+    end
+  end
+
+  describe "#[]=" do
+    let(sub_data) { Bytes[5, 4, 3, 2] }
+    before_each { target.data = data }
+
+    context "with a Range" do
+      it "updates a subset of the buffer" do
+        expect { target[2..5] = sub_data }.to change(&.data).to(Bytes[0, 1, 5, 4, 3, 2, 6, 7])
+      end
+    end
+
+    context "with start and count" do
+      it "updates a subset of the buffer" do
+        expect { target[2, 4] = sub_data }.to change(&.data).to(Bytes[0, 1, 5, 4, 3, 2, 6, 7])
+      end
+    end
+  end
 end
