@@ -43,5 +43,9 @@ module Gloop
     def [](target : Buffer::Target)
       Buffer::BindTarget.new(target)
     end
+
+    def copy(from source : Buffer::Target, to destination : Buffer::Target, source_offset : Int, destination_offset : Int, size : Int)
+      Buffer::BindTarget.copy(from, to, source_offset, destination_offset, size)
+    end
   end
 end

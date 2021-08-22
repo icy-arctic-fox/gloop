@@ -206,6 +206,18 @@ module Gloop
         checked { LibGL.buffer_sub_data(self, start, count, data) }
       end
 
+      def self.copy(from source, to destination, source_offset : Int, destination_offset : Int, size : Int)
+        checked { LibGL.copy_buffer_sub_data(source, destination, source_offset, destination_offset, size) }
+      end
+
+      def copy_to(destination, source_offset : Int, destination_offset : Int, size : Int)
+        self.class.copy(self, destination, source_offset, destination_offset, size)
+      end
+
+      def copy_from(source, source_offset : Int, destination_offset : Int, size : Int)
+        self.class.copy(source, self, source_offset, destination_offset, size)
+      end
+
       # Returns an OpenGL enum representing this buffer binding target.
       def to_unsafe
         @target.to_unsafe
