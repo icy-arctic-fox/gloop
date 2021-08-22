@@ -3,9 +3,7 @@ require "../spec_helper"
 Spectator.describe Gloop::Buffer do
   subject(buffer) { described_class.create }
 
-  let(data) do
-    Bytes.new(8) { |i| i.to_u8 }
-  end
+  let(data) { Bytes.new(8, &.to_u8) }
 
   describe ".create" do
     it "creates a buffer" do

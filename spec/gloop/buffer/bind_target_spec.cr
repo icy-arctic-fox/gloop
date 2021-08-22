@@ -3,11 +3,8 @@ require "../../spec_helper"
 Spectator.describe Gloop::Buffer::BindTarget do
   subject(buffer) { Gloop::Buffer.generate }
   subject(target) { Gloop::Buffers.array }
+  let(data) { Bytes.new(8, &.to_u8) }
   before_each { target.bind(buffer) }
-
-  let(data) do
-    Bytes.new(8) { |i| i.to_u8 }
-  end
 
   describe "#buffer" do
     subject { target.buffer }
