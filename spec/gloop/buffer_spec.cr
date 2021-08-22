@@ -300,6 +300,26 @@ Spectator.describe Gloop::Buffer do
     end
   end
 
+  describe "#invalidate" do
+    before_each { buffer.data = data }
+
+    specify do
+      expect(&.invalidate).to_not raise_error
+    end
+
+    context "with a Range" do
+      specify do
+        expect(&.invalidate(2..5)).to_not raise_error
+      end
+    end
+
+    context "with start and count" do
+      specify do
+        expect(&.invalidate(2, 4)).to_not raise_error
+      end
+    end
+  end
+
   context "Labelable" do
     it "can be labeled" do
       subject.label = "Test label"

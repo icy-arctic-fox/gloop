@@ -229,5 +229,24 @@ module Gloop
       start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
       checked { LibGL.named_buffer_sub_data(self, start, count, data) }
     end
+
+    # Invalidates the entire content of the buffer.
+    def invalidate
+      checked { LibGL.invalidate_buffer_data(self) }
+    end
+
+    # Invalidates a subset of the buffer's content.
+    def invalidate(start : Int, count : Int)
+      start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
+      checked { LibGL.invalidate_buffer_sub_data(self, start, count) }
+    end
+
+    # Invalidates a subset of the buffer's content.
+    def invalidate(range : Range)
+      size = self.size
+      start, count = Indexable.range_to_index_and_count(range, size) || raise IndexError.new
+      start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
+      checked { LibGL.invalidate_buffer_sub_data(self, start, count) }
+    end
   end
 end
