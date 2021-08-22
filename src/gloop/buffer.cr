@@ -255,16 +255,19 @@ module Gloop
       checked { LibGL.named_buffer_sub_data(self, start, count, data) }
     end
 
-    def self.copy(from source, to destination, source_offset : Int, destination_offset : Int, size : Int)
-      checked { LibGL.copy_named_buffer_sub_data(source, destination, source_offset, destination_offset, size) }
+    # Copies a subset of data from one buffer to another.
+    def self.copy(from read_buffer, to write_buffer, read_offset : Int, write_offset : Int, size : Int)
+      checked { LibGL.copy_named_buffer_sub_data(read_buffer, write_buffer, read_offset, write_offset, size) }
     end
 
-    def copy_to(destination, source_offset : Int, destination_offset : Int, size : Int)
-      self.class.copy(self, destination, source_offset, destination_offset, size)
+    # Copies a subset of this buffer into another.
+    def copy_to(buffer, read_offset : Int, write_offset : Int, size : Int)
+      self.class.copy(self, buffer, read_offset, write_offset, size)
     end
 
-    def copy_from(source, source_offset : Int, destination_offset : Int, size : Int)
-      self.class.copy(source, self, source_offset, destination_offset, size)
+    # Copies a subset of another buffer into this one.
+    def copy_from(buffer, read_offset : Int, write_offset : Int, size : Int)
+      self.class.copy(buffer, self, read_offset, write_offset, size)
     end
 
     # Invalidates the entire content of the buffer.

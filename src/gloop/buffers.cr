@@ -44,8 +44,10 @@ module Gloop
       Buffer::BindTarget.new(target)
     end
 
-    def copy(from source : Buffer::Target, to destination : Buffer::Target, source_offset : Int, destination_offset : Int, size : Int)
-      Buffer::BindTarget.copy(from, to, source_offset, destination_offset, size)
+    # Copies a subset of data from a buffer bound to one target into one bound by another target.
+    def copy(from read_target : Buffer::Target, to write_target : Buffer::Target,
+             read_offset : Int, write_offset : Int, size : Int)
+      Buffer::BindTarget.copy(read_target, write_target, read_offset, write_offset, size)
     end
   end
 end

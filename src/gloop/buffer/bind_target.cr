@@ -5,6 +5,7 @@ require "./target"
 module Gloop
   struct Buffer < Object
     struct BindTarget
+      extend ErrorHandling
       include BufferTargetParameters
       include ErrorHandling
 
@@ -206,16 +207,24 @@ module Gloop
         checked { LibGL.buffer_sub_data(self, start, count, data) }
       end
 
-      def self.copy(from source, to destination, source_offset : Int, destination_offset : Int, size : Int)
-        checked { LibGL.copy_buffer_sub_data(source, destination, source_offset, destination_offset, size) }
+      # Copies a subset of data from a buffer bound to one target into one bound by another target.
+      def self.copy(from read_target : Target | self, to write_target : Target | self,
+                    read_offset : Int, write_offset : Int, size : Int)
+        checked do
+          LibGL.copy_buffer_sub_data(
+            read_target.copy_buffer_target, write_target.copy_buffer_target,
+            read_offset, write_offset, size)
+        end
       end
 
-      def copy_to(destination, source_offset : Int, destination_offset : Int, size : Int)
-        self.class.copy(self, destination, source_offset, destination_offset, size)
+      # Copies a subset of the buffer bound to this target into another.
+      def copy_to(target : Target | self, read_offset : Int, write_offset : Int, size : Int)
+        self.class.copy(self, target, read_offset, write_offset, size)
       end
 
-      def copy_from(source, source_offset : Int, destination_offset : Int, size : Int)
-        self.class.copy(source, self, source_offset, destination_offset, size)
+      # Copies a subset of another buffer into the buffer bound to this target.
+      def copy_from(target : Target | self, read_offset : Int, write_offset : Int, size : Int)
+        self.class.copy(target, self, read_offset, write_offset, size)
       end
 
       # Returns an OpenGL enum representing this buffer binding target.
@@ -227,6 +236,12 @@ module Gloop
       # This intended to be used with `glBufferStorage` since it uses a different enum group.
       private def storage_target
         LibGL::BufferStorageTarget.new(@target.value)
+      end
+
+      # Returns an OpenGL enum representing this buffer binding target.
+      # This intended to be used with `glCopyBufferSubData` since it uses a different enum group.
+      protected def copy_buffer_target
+        LibGL::CopyBufferSubDataTarget.new(@target.value)
       end
     end
   end

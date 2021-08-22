@@ -22,6 +22,12 @@ module Gloop
       def to_unsafe
         LibGL::BufferTargetARB.new(value)
       end
+
+      # Returns an OpenGL enum representing this buffer binding target.
+      # This intended to be used with `glCopyBufferSubData` since it uses a different enum group.
+      protected def copy_buffer_target
+        LibGL::CopyBufferSubDataTarget.new(value)
+      end
     end
   end
 end

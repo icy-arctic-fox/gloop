@@ -258,4 +258,61 @@ Spectator.describe Gloop::Buffer::BindTarget do
       end
     end
   end
+
+  describe ".copy" do
+    let(buffer_a) { Gloop::Buffer.generate }
+    let(buffer_b) { Gloop::Buffer.generate }
+    let(target_a) { Gloop::Buffers.copy_read }
+    let(target_b) { Gloop::Buffers.copy_write }
+
+    before_each do
+      target_a.bind(buffer_a)
+      target_b.bind(buffer_b)
+      target_a.data = Bytes[10, 11, 12, 13, 14, 15, 16, 17]
+      target_b.data = Bytes[20, 21, 22, 23, 24, 25, 26, 27]
+    end
+
+    it "copies data from one buffer to another" do
+      described_class.copy(target_a, target_b, 1, 2, 4)
+      expect(target_b.data).to eq(Bytes[20, 21, 11, 12, 13, 14, 26, 27])
+    end
+  end
+
+  describe "#copy_to" do
+    let(buffer_a) { Gloop::Buffer.generate }
+    let(buffer_b) { Gloop::Buffer.generate }
+    let(target_a) { Gloop::Buffers.copy_read }
+    let(target_b) { Gloop::Buffers.copy_write }
+
+    before_each do
+      target_a.bind(buffer_a)
+      target_b.bind(buffer_b)
+      target_a.data = Bytes[10, 11, 12, 13, 14, 15, 16, 17]
+      target_b.data = Bytes[20, 21, 22, 23, 24, 25, 26, 27]
+    end
+
+    it "copies data from one buffer to another" do
+      target_a.copy_to(target_b, 1, 2, 4)
+      expect(target_b.data).to eq(Bytes[20, 21, 11, 12, 13, 14, 26, 27])
+    end
+  end
+
+  describe "#copy_from" do
+    let(buffer_a) { Gloop::Buffer.generate }
+    let(buffer_b) { Gloop::Buffer.generate }
+    let(target_a) { Gloop::Buffers.copy_read }
+    let(target_b) { Gloop::Buffers.copy_write }
+
+    before_each do
+      target_a.bind(buffer_a)
+      target_b.bind(buffer_b)
+      target_a.data = Bytes[10, 11, 12, 13, 14, 15, 16, 17]
+      target_b.data = Bytes[20, 21, 22, 23, 24, 25, 26, 27]
+    end
+
+    it "copies data from one buffer to another" do
+      target_b.copy_from(target_a, 1, 2, 4)
+      expect(target_b.data).to eq(Bytes[20, 21, 11, 12, 13, 14, 26, 27])
+    end
+  end
 end

@@ -341,6 +341,51 @@ Spectator.describe Gloop::Buffer do
     end
   end
 
+  describe ".copy" do
+    let(buffer_a) { described_class.create }
+    let(buffer_b) { described_class.create }
+
+    before_each do
+      buffer_a.data = Bytes[10, 11, 12, 13, 14, 15, 16, 17]
+      buffer_b.data = Bytes[20, 21, 22, 23, 24, 25, 26, 27]
+    end
+
+    it "copies data from one buffer to another" do
+      described_class.copy(buffer_a, buffer_b, 1, 2, 4)
+      expect(buffer_b.data).to eq(Bytes[20, 21, 11, 12, 13, 14, 26, 27])
+    end
+  end
+
+  describe "#copy_to" do
+    let(buffer_a) { described_class.create }
+    let(buffer_b) { described_class.create }
+
+    before_each do
+      buffer_a.data = Bytes[10, 11, 12, 13, 14, 15, 16, 17]
+      buffer_b.data = Bytes[20, 21, 22, 23, 24, 25, 26, 27]
+    end
+
+    it "copies data from one buffer to another" do
+      buffer_a.copy_to(buffer_b, 1, 2, 4)
+      expect(buffer_b.data).to eq(Bytes[20, 21, 11, 12, 13, 14, 26, 27])
+    end
+  end
+
+  describe "#copy_from" do
+    let(buffer_a) { described_class.create }
+    let(buffer_b) { described_class.create }
+
+    before_each do
+      buffer_a.data = Bytes[10, 11, 12, 13, 14, 15, 16, 17]
+      buffer_b.data = Bytes[20, 21, 22, 23, 24, 25, 26, 27]
+    end
+
+    it "copies data from one buffer to another" do
+      buffer_b.copy_from(buffer_a, 1, 2, 4)
+      expect(buffer_b.data).to eq(Bytes[20, 21, 11, 12, 13, 14, 26, 27])
+    end
+  end
+
   describe "#invalidate" do
     before_each { buffer.data = data }
 
