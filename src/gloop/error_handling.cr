@@ -1,5 +1,8 @@
 require "./errors"
 
+# Don't show this file in stack traces.
+Exception::CallStack.skip(__FILE__)
+
 module Gloop
   # Mix-in providing error handling feautres to OpenGL calls.
   # Can be included or extended.
