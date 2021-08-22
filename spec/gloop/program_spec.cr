@@ -30,6 +30,34 @@ Spectator.describe Gloop::Program do
 
   # TODO: Test program parameters.
 
+  describe "#current" do
+    subject { described_class.current }
+
+    before_each do
+      program.attach(vertex_shader)
+      program.attach(fragment_shader)
+      program.link
+    end
+
+    it "is the currently active program" do
+      program.activate
+      is_expected.to eq(program)
+    end
+
+    it "is the null object when no program is active" do
+      described_class.deactivate
+      is_expected.to be_none
+    end
+  end
+
+  describe ".none" do
+    subject { described_class.none }
+
+    it "is a null object" do
+      expect(&.none?).to be_true
+    end
+  end
+
   describe "#delete" do
     it "deletes a program" do
       subject.delete
@@ -177,7 +205,7 @@ Spectator.describe Gloop::Program do
   end
 
   describe ".deactivate" do
-    subject { described_class.current }
+    subject { described_class.current? }
 
     before_each do
       program.attach(vertex_shader)

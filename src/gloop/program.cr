@@ -31,6 +31,16 @@ module Gloop
       new(name)
     end
 
+    # Non-existent program to be used as a null object.
+    def self.none
+      new(0_u32)
+    end
+
+    # Checks if this is a null object for a program.
+    def none?
+      @name.zero?
+    end
+
     # Retrieves the current active program.
     # Returns nil if there isn't a program in use.
     #
@@ -38,9 +48,20 @@ module Gloop
     # ```c
     # glGetIntegerv(GL_CURRENT_PROGRAM, &program)
     # ```
-    class_parameter(CurrentProgram, current) do |name|
+    class_parameter(CurrentProgram, current?) do |name|
       return if name.zero? # No active program.
 
+      new(name.to_u32!)
+    end
+
+    # Retrieves the current active program.
+    # Returns `.none` if there isn't a program in use.
+    #
+    # Effectively calls:
+    # ```c
+    # glGetIntegerv(GL_CURRENT_PROGRAM, &program)
+    # ```
+    class_parameter(CurrentProgram, current) do |name|
       new(name.to_u32!)
     end
 
