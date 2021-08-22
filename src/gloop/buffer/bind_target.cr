@@ -71,6 +71,19 @@ module Gloop
         checked { LibGL.bind_buffer(self, buffer) }
       end
 
+      # Binds a buffer to this target.
+      # The previously bound buffer (if any) is restored after the block exits.
+      def bind(buffer)
+        previous = self.buffer
+        bind(buffer)
+
+        begin
+          yield
+        ensure
+          bind(previous || Buffer.none)
+        end
+      end
+
       # Unbinds any previously bound buffer from this target.
       def unbind
         checked { LibGL.bind_buffer(self, 0) }

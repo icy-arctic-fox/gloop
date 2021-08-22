@@ -15,6 +15,37 @@ Spectator.describe Gloop::Buffer::BindTarget do
     it "binds a buffer to the target" do
       expect { target.bind(buffer) }.to change(&.buffer).from(nil).to(buffer)
     end
+
+    context "with a block" do
+      it "rebinds the previous buffer after the block" do
+        previous = Gloop::Buffer.generate
+        target.bind(previous)
+        target.bind(buffer) do
+          expect(&.buffer).to eq(buffer)
+        end
+        expect(&.buffer).to eq(previous)
+      end
+
+      it "rebinds the previous buffer on error" do
+        previous = Gloop::Buffer.generate
+        target.bind(previous)
+        expect do
+          target.bind(buffer) do
+            expect(&.buffer).to eq(buffer)
+            raise "oops"
+          end
+        end.to raise_error("oops")
+        expect(&.buffer).to eq(previous)
+      end
+
+      it "unbinds the buffer when a previous one wasn't bound" do
+        target.unbind
+        target.bind(buffer) do
+          expect(&.buffer).to eq(buffer)
+        end
+        expect(&.buffer).to be_nil
+      end
+    end
   end
 
   describe "#unbind" do

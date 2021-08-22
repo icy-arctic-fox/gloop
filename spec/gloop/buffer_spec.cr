@@ -100,8 +100,43 @@ Spectator.describe Gloop::Buffer do
   end
 
   describe "#bind" do
+    def bound_buffer
+      Gloop::Buffers.array.buffer
+    end
+
     it "binds the buffer to a target" do
-      expect { buffer.bind(:array) }.to change { Gloop::Buffers.array.buffer }.to(buffer)
+      expect { buffer.bind(:array) }.to change { bound_buffer }.to(buffer)
+    end
+
+    context "with a block" do
+      it "rebinds the previous buffer after the block" do
+        previous = described_class.generate
+        previous.bind(:array)
+        buffer.bind(:array) do
+          expect(bound_buffer).to eq(buffer)
+        end
+        expect(bound_buffer).to eq(previous)
+      end
+
+      it "rebinds the previous buffer on error" do
+        previous = described_class.generate
+        previous.bind(:array)
+        expect do
+          buffer.bind(:array) do
+            expect(bound_buffer).to eq(buffer)
+            raise "oops"
+          end
+        end.to raise_error("oops")
+        expect(bound_buffer).to eq(previous)
+      end
+
+      it "unbinds the buffer when a previous one wasn't bound" do
+        described_class.none.bind(:array)
+        buffer.bind(:array) do
+          expect(bound_buffer).to eq(buffer)
+        end
+        expect(bound_buffer).to be_nil
+      end
     end
   end
 

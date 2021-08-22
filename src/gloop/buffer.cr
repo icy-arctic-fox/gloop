@@ -75,6 +75,11 @@ module Gloop
       names.map { |name| new(name) }
     end
 
+    # Non-existent buffer to be used as a null object.
+    def self.none
+      new(0_u32)
+    end
+
     # Creates a mutable buffer with initial contents.
     # This effectively combines `.create` and `#data`.
     def self.mutable(data, usage : Usage = :static_draw)
@@ -115,13 +120,28 @@ module Gloop
     end
 
     # Binds this buffer to the specified target.
-    def bind(target : Target)
+    def bind(target : Target | BindTarget)
       checked { LibGL.bind_buffer(target, self) }
     end
 
     # Binds this buffer to the specified target.
+    # The previously bound buffer (if any) is restored after the block exits.
+    def bind(target : Target)
+      target = BindTarget.new(target)
+      bind(target) { yield }
+    end
+
+    # Binds this buffer to the specified target.
+    # The previously bound buffer (if any) is restored after the block exits.
     def bind(target : BindTarget)
-      checked { LibGL.bind_buffer(target, self) }
+      previous = target.buffer
+      target.bind(self)
+
+      begin
+        yield
+      ensure
+        target.bind(previous || self.class.none)
+      end
     end
 
     # Stores data in this buffer.
