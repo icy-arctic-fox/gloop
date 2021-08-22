@@ -49,6 +49,38 @@ Spectator.describe Gloop::Buffer do
     end
   end
 
+  describe ".mutable" do
+    subject(buffer) { Gloop::Buffer.mutable(data, :dynamic_draw) }
+
+    it "populates the data" do
+      expect(buffer.data).to eq(data)
+    end
+
+    it "sets the usage hints" do
+      expect(buffer.usage).to eq(Gloop::Buffer::Usage::DynamicDraw)
+    end
+
+    it "creates a mutable buffer" do
+      expect(buffer.immutable?).to be_false
+    end
+  end
+
+  describe ".immutable" do
+    subject(buffer) { Gloop::Buffer.immutable(data, :map_read) }
+
+    it "populates the data" do
+      expect(buffer.data).to eq(data)
+    end
+
+    it "sets the storage flags" do
+      expect(buffer.storage_flags).to eq(Gloop::Buffer::Storage::MapRead)
+    end
+
+    it "creates a immutable buffer" do
+      expect(buffer.immutable?).to be_true
+    end
+  end
+
   describe ".delete" do
     it "deletes buffers" do
       buffers = described_class.create(3)

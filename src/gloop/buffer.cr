@@ -75,6 +75,22 @@ module Gloop
       names.map { |name| new(name) }
     end
 
+    # Creates a mutable buffer with initial contents.
+    # This effectively combines `.create` and `#data`.
+    def self.mutable(data, usage : Usage = :static_draw)
+      create.tap do |buffer|
+        buffer.data(data, usage)
+      end
+    end
+
+    # Creates an immutable buffer with initial contents.
+    # This effectively combines `.create` and `#storage`.
+    def self.immutable(data, flags : Storage)
+      create.tap do |buffer|
+        buffer.storage(data, flags)
+      end
+    end
+
     # Deletes multiple buffers.
     def self.delete(buffers)
       names = buffers.map(&.to_unsafe)
