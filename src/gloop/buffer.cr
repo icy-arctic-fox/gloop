@@ -288,5 +288,32 @@ module Gloop
       start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
       checked { LibGL.invalidate_buffer_sub_data(self, start, count) }
     end
+
+    # Maps the buffer's memory into client space.
+    def map(access : Access) : Bytes
+      pointer = expect_truthy { LibGL.map_named_buffer(self, access) }
+      Bytes.new(pointer.as(UInt8*), size, read_only: access.read_only?)
+    end
+
+    # Unmaps the buffer's memory from client space.
+    # Returns false if the buffer memory was corrupted while it was mapped.
+    def unmap : Bool
+      value = checked { LibGL.unmap_named_buffer(self) }
+      !value.false?
+    end
+
+    # Maps the buffer's memory into the client space.
+    # The buffer is automatically unmapped when the block completes.
+    # Returns false if the buffer memory was corrupted while it was mapped.
+    def map(access : Access, & : Bytes -> _) : Bool
+      bytes = map(access)
+      begin
+        yield bytes
+      rescue ex
+        unmap
+        raise ex
+      end
+      unmap
+    end
   end
 end

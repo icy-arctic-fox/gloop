@@ -315,4 +315,114 @@ Spectator.describe Gloop::Buffer::BindTarget do
       expect(target_b.data).to eq(Bytes[20, 21, 11, 12, 13, 14, 26, 27])
     end
   end
+
+  describe "#map" do
+    let(data) { Bytes[10, 20, 30, 40, 50, 60, 70, 80] }
+    before_each { target.data = data }
+
+    it "maps the buffer into client space" do
+      bytes = target.map(:read_write)
+      expect(bytes).to eq(data)
+    ensure
+      target.unmap
+    end
+
+    it "sets the size correctly" do
+      bytes = target.map(:read_write)
+      expect(bytes.size).to eq(8)
+    ensure
+      target.unmap
+    end
+
+    context "with read-only access" do
+      it "sets the slice as read-only" do
+        bytes = target.map(:read_only)
+        expect(bytes).to be_read_only
+      ensure
+        target.unmap
+      end
+    end
+
+    context "with write access" do
+      it "sets the slice as writable" do
+        bytes = target.map(:write_only)
+        expect(bytes).to_not be_read_only
+      ensure
+        target.unmap
+      end
+
+      it "stores changes in the buffer" do
+        bytes = target.map(:write_only)
+        bytes[3] = 42_u8
+        expect(target.unmap).to be_true, "Unmap failed - buffer corrupt"
+        expect(target.data).to eq(Bytes[10, 20, 30, 42, 50, 60, 70, 80])
+      end
+    end
+
+    context "with a block" do
+      it "maps the buffer into client space" do
+        target.map(:read_write) do |bytes|
+          expect(bytes).to eq(data)
+        end
+      end
+
+      it "sets the size correctly" do
+        target.map(:read_write) do |bytes|
+          expect(bytes.size).to eq(8)
+        end
+      end
+
+      it "unmaps the buffer afterwards" do
+        target.map(:read_write) do |bytes|
+          is_expected.to be_mapped
+        end
+        is_expected.to_not be_mapped
+      end
+
+      it "unmaps the buffer on error" do
+        expect do
+          target.map(:read_write) do |bytes|
+            raise "oops"
+          end
+        end.to raise_error("oops")
+        is_expected.to_not be_mapped
+      end
+
+      context "with read-only access" do
+        it "sets the slice as read-only" do
+          target.map(:read_only) do |bytes|
+            expect(bytes).to be_read_only
+          end
+        end
+      end
+
+      context "with write access" do
+        it "sets the slice as writable" do
+          target.map(:write_only) do |bytes|
+            expect(bytes).to_not be_read_only
+          end
+        end
+
+        it "stores changes in the buffer" do
+          unmap = target.map(:write_only) do |bytes|
+            bytes[3] = 42_u8
+          end
+          expect(unmap).to be_true, "Unmap failed - buffer corrupt"
+          expect(target.data).to eq(Bytes[10, 20, 30, 42, 50, 60, 70, 80])
+        end
+      end
+    end
+  end
+
+  describe "#unmap" do
+    let(data) { Bytes[10, 20, 30, 40, 50, 60, 70, 80] }
+    before_each do
+      target.data = data
+      target.map(:read_only)
+    end
+
+    it "unmaps the buffer" do
+      expect { target.unmap }.to change(&.mapped?).from(true).to(false)
+    end
+  end
 end

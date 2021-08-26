@@ -227,6 +227,33 @@ module Gloop
         self.class.copy(target, self, read_offset, write_offset, size)
       end
 
+      # Maps the currently bound buffer's memory into client space.
+      def map(access : Access) : Bytes
+        pointer = expect_truthy { LibGL.map_buffer(self, access) }
+        Bytes.new(pointer.as(UInt8*), size, read_only: access.read_only?)
+      end
+
+      # Unmaps the currentlly bound buffer's memory from client space.
+      # Returns false if the buffer memory was corrupted while it was mapped.
+      def unmap : Bool
+        value = checked { LibGL.unmap_buffer(self) }
+        !value.false?
+      end
+
+      # Maps the currently bound buffer's memory into client space.
+      # The buffer is automatically unmapped when the block completes.
+      # Returns false if the buffer memory was corrupted while it was mapped.
+      def map(access : Access, & : Bytes -> _) : Bool
+        bytes = map(access)
+        begin
+          yield bytes
+        rescue ex
+          unmap
+          raise ex
+        end
+        unmap
+      end
+
       # Returns an OpenGL enum representing this buffer binding target.
       def to_unsafe
         @target.to_unsafe
