@@ -227,20 +227,29 @@ module Gloop
         self.class.copy(target, self, read_offset, write_offset, size)
       end
 
-      # Maps the currently bound buffer's memory into client space.
+      # Maps the buffer's memory into client space.
       def map(access : Access) : Bytes
         pointer = expect_truthy { LibGL.map_buffer(self, access) }
         Bytes.new(pointer.as(UInt8*), size, read_only: access.read_only?)
       end
 
-      # Unmaps the currentlly bound buffer's memory from client space.
-      # Returns false if the buffer memory was corrupted while it was mapped.
-      def unmap : Bool
-        value = checked { LibGL.unmap_buffer(self) }
-        !value.false?
+      # Maps a subset of the buffer's memory into client space.
+      def map(access : AccessMask, start : Int, count : Int) : Bytes
+        start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
+        pointer = expect_truthy { LibGL.map_buffer_range(self, start, count, access) }
+        Bytes.new(pointer.as(UInt8*), count, read_only: access.read_only?)
       end
 
-      # Maps the currently bound buffer's memory into client space.
+      # Maps a subset of the buffer's memory into client space.
+      def map(access : AccessMask, range : Range) : Bytes
+        size = self.size
+        start, count = Indexable.range_to_index_and_count(range, size) || raise IndexError.new
+        start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
+        pointer = expect_truthy { LibGL.map_buffer_range(self, start, count, access) }
+        Bytes.new(pointer.as(UInt8*), count, read_only: access.read_only?)
+      end
+
+      # Maps the buffer's memory into the client space.
       # The buffer is automatically unmapped when the block completes.
       # Returns false if the buffer memory was corrupted while it was mapped.
       def map(access : Access, & : Bytes -> _) : Bool
@@ -252,6 +261,41 @@ module Gloop
           raise ex
         end
         unmap
+      end
+
+      # Maps a subset of the buffer's memory into client space.
+      # The buffer is automatically unmapped when the block completes.
+      # Returns false if the buffer memory was corrupted while it was mapped.
+      def map(access : AccessMask, start : Int, count : Int, & : Bytes -> _) : Bool
+        bytes = map(access, start, count)
+        begin
+          yield bytes
+        rescue ex
+          unmap
+          raise ex
+        end
+        unmap
+      end
+
+      # Maps a subset of the buffer's memory into client space.
+      # The buffer is automatically unmapped when the block completes.
+      # Returns false if the buffer memory was corrupted while it was mapped.
+      def map(access : AccessMask, range : Range, & : Bytes -> _) : Bool
+        bytes = map(access, range)
+        begin
+          yield bytes
+        rescue ex
+          unmap
+          raise ex
+        end
+        unmap
+      end
+
+      # Unmaps the buffer's memory from client space.
+      # Returns false if the buffer memory was corrupted while it was mapped.
+      def unmap : Bool
+        value = checked { LibGL.unmap_buffer(self) }
+        !value.false?
       end
 
       # Returns an OpenGL enum representing this buffer binding target.
