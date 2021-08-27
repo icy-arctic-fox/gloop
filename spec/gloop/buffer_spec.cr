@@ -553,7 +553,7 @@ Spectator.describe Gloop::Buffer do
       end
 
       it "unmaps the buffer afterwards" do
-        buffer.map(:read_write) do |bytes|
+        buffer.map(:read_write) do
           is_expected.to be_mapped
         end
         is_expected.to_not be_mapped
@@ -561,7 +561,7 @@ Spectator.describe Gloop::Buffer do
 
       it "unmaps the buffer on error" do
         expect do
-          buffer.map(:read_write) do |bytes|
+          buffer.map(:read_write) do
             raise "oops"
           end
         end.to raise_error("oops")
@@ -610,7 +610,7 @@ Spectator.describe Gloop::Buffer do
         end
 
         it "unmaps the buffer afterwards" do
-          buffer.map(access_mask, range) do |bytes|
+          buffer.map(access_mask, range) do
             is_expected.to be_mapped
           end
           is_expected.to_not be_mapped
@@ -618,7 +618,7 @@ Spectator.describe Gloop::Buffer do
 
         it "unmaps the buffer on error" do
           expect do
-            buffer.map(access_mask, range) do |bytes|
+            buffer.map(access_mask, range) do
               raise "oops"
             end
           end.to raise_error("oops")
@@ -669,7 +669,7 @@ Spectator.describe Gloop::Buffer do
         end
 
         it "unmaps the buffer afterwards" do
-          buffer.map(access_mask, start, count) do |bytes|
+          buffer.map(access_mask, start, count) do
             is_expected.to be_mapped
           end
           is_expected.to_not be_mapped
@@ -677,7 +677,7 @@ Spectator.describe Gloop::Buffer do
 
         it "unmaps the buffer on error" do
           expect do
-            buffer.map(access_mask, start, count) do |bytes|
+            buffer.map(access_mask, start, count) do
               raise "oops"
             end
           end.to raise_error("oops")

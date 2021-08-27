@@ -9,8 +9,8 @@ Spectator.describe Gloop::Buffer::Map do
   subject { buffer.mapping }
 
   around_each do |example|
-    buffer.map(access_mask, range) do |bytes|
-      @bytes = bytes # Bit of a hack.
+    buffer.map(access_mask, range) do |bytes| # ameba:disable Lint/UnusedArgument
+      @bytes = bytes
       example.run
     end
   end
