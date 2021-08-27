@@ -4,6 +4,8 @@ require "./target"
 
 module Gloop
   struct Buffer < Object
+    # Reference to a target that a buffer can be bound to.
+    # Provides operations for working with buffers bound to the target.
     struct BindTarget
       extend ErrorHandling
       include BufferTargetParameters
@@ -30,6 +32,7 @@ module Gloop
         Usage.new(value.to_u32)
       end
 
+      # Target this binding refers to.
       getter target : Target
 
       protected def initialize(@target : Target)
