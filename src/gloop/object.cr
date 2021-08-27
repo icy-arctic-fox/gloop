@@ -27,6 +27,16 @@ module Gloop
       end
     end
 
+    # Non-existent instance to be used as a null object.
+    def self.none
+      new(0_u32)
+    end
+
+    # Checks if this is a null object.
+    def none?
+      @name.zero?
+    end
+
     # Unique identifier of this object.
     getter name
 

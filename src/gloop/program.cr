@@ -31,16 +31,6 @@ module Gloop
       new(name)
     end
 
-    # Non-existent program to be used as a null object.
-    def self.none
-      new(0_u32)
-    end
-
-    # Checks if this is a null object for a program.
-    def none?
-      @name.zero?
-    end
-
     # Retrieves the current active program.
     # Returns nil if there isn't a program in use.
     #
