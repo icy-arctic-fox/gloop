@@ -418,7 +418,7 @@ Spectator.describe Gloop::Buffer do
 
     it "sets the size correctly" do
       bytes = buffer.map(:read_write)
-      expect(bytes.size).to eq(8)
+      expect(bytes.size).to eq(data.bytesize)
     ensure
       buffer.unmap
     end
@@ -462,7 +462,7 @@ Spectator.describe Gloop::Buffer do
 
       it "sets the size correctly" do
         bytes = buffer.map(access_mask, range)
-        expect(bytes.size).to eq(6)
+        expect(bytes.size).to eq(subdata.bytesize)
       ensure
         buffer.unmap
       end
@@ -508,7 +508,7 @@ Spectator.describe Gloop::Buffer do
 
       it "sets the size correctly" do
         bytes = buffer.map(access_mask, start, count)
-        expect(bytes.size).to eq(6)
+        expect(bytes.size).to eq(subdata.bytesize)
       ensure
         buffer.unmap
       end
@@ -548,7 +548,7 @@ Spectator.describe Gloop::Buffer do
 
       it "sets the size correctly" do
         buffer.map(:read_write) do |bytes|
-          expect(bytes.size).to eq(8)
+          expect(bytes.size).to eq(data.bytesize)
         end
       end
 
@@ -605,7 +605,7 @@ Spectator.describe Gloop::Buffer do
 
         it "sets the size correctly" do
           buffer.map(access_mask, range) do |bytes|
-            expect(bytes.size).to eq(6)
+            expect(bytes.size).to eq(subdata.bytesize)
           end
         end
 
@@ -664,7 +664,7 @@ Spectator.describe Gloop::Buffer do
 
         it "sets the size correctly" do
           buffer.map(access_mask, start, count) do |bytes|
-            expect(bytes.size).to eq(6)
+            expect(bytes.size).to eq(subdata.bytesize)
           end
         end
 

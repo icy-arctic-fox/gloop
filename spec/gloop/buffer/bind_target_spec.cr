@@ -329,7 +329,7 @@ Spectator.describe Gloop::Buffer::BindTarget do
 
     it "sets the size correctly" do
       bytes = target.map(:read_write)
-      expect(bytes.size).to eq(8)
+      expect(bytes.size).to eq(data.bytesize)
     ensure
       target.unmap
     end
@@ -373,7 +373,7 @@ Spectator.describe Gloop::Buffer::BindTarget do
 
       it "sets the size correctly" do
         bytes = target.map(access_mask, range)
-        expect(bytes.size).to eq(6)
+        expect(bytes.size).to eq(subdata.bytesize)
       ensure
         target.unmap
       end
@@ -419,7 +419,7 @@ Spectator.describe Gloop::Buffer::BindTarget do
 
       it "sets the size correctly" do
         bytes = target.map(access_mask, start, count)
-        expect(bytes.size).to eq(6)
+        expect(bytes.size).to eq(subdata.bytesize)
       ensure
         target.unmap
       end
@@ -459,7 +459,7 @@ Spectator.describe Gloop::Buffer::BindTarget do
 
       it "sets the size correctly" do
         target.map(:read_write) do |bytes|
-          expect(bytes.size).to eq(8)
+          expect(bytes.size).to eq(data.bytesize)
         end
       end
 
@@ -516,7 +516,7 @@ Spectator.describe Gloop::Buffer::BindTarget do
 
         it "sets the size correctly" do
           target.map(access_mask, range) do |bytes|
-            expect(bytes.size).to eq(6)
+            expect(bytes.size).to eq(subdata.bytesize)
           end
         end
 
@@ -575,7 +575,7 @@ Spectator.describe Gloop::Buffer::BindTarget do
 
         it "sets the size correctly" do
           target.map(access_mask, start, count) do |bytes|
-            expect(bytes.size).to eq(6)
+            expect(bytes.size).to eq(subdata.bytesize)
           end
         end
 
