@@ -633,4 +633,16 @@ Spectator.describe Gloop::Buffer::BindTarget do
       expect { target.unmap }.to change(&.mapped?).from(true).to(false)
     end
   end
+
+  describe "#mapping?" do
+    it "returns nil when a buffer isn't mapped" do
+      expect(&.mapping?).to be_nil
+    end
+  end
+
+  describe "#mapping" do
+    it "raises when a buffer isn't mapped" do
+      expect { target.mapping }.to raise_error(NilAssertionError, /map/)
+    end
+  end
 end

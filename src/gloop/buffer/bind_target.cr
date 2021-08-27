@@ -301,6 +301,20 @@ module Gloop
         !value.false?
       end
 
+      # Retrieves information about the bound buffer's current map.
+      # Returns nil if the buffer isn't mapped.
+      def mapping? : TargetMap?
+        return unless mapped?
+
+        TargetMap.new(target)
+      end
+
+      # Retrieves information about the bound buffer's current map.
+      # Raises if the buffer isn't mapped.
+      def mapping : TargetMap
+        mapping? || raise NilAssertionError.new("Buffer not mapped")
+      end
+
       # Returns an OpenGL enum representing this buffer binding target.
       def to_unsafe
         @target.to_unsafe

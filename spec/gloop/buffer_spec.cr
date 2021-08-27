@@ -723,6 +723,18 @@ Spectator.describe Gloop::Buffer do
     end
   end
 
+  describe "#mapping?" do
+    it "returns nil when the buffer isn't mapped" do
+      expect(&.mapping?).to be_nil
+    end
+  end
+
+  describe "#mapping" do
+    it "raises when the buffer isn't mapped" do
+      expect { buffer.mapping }.to raise_error(NilAssertionError, /map/)
+    end
+  end
+
   context "Labelable" do
     it "can be labeled" do
       subject.label = "Test label"

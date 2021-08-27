@@ -359,5 +359,19 @@ module Gloop
       value = checked { LibGL.unmap_named_buffer(self) }
       !value.false?
     end
+
+    # Retrieves information about the buffer's current map.
+    # Returns nil if the buffer isn't mapped.
+    def mapping? : Map?
+      return unless mapped?
+
+      Map.new(name)
+    end
+
+    # Retrieves information about the buffer's current map.
+    # Raises if the buffer isn't mapped.
+    def mapping : Map
+      mapping? || raise NilAssertionError.new("Buffer not mapped")
+    end
   end
 end
