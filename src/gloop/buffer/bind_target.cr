@@ -301,6 +301,27 @@ module Gloop
         !value.false?
       end
 
+      # Flushes the entire mapped buffer range to indicate changes have been made.
+      def flush
+        size = mapping.size
+        checked { LibGL.flush_mapped_buffer_range(self, 0, size) }
+      end
+
+      # Flushes a subset of the mapped buffer to indicate changes have been made.
+      def flush(start : Int, count : Int)
+        size = mapping.size
+        start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
+        checked { LibGL.flush_mapped_buffer_range(self, start, count) }
+      end
+
+      # Flushes a subset of the mapped buffer to indicate changes have been made.
+      def flush(range : Range)
+        size = mapping.size
+        start, count = Indexable.range_to_index_and_count(range, size) || raise IndexError.new
+        start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
+        checked { LibGL.flush_mapped_buffer_range(self, start, count) }
+      end
+
       # Retrieves information about the bound buffer's current map.
       # Returns nil if the buffer isn't mapped.
       def mapping? : TargetMap?

@@ -723,6 +723,40 @@ Spectator.describe Gloop::Buffer do
     end
   end
 
+  describe "#flush" do
+    let(data) { Bytes[10, 20, 30, 40, 50, 60, 70, 80] }
+    let(storage_flags) { Gloop::Buffer::Storage.flags(MapWrite, MapPersistent) }
+    let(buffer) { described_class.immutable(data, storage_flags) }
+    let(access_mask) { Gloop::Buffer::AccessMask.flags(Write, Persistent, FlushExplicit) }
+
+    before_each { @bytes = buffer.map(access_mask, 1..6) }
+    after_each { buffer.unmap }
+
+    private getter bytes : Bytes = Bytes.empty
+
+    it "publishes changed data" do
+      bytes[2] = 42_u8
+      buffer.flush
+      expect(buffer.data).to eq(Bytes[10, 20, 30, 42, 50, 60, 70, 80])
+    end
+
+    context "with a start and count" do
+      it "publishes changed data" do
+        bytes[2] = 42_u8
+        buffer.flush(2, 1)
+        expect(buffer.data).to eq(Bytes[10, 20, 30, 42, 50, 60, 70, 80])
+      end
+    end
+
+    context "with a Range" do
+      it "publishes changed data" do
+        bytes[2] = 42_u8
+        buffer.flush(2..3)
+        expect(buffer.data).to eq(Bytes[10, 20, 30, 42, 50, 60, 70, 80])
+      end
+    end
+  end
+
   describe "#mapping?" do
     it "returns nil when the buffer isn't mapped" do
       expect(&.mapping?).to be_nil
