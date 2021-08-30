@@ -112,4 +112,11 @@ Spectator.describe Gloop::VertexArray do
       expect { described_class.unbind }.to change { current_vao }.from(vao).to(nil)
     end
   end
+
+  context "Labelable" do
+    it "can be labeled" do
+      subject.label = "Test label"
+      expect(&.label).to eq("Test label")
+    end
+  end
 end
