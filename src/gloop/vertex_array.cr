@@ -1,6 +1,7 @@
 require "./error_handling"
 require "./object"
 require "./parameters"
+require "./vertex_array/*"
 
 module Gloop
   # Information about the specification of vertex formats.
@@ -111,6 +112,11 @@ module Gloop
     # Removes any previously bound vertex buffers.
     def self.unbind
       checked { LibGL.bind_vertex_array(none) }
+    end
+
+    # Provides access to the attributes defined in this vertex array.
+    def attributes
+      Attributes.new(@name)
     end
   end
 end
