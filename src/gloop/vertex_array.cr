@@ -1,3 +1,4 @@
+require "./buffer"
 require "./error_handling"
 require "./object"
 require "./parameters"
@@ -112,6 +113,36 @@ module Gloop
     # Removes any previously bound vertex buffers.
     def self.unbind
       checked { LibGL.bind_vertex_array(none) }
+    end
+
+    # Retrieves the name of the element array buffer tied to this vertex array.
+    # Returns zero if one isn't associated.
+    private def element_array_buffer_name
+      pname = LibGL::VertexArrayPName.new(LibGL::GetPName::ElementArrayBufferBinding.to_u32!)
+      checked do
+        LibGL.get_vertex_array_iv(self, pname, out value)
+        value.to_u32!
+      end
+    end
+
+    # Retrieves the element array buffer tied to this vertex array.
+    # Returns `nil` if one isn't associated.
+    def element_array_buffer? : Buffer?
+      return if (name = element_array_buffer_name).zero?
+
+      Buffer.new(name)
+    end
+
+    # Retrieves the element array buffer tied to this vertex array.
+    # Returns `Buffer.none` if one isn't associated.
+    def element_array_buffer : Buffer
+      name = element_array_buffer_name
+      Buffer.new(name)
+    end
+
+    # Sets the element array buffer used for indexed drawing calls.
+    def element_array_buffer=(buffer)
+      checked { LibGL.vertex_array_element_buffer(self, buffer) }
     end
 
     # Provides access to the attributes defined in this vertex array.

@@ -113,6 +113,60 @@ Spectator.describe Gloop::VertexArray do
     end
   end
 
+  describe "#element_array_buffer?" do
+    subject { super.element_array_buffer? }
+
+    context "with a buffer bound" do
+      let(buffer) { Gloop::Buffer.create }
+
+      around_each do |example|
+        vao.bind do
+          buffer.bind(:element_array)
+          example.run
+        end
+      end
+
+      it "is the currently bound EBO" do
+        is_expected.to eq(buffer)
+      end
+    end
+
+    it "is nil" do
+      is_expected.to be_nil
+    end
+  end
+
+  describe "#element_array_buffer" do
+    subject { super.element_array_buffer }
+
+    context "with a buffer bound" do
+      let(buffer) { Gloop::Buffer.create }
+
+      around_each do |example|
+        vao.bind do
+          buffer.bind(:element_array)
+          example.run
+        end
+      end
+
+      it "is the currently bound EBO" do
+        is_expected.to eq(buffer)
+      end
+    end
+
+    it "is a null-object buffer" do
+      is_expected.to be_none
+    end
+  end
+
+  describe "#element_array_buffer=" do
+    let(buffer) { Gloop::Buffer.create }
+
+    it "sets the EBO" do
+      expect { vao.element_array_buffer = buffer }.to change(&.element_array_buffer?).from(nil).to(buffer)
+    end
+  end
+
   context "Labelable" do
     it "can be labeled" do
       subject.label = "Test label"
