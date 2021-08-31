@@ -98,8 +98,9 @@ Spectator.describe Gloop::AttributeIndex do
       it { is_expected.to eq(32) }
     end
 
-    describe "#divisor", pending: "Requires attribute divisor setter" do
+    describe "#divisor" do
       subject { super.divisor }
+      before_each { attribute.divisor = 1 }
 
       it { is_expected.to eq(1) }
     end

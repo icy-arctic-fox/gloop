@@ -121,6 +121,11 @@ module Gloop
       pointer.address
     end
 
+    # Sets the rate at which vertex attributes advance for instanced rendering.
+    def divisor=(divisor : Int)
+      checked { LibGL.vertex_attrib_divisor(@index, divisor) }
+    end
+
     # Retrieves a definition for this attribute that can be assigned to other indexes.
     def definition : Attribute
       case
