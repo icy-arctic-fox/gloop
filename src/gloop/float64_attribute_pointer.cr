@@ -26,8 +26,18 @@ module Gloop
     # This must be 1, 2, 3, or 4.
     # The *type* is the format of data of each component.
     # The *stride* is the number of bytes to the next value of the same attribute in the buffer.
+    # The *pointer* references the start of attribute data in the vertex buffer.
+    def initialize(size : Int32, @type : Type, stride : Int32, pointer : Pointer)
+      super(size, stride, pointer)
+    end
+
+    # Creates a new attribute definition.
+    # The *size* refers to the number of components the attribute contains.
+    # This must be 1, 2, 3, or 4.
+    # The *type* is the format of data of each component.
+    # The *stride* is the number of bytes to the next value of the same attribute in the buffer.
     # Lastly, the *offset* is the number of bytes from the start of attribute data in the vertex buffer.
-    def initialize(size : Int32, @type : Type, stride : Int32, offset : IntPointer)
+    def initialize(size : Int32, @type : Type, stride : Int32, offset : UInt64)
       super(size, stride, offset)
     end
 
@@ -36,9 +46,9 @@ module Gloop
     # This must be 1, 2, 3, or 4.
     # The `#type` will be a 64-bit floating-point number.
     # The *stride* is the number of bytes to the next value of the same attribute in the buffer.
-    # The *offset* is the number of bytes from the start of attribute data in the vertex buffer.
-    def initialize(size : Int32, type : Float64.class, stride : Int32, offset : IntPointer)
-      initialize(size, :float64, stride, offset)
+    # The *pointer* references the start of attribute data in the vertex buffer.
+    def initialize(size : Int32, type : Float64.class, stride : Int32, pointer : Pointer)
+      initialize(size, :float64, stride, pointer)
     end
 
     # Creates a new attribute definition.
@@ -47,7 +57,27 @@ module Gloop
     # The `#type` will be a 64-bit floating-point number.
     # The *stride* is the number of bytes to the next value of the same attribute in the buffer.
     # The *offset* is the number of bytes from the start of attribute data in the vertex buffer.
-    def initialize(size : Int32, stride : Int32, offset : IntPointer)
+    def initialize(size : Int32, type : Float64.class, stride : Int32, offset : UInt64)
+      initialize(size, :float64, stride, offset)
+    end
+
+    # Creates a new attribute definition.
+    # The *size* refers to the number of components the attribute contains.
+    # This must be 1, 2, 3, or 4.
+    # The `#type` will be a 64-bit floating-point number.
+    # The *stride* is the number of bytes to the next value of the same attribute in the buffer.
+    # The *pointer* references the start of attribute data in the vertex buffer.
+    def initialize(size : Int32, stride : Int32, pointer : Pointer)
+      initialize(size, :double, stride, pointer)
+    end
+
+    # Creates a new attribute definition.
+    # The *size* refers to the number of components the attribute contains.
+    # This must be 1, 2, 3, or 4.
+    # The `#type` will be a 64-bit floating-point number.
+    # The *stride* is the number of bytes to the next value of the same attribute in the buffer.
+    # The *offset* is the number of bytes from the start of attribute data in the vertex buffer.
+    def initialize(size : Int32, stride : Int32, offset : UInt64)
       initialize(size, :double, stride, offset)
     end
 
