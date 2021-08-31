@@ -118,11 +118,7 @@ module Gloop
 
     # Number of bytes from the begining of the vertex buffer to the first attribute.
     def buffer_offset
-      {% if flag?(:x86_64) %}
-        pointer.address.to_u64!
-      {% else %}
-        pointer.address.to_u32
-      {% end %}
+      pointer.address
     end
 
     # Retrieves a definition for this attribute that can be assigned to other indexes.
