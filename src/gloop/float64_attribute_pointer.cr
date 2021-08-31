@@ -9,12 +9,12 @@ module Gloop
 
     # Types allowed for 64-bit floating-point attributes.
     enum Type : UInt32
-      Double  = LibGL::VertexAttribPointerType::Double
+      Double  = LibGL::VertexAttribLType::Double
       Float64 = Double
 
       # Converts to an OpenGL enum.
       def to_unsafe
-        LibGL::VertexAttribPointerType.new(value)
+        LibGL::VertexAttribLType.new(value)
       end
     end
 

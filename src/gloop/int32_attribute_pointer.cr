@@ -9,12 +9,12 @@ module Gloop
 
     # Types allowed for 32-bit integer attributes.
     enum Type : UInt32
-      Byte          = LibGL::VertexAttribPointerType::Byte
-      UnsignedByte  = LibGL::VertexAttribPointerType::UnsignedByte
-      Short         = LibGL::VertexAttribPointerType::Short
-      UnsignedShort = LibGL::VertexAttribPointerType::UnsignedShort
-      Int           = LibGL::VertexAttribPointerType::Int
-      UnsignedInt   = LibGL::VertexAttribPointerType::UnsignedInt
+      Byte          = LibGL::VertexAttribIType::Byte
+      UnsignedByte  = LibGL::VertexAttribIType::UnsignedByte
+      Short         = LibGL::VertexAttribIType::Short
+      UnsignedShort = LibGL::VertexAttribIType::UnsignedShort
+      Int           = LibGL::VertexAttribIType::Int
+      UnsignedInt   = LibGL::VertexAttribIType::UnsignedInt
 
       Int8   = Byte
       UInt8  = UnsignedByte
@@ -28,7 +28,7 @@ module Gloop
 
       # Converts to an OpenGL enum.
       def to_unsafe
-        LibGL::VertexAttribPointerType.new(value)
+        LibGL::VertexAttribIType.new(value)
       end
     end
 
