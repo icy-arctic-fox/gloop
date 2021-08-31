@@ -55,5 +55,21 @@ Spectator.describe Gloop::Attributes do
         end
       end
     end
+
+    context "with AttributePointer" do
+      let(attribute) { Gloop::Float32AttributePointer.new(3, Float32, 32, 64) }
+      let(buffer) { Gloop::Buffer.mutable(Bytes[0, 1, 2, 3, 4, 5, 6, 7]) }
+      before_each { buffer.bind(:array) }
+
+      it "applies the attribute information" do
+        attributes[0] = attribute
+        aggregate_failures "attribute parameters" do
+          expect(attributes[0].size).to eq(3)
+          expect(attributes[0].type).to eq(Gloop::Attribute::Type::Float32)
+          expect(attributes[0].stride).to eq(32)
+          expect(attributes[0].buffer_offset).to eq(64)
+        end
+      end
+    end
   end
 end

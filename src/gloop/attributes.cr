@@ -29,5 +29,11 @@ module Gloop
     def []=(index : Int, attribute : AttributeIndex)
       attribute.definition.apply(index)
     end
+
+    # Defines an attribute with the specified index.
+    # This does not enable or disable the attribute.
+    def []=(index : Int, attribute : AttributePointer)
+      attribute.apply(index)
+    end
   end
 end

@@ -108,6 +108,23 @@ module Gloop
       flag ? enable : disable
     end
 
+    # Retrieves the offset from the begining of the vertex buffer to the first attribute.
+    def pointer
+      checked do
+        LibGL.get_vertex_attrib_pointer_v(@index, LibGL::VertexAttribPointerPropertyARB::VertexAttribArrayPointer, out value)
+        value
+      end
+    end
+
+    # Number of bytes from the begining of the vertex buffer to the first attribute.
+    def buffer_offset
+      {% if flag?(:x86_64) %}
+        pointer.address.to_u64!
+      {% else %}
+        pointer.address.to_u32
+      {% end %}
+    end
+
     # Retrieves a definition for this attribute that can be assigned to other indexes.
     def definition : Attribute
       case
