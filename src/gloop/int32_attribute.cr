@@ -18,10 +18,13 @@ module Gloop
 
       Int8   = Byte
       UInt8  = UnsignedByte
+      Uint8  = UnsignedByte
       Int16  = Short
       UInt16 = UnsignedShort
+      Uint16 = UnsignedShort
       Int32  = Int
       UInt32 = UnsignedInt
+      Uint32 = UnsignedInt
 
       # Converts to an OpenGL enum.
       def to_unsafe
