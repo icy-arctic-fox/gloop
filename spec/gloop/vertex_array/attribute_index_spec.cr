@@ -60,12 +60,6 @@ Spectator.describe Gloop::VertexArray::AttributeIndex do
       it { is_expected.to eq(24) }
     end
 
-    describe "#stride", pending: "Requires vertex buffer binding" do
-      subject { super.stride }
-
-      it { is_expected.to eq(24) }
-    end
-
     describe "#divisor", pending: "Requires attribute divisor setter" do
       subject { super.divisor }
 
@@ -94,6 +88,36 @@ Spectator.describe Gloop::VertexArray::AttributeIndex do
 
         it { is_expected.to be_true }
       end
+    end
+  end
+
+  # Stride and pointer (buffer offset) can only be set when a VAO and vertex buffer are bound.
+  context "vertex buffer parameters" do
+    let(definition) { Gloop::Float32AttributePointer.new(3, Int32, true, 24, 32) }
+
+    before_each do
+      vao.bind
+      Gloop::Buffer.create.bind(:array)
+      Gloop::Attributes[0] = definition
+    end
+
+    describe "#stride" do
+      subject { super.stride }
+
+      it { is_expected.to eq(24) }
+    end
+
+    describe "#pointer" do
+      subject { super.pointer }
+      let(pointer) { Pointer(Void).new(32) }
+
+      it { is_expected.to eq(pointer) }
+    end
+
+    describe "#buffer_offset" do
+      subject { super.buffer_offset }
+
+      it { is_expected.to eq(32) }
     end
   end
 end

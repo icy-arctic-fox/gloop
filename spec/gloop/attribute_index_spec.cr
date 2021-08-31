@@ -61,10 +61,41 @@ Spectator.describe Gloop::AttributeIndex do
       it { is_expected.to eq(24) }
     end
 
-    describe "#stride", pending: "Requires vertex buffer binding" do
+    describe "#stride" do
       subject { super.stride }
+      let(definition) { Gloop::Float32AttributePointer.new(3, Int32, true, 24, 32) }
+
+      around_each do |example|
+        Gloop::Buffer.create.bind(:array)
+        Gloop::VertexArray.create.bind { example.run }
+      end
 
       it { is_expected.to eq(24) }
+    end
+
+    describe "#pointer" do
+      subject { super.pointer }
+      let(pointer) { Pointer(Void).new(32) }
+      let(definition) { Gloop::Float32AttributePointer.new(3, Int32, true, 24, pointer) }
+
+      around_each do |example|
+        Gloop::Buffer.create.bind(:array)
+        Gloop::VertexArray.create.bind { example.run }
+      end
+
+      it { is_expected.to eq(pointer) }
+    end
+
+    describe "#buffer_offset" do
+      subject { super.buffer_offset }
+      let(definition) { Gloop::Float32AttributePointer.new(3, Int32, true, 24, 32) }
+
+      around_each do |example|
+        Gloop::Buffer.create.bind(:array)
+        Gloop::VertexArray.create.bind { example.run }
+      end
+
+      it { is_expected.to eq(32) }
     end
 
     describe "#divisor", pending: "Requires attribute divisor setter" do

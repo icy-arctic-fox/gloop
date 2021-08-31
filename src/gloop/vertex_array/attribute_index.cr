@@ -38,35 +38,6 @@ module Gloop
         end
       end
 
-      # Defines a getter method that retrieves an OpenGL vertex array attribute parameter.
-      # The *pname* is the name of the OpenGL parameter to retrieve.
-      # This should be an enum value (just the name) from `LibGL::VertexArrayPName`.
-      # The *name* will be the name of the generated method.
-      # This is a variant of `#attribute_parameter` that returns a 64-bit integer.
-      #
-      # ```
-      # attribute_parameter64 VertexBindingOffset, offset
-      # ```
-      #
-      # The `#vao` method is used to get the vertex array name.
-      # The `#index` method is used to get the attribute index.
-      #
-      # An optional block can be provided to modify the value before returning it.
-      # The original value is yielded to the block.
-      private macro attribute_parameter64(pname, name, &block)
-        def {{name.id}} : Int64
-          %value = checked do
-            LibGL.get_vertex_array_indexed_64iv(vao, index, LibGL::VertexArrayPName::{{pname.id}}, out value)
-            value
-          end
-
-          {% if block %}
-            {{block.args.splat}} = %value
-            {{yield}}
-          {% end %}
-        end
-      end
-
       # Defines a boolean getter method that retrieves an OpenGL vertex array attribute parameter.
       # The *pname* is the OpenGL parameter name to retrieve.
       # This should be an enum value (just the name) from `LibGL::VertexArrayPName`.
@@ -141,6 +112,20 @@ module Gloop
       # Enables or disables this attribute on the vertex array.
       def enabled=(flag)
         flag ? enable : disable
+      end
+
+      # Offset (in bytes) to the first attribute in the vertex buffer data.
+      def buffer_offset : UInt64
+        pname = LibGL::VertexArrayPName.new(LibGL::GetPName::VertexBindingOffset.value)
+        checked do
+          LibGL.get_vertex_array_indexed_64iv(vao, index, pname, out value)
+          value.to_u64!
+        end
+      end
+
+      # Offset to the start of attribute data in the vertex buffer.
+      def pointer : Pointer(Void)
+        Pointer(Void).new(buffer_offset)
       end
 
       # Retrieves a definition for this attribute that can be assigned to other indexes.
