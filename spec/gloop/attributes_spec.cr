@@ -4,6 +4,7 @@ Spectator.describe Gloop::Attributes do
   let(vao) { Gloop::VertexArray.create }
   subject(attributes) { described_class }
   before_each { vao.bind }
+  after_each { Gloop::VertexArray.unbind }
 
   def max_attributes
     LibGL.get_integer_v(LibGL::GetPName::MaxVertexAttribs, out max)
