@@ -150,6 +150,30 @@ module Gloop
       Attributes.new(@name)
     end
 
+    def self.bind_attribute(attribute, to slot)
+      checked { LibGL.vertex_attrib_binding(attribute, slot) }
+    end
+
+    def bind_attribute(attribute, to slot)
+      checked { LibGL.vertex_array_attrib_binding(self, attribute, slot) }
+    end
+
+    def self.bind_vertex_buffer(buffer, offset, stride, to slot)
+      checked { LibGL.bind_vertex_buffer(slot, buffer, offset, stride) }
+    end
+
+    def bind_vertex_buffer(buffer, offset, stride, to slot)
+      checked { LibGL.vertex_array_vertex_buffer(self, slot, buffer, offset, stride) }
+    end
+
+    def self.bind_vertex_buffer(binding : VertexBufferBinding, to slot)
+      checked { LibGL.bind_vertex_buffer(slot, binding.buffer, binding.offset, binding.stride) }
+    end
+
+    def bind_vertex_buffer(binding : VertexBufferBinding, to slot)
+      checked { LibGL.vertex_array_vertex_buffer(self, slot, binding.buffer, binding.offset, binding.stride) }
+    end
+
     # Provides access to the binding slots in this vertex array.
     # Binding slots are used to associate vertex buffers and attributes.
     def bindings
