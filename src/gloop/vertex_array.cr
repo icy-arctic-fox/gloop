@@ -149,5 +149,11 @@ module Gloop
     def attributes
       Attributes.new(@name)
     end
+
+    # Provides access to the binding slots in this vertex array.
+    # Binding slots are used to associate vertex buffers and attributes.
+    def bindings
+      Bindings.new(@name)
+    end
   end
 end

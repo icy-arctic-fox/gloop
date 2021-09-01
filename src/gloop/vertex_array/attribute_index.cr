@@ -136,6 +136,11 @@ module Gloop
         else               Float32Attribute.new(size, type.unsafe_as(Float32Attribute::Type), normalized?, offset)
         end
       end
+
+      # Index of the attribute in the vertex array.
+      def to_unsafe
+        @index
+      end
     end
   end
 end
