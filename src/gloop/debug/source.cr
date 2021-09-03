@@ -5,7 +5,7 @@ module Gloop::Debug
     DontCare = LibGL::DebugSource::DontCare
 
     # OpenGL API call.
-    API = LibGL::DebugSource::DebugSourceApi
+    API = LibGL::DebugSource::DebugSourceAPI
 
     # Window system API.
     WindowSystem = LibGL::DebugSource::DebugSourceWindowSystem
