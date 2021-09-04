@@ -7,7 +7,13 @@ run: bin/ameba %file%
 files: ./spec/**/*.cr
 run: crystal spec %file%
 ---
-files: ./**/*.cr
+files: ./src/**/*.cr
+run: crystal tool format %file%
+---
+files: ./spec/**/*.cr
+run: crystal tool format %file%
+---
+files: ./examples/**/*.cr
 run: crystal tool format %file%
 ---
 files: ./shard.yml
