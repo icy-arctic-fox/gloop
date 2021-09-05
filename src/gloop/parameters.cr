@@ -17,7 +17,7 @@ module Gloop
       def {{name.id}}? : Bool
         value = uninitialized Int32
         checked do
-          gl.get_boolean_v(LibGL::GetPName::{{pname.id}}, pointerof(value))
+          gl_call get_boolean_v(LibGL::GetPName::{{pname.id}}, pointerof(value))
         end
         !value.zero?
       end
@@ -64,46 +64,46 @@ module Gloop
           {% if type < Enum %}
             %value = uninitialized Int32
             checked do
-              gl.get_integer_v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
+              gl_call get_integer_v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
             end
             %return = {{type}}.from_value(%value)
           {% elsif type <= Int32 %}
             %value = uninitialized Int32
             checked do
-              gl.get_integer_v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
+              gl_call get_integer_v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
             end
             %return = %value
           {% elsif type <= Int64 %}
             %value = uninitialized Int64
             checked do
-              gl.get_integer_64v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
+              gl_call get_integer_64v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
             end
             %return = %value
           {% elsif type <= Float32 %}
             %value = uninitialized Float32
             checked do
-              gl.get_float_v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
+              gl_call get_float_v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
             end
             %return = %value
           {% elsif type <= Float64 %}
             %value = uninitialized Float64
             checked do
-              gl.get_float_64v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
+              gl_call get_float_64v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
             end
             %return = %value
           {% elsif type <= Bool %}
             %value = uninitialized Int32
             checked do
-              gl.get_boolean_v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
+              gl_call get_boolean_v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
             end
             %return = !%value.zero?
           {% elsif type <= String %}
-            %ptr = expect_truthy { gl.get_string(LibGL::StringName::{{pname.id}}) }
+            %ptr = expect_truthy { gl_call get_string(LibGL::StringName::{{pname.id}}) }
             %return = String.new(%ptr)
           {% else %}
             %value = uninitialized Int32
             checked do
-              gl.get_integer_v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
+              gl_call get_integer_v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
             end
             %return = {{type}}.new(%value)
           {% end %}
@@ -119,7 +119,7 @@ module Gloop
         def {{name.id}}
           %value = uninitialized Int32
           checked do
-            gl.get_integer_v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
+            gl_call get_integer_v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
           end
 
           {% if block %}

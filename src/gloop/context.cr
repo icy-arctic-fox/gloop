@@ -124,6 +124,24 @@ module Gloop
       @loader
     end
 
+    # Calls an OpenGL function.
+    # When compiling in debug mode or with error checking explicitly enabled,
+    # function pointers are checked prior to calling them.
+    # An error will be raised if an unloaded or unavailable function is called.
+    # In release mode or with error checking disabled,
+    # calls to unloaded and unavailable functions can crash the program.
+    #
+    # ```
+    # gl_call get_integer_v(LibGL::GetPName::MajorVersion, pointerof(value))
+    # ```
+    private macro gl_call(call)
+      {% if flag?(:release) && !flag?(:error_checking) %}
+        gl.{{call.name}}!({{call.args.splat}})
+      {% else %}
+        gl.{{call}}
+      {% end %}
+    end
+
     # Retrieves the extensions supported by this implementation of OpenGL.
     # Returns an indexable (iterable) collection of `Extension` instances.
     def extensions
@@ -141,7 +159,7 @@ module Gloop
     #
     # Minimum required version: 2.0
     def enable(capability)
-      checked { gl.enable(capability.to_unsafe) }
+      checked { gl_call enable(capability.to_unsafe) }
     end
 
     # Disables an OpenGL capability.
@@ -155,7 +173,7 @@ module Gloop
     #
     # Minimum required version: 2.0
     def disable(capability)
-      checked { gl.disable(capability.to_unsafe) }
+      checked { gl_call disable(capability.to_unsafe) }
     end
 
     # Checks if an OpenGL capability is enabled.
@@ -169,7 +187,7 @@ module Gloop
     #
     # Minimum required version: 2.0
     def enabled?(capability)
-      value = checked { gl.is_enabled(capability.to_unsafe) }
+      value = checked { gl_call is_enabled(capability.to_unsafe) }
       !value.false?
     end
   end

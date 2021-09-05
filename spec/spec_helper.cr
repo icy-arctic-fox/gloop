@@ -37,6 +37,10 @@ def context
   CONTEXT_WRAPPER.first
 end
 
+macro gl_call(call)
+  context.loader.{{call}}
+end
+
 Spectator.configure do |config|
   config.before_suite do
     init_opengl
