@@ -8,7 +8,7 @@ module Gloop
     include ErrorHandling
 
     # Types allowed for 32-bit floating-point attributes.
-    enum Type : UInt32
+    enum Type : LibGL::Enum
       HalfFloat     = LibGL::VertexAttribType::HalfFloat
       Float         = LibGL::VertexAttribType::Float
       Double        = LibGL::VertexAttribType::Double

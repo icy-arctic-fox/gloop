@@ -1,7 +1,7 @@
 module Gloop
   struct Buffer < Object
     # Hints indicating how a buffer's data will be used.
-    enum Usage : UInt32
+    enum Usage : LibGL::Enum
       StreamDraw  = LibGL::VertexBufferObjectUsage::StreamDraw
       StreamRead  = LibGL::VertexBufferObjectUsage::StreamRead
       StreamCopy  = LibGL::VertexBufferObjectUsage::StreamCopy

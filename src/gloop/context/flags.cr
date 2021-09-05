@@ -1,7 +1,7 @@
 module Gloop::Context
   # Features of an OpenGL context.
   @[Flags]
-  enum Flags
+  enum Flags : LibGL::Enum
     # The context is forward compatible.
     # Any features marked as deprecated in the version after this context's will be unavailable.
     ForwardCompatible = LibGL::ContextFlagMask::ContextFlagForwardCompatible

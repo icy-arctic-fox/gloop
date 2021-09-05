@@ -1,7 +1,7 @@
 module Gloop
   struct Buffer < Object
     # Targets a buffer can be bound to.
-    enum Target : UInt32
+    enum Target : LibGL::Enum
       Array             = LibGL::BufferTargetARB::ArrayBuffer
       ElementArray      = LibGL::BufferTargetARB::ElementArrayBuffer
       PixelPack         = LibGL::BufferTargetARB::PixelPackBuffer

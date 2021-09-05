@@ -8,7 +8,7 @@ module Gloop
     include ErrorHandling
 
     # Types allowed for 32-bit integer attributes.
-    enum Type : UInt32
+    enum Type : LibGL::Enum
       Byte          = LibGL::VertexAttribIType::Byte
       UnsignedByte  = LibGL::VertexAttribIType::UnsignedByte
       Short         = LibGL::VertexAttribIType::Short

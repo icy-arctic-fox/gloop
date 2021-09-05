@@ -2,7 +2,7 @@ module Gloop
   # Base class for all attribute definitions.
   abstract struct Attribute
     # All valid attribute types.
-    enum Type : UInt32
+    enum Type : LibGL::Enum
       Byte          = LibGL::VertexAttribPointerType::Byte
       UnsignedByte  = LibGL::VertexAttribPointerType::UnsignedByte
       Short         = LibGL::VertexAttribPointerType::Short

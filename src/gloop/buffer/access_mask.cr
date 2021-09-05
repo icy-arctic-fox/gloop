@@ -2,7 +2,7 @@ module Gloop
   struct Buffer < Object
     # Options for mapping a subset of a buffer.
     @[Flags]
-    enum AccessMask : UInt32
+    enum AccessMask : LibGL::Enum
       Read             = LibGL::MapBufferAccessMask::MapRead
       Write            = LibGL::MapBufferAccessMask::MapWrite
       InvalidateRange  = LibGL::MapBufferAccessMask::MapInvalidateRange

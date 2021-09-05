@@ -2,7 +2,7 @@ module Gloop
   struct Buffer < Object
     # Flags indicating how a buffer's immutable storage can be used.
     @[Flags]
-    enum Storage : UInt32
+    enum Storage : LibGL::Enum
       MapRead        = LibGL::BufferStorageMask::MapRead
       MapWrite       = LibGL::BufferStorageMask::MapWrite
       MapPersistent  = LibGL::BufferStorageMask::MapPersistent

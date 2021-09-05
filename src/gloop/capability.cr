@@ -2,7 +2,7 @@ require "./context"
 
 module Gloop
   # Identifier for an toggleable OpenGL capability.
-  enum Capability : UInt32
+  enum Capability : LibGL::Enum
     LineSmooth                 = LibGL::EnableCap::LineSmooth
     PolygonSmooth              = LibGL::EnableCap::PolygonSmooth
     CullFace                   = LibGL::EnableCap::CullFace
