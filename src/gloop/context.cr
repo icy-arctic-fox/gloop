@@ -5,9 +5,8 @@ require "./parameters"
 
 module Gloop
   # Information about the current OpenGL context.
-  module Context
-    extend self
-    extend ErrorHandling
+  struct Context
+    include ErrorHandling
     include Parameters
 
     # Retrieves the major portion of the OpenGL's context version.
@@ -103,6 +102,28 @@ module Gloop
     # Minimum required version: 2.0
     parameter ShadingLanguageVersion, shading_language_version : String
 
+    # Provides direct access to loaded OpenGL functions.
+    # These methods are unchecked.
+    getter loader = OpenGL::Loader.new
+
+    # Creates a reference to an OpenGL context.
+    #
+    # A block must be provided that loads OpenGL functions for the context.
+    # An OpenGL function name is given as a block argument.
+    # The address of the function should be returned.
+    # If the function isn't available, then null should be returned.
+    def initialize(& : String -> Void*)
+      @loader.load_all do |name|
+        yield name
+      end
+    end
+
+    # Provides direct access to loaded OpenGL functions.
+    # These methods are unchecked.
+    private def gl
+      @loader
+    end
+
     # Retrieves the extensions supported by this implementation of OpenGL.
     # Returns an indexable (iterable) collection of `Extension` instances.
     def extensions
@@ -120,7 +141,7 @@ module Gloop
     #
     # Minimum required version: 2.0
     def enable(capability)
-      checked { LibGL.enable(capability) }
+      checked { gl.enable(capability.to_unsafe) }
     end
 
     # Disables an OpenGL capability.
@@ -134,7 +155,7 @@ module Gloop
     #
     # Minimum required version: 2.0
     def disable(capability)
-      checked { LibGL.disable(capability) }
+      checked { gl.disable(capability.to_unsafe) }
     end
 
     # Checks if an OpenGL capability is enabled.
@@ -148,7 +169,7 @@ module Gloop
     #
     # Minimum required version: 2.0
     def enabled?(capability)
-      value = checked { LibGL.is_enabled(capability) }
+      value = checked { gl.is_enabled(capability.to_unsafe) }
       !value.false?
     end
   end
