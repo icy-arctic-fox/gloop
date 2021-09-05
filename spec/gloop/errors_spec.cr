@@ -1,13 +1,14 @@
 require "../spec_helper"
 
-Spectator.describe Gloop do
-  describe ".error_code" do
-    subject { Gloop.error_code }
+Spectator.describe Gloop::Context do
+  describe "#error_code" do
+    subject { context.error_code }
 
     context "with no error" do
       before_each do
         # Perform an operation that shouldn't trigger an error.
-        LibGL.get_integer_v(LibGL::GetPName::MajorVersion, out value)
+        value = uninitialized Int32
+        gl_call get_integer_v(LibGL::GetPName::MajorVersion, pointerof(value))
       end
 
       it "returns Error::None" do
@@ -19,7 +20,8 @@ Spectator.describe Gloop do
       before_each do
         # Perform an operation that should trigger an error.
         bad_pname = LibGL::GetPName.new(0)
-        LibGL.get_integer_v(bad_pname, out value)
+        value = uninitialized Int32
+        gl_call get_integer_v(bad_pname, pointerof(value))
       end
 
       it "returns an error" do
@@ -28,13 +30,14 @@ Spectator.describe Gloop do
     end
   end
 
-  describe ".error" do
-    subject { Gloop.error }
+  describe "#error" do
+    subject { context.error }
 
     context "with no error" do
       before_each do
         # Perform an operation that shouldn't trigger an error.
-        LibGL.get_integer_v(LibGL::GetPName::MajorVersion, out value)
+        value = uninitialized Int32
+        gl_call get_integer_v(LibGL::GetPName::MajorVersion, pointerof(value))
       end
 
       it "returns nil" do
@@ -46,7 +49,8 @@ Spectator.describe Gloop do
       before_each do
         # Perform an operation that should trigger an error.
         bad_pname = LibGL::GetPName.new(0)
-        LibGL.get_integer_v(bad_pname, out value)
+        value = uninitialized Int32
+        gl_call get_integer_v(bad_pname, pointerof(value))
       end
 
       it "returns an error" do
@@ -55,15 +59,16 @@ Spectator.describe Gloop do
     end
   end
 
-  describe ".error!" do
+  describe "#error!" do
     context "with no error" do
       before_each do
         # Perform an operation that shouldn't trigger an error.
-        LibGL.get_integer_v(LibGL::GetPName::MajorVersion, out value)
+        value = uninitialized Int32
+        gl_call get_integer_v(LibGL::GetPName::MajorVersion, pointerof(value))
       end
 
       it "doesn't raise" do
-        expect { Gloop.error! }.to_not raise_error
+        expect { context.error! }.to_not raise_error
       end
     end
 
@@ -71,11 +76,12 @@ Spectator.describe Gloop do
       before_each do
         # Perform an operation that should trigger an error.
         bad_pname = LibGL::GetPName.new(0)
-        LibGL.get_integer_v(bad_pname, out value)
+        value = uninitialized Int32
+        gl_call get_integer_v(bad_pname, pointerof(value))
       end
 
       it "raises an error" do
-        expect { Gloop.error! }.to raise_error(Gloop::InvalidEnumError)
+        expect { context.error! }.to raise_error(Gloop::InvalidEnumError)
       end
     end
   end

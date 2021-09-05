@@ -29,7 +29,7 @@ module Gloop
       {% if flag?(:release) && !flag?(:error_checking) %}
         yield
       {% else %}
-        yield.tap { Gloop.error! }
+        yield.tap { context.error! }
       {% end %}
     end
 
@@ -46,7 +46,7 @@ module Gloop
         yield
       {% else %}
         yield.tap do |result|
-          Gloop.error! if !result || (result.responds_to?(:zero?) && result.zero?)
+          context.error! if !result || (result.responds_to?(:zero?) && result.zero?)
         end
       {% end %}
     end
