@@ -5,8 +5,6 @@ module Gloop
   # These wrap calls to `glGet` and `glGetString`.
   # All calls are wrapped with error checking.
   private module Parameters
-    extend ErrorHandling
-
     # Defines a boolean getter method that retrieves an OpenGL parameter.
     # The *pname* is the OpenGL parameter name to retrieve.
     # This should be an enum value (just the name) from `LibGL::GetPName`.
@@ -17,10 +15,11 @@ module Gloop
     # ```
     private macro parameter?(pname, name)
       def {{name.id}}? : Bool
+        value = uninitialized Int32
         checked do
-          LibGL.get_boolean_v(LibGL::GetPName::{{pname.id}}, out value)
-          !value.false?
+          gl.get_boolean_v(LibGL::GetPName::{{pname.id}}, pointerof(value))
         end
+        !value.zero?
       end
     end
 
@@ -63,62 +62,71 @@ module Gloop
         {% type = name.type.resolve %}
         def {{name.var.id}} : {{type}}
           {% if type < Enum %}
-            %value = checked do
-              LibGL.get_integer_v(LibGL::GetPName::{{pname.id}}, out value)
-              value
+            %value = uninitialized Int32
+            checked do
+              gl.get_integer_v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
             end
-            %value = {{type}}.from_value(%value)
+            %return = {{type}}.from_value(%value)
           {% elsif type <= Int32 %}
-            %value = checked do
-              LibGL.get_integer_v(LibGL::GetPName::{{pname.id}}, out value)
-              value
+            %value = uninitialized Int32
+            checked do
+              gl.get_integer_v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
             end
+            %return = %value
           {% elsif type <= Int64 %}
-            %value = checked do
-              LibGL.get_integer_64v(LibGL::GetPName::{{pname.id}}, out value)
-              value
+            %value = uninitialized Int64
+            checked do
+              gl.get_integer_64v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
             end
+            %return = %value
           {% elsif type <= Float32 %}
-            %value = checked do
-              LibGL.get_float_v(LibGL::GetPName::{{pname.id}}, out value)
-              value
+            %value = uninitialized Float32
+            checked do
+              gl.get_float_v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
             end
+            %return = %value
           {% elsif type <= Float64 %}
-            %value = checked do
-              LibGL.get_float_64v(LibGL::GetPName::{{pname.id}}, out value)
-              value
+            %value = uninitialized Float64
+            checked do
+              gl.get_float_64v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
             end
+            %return = %value
           {% elsif type <= Bool %}
-            %value = checked do
-              LibGL.get_boolean_v(LibGL::GetPName::{{pname.id}}, out value)
-              !value.false?
+            %value = uninitialized Int32
+            checked do
+              gl.get_boolean_v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
             end
+            %return = !%value.zero?
           {% elsif type <= String %}
-            %ptr = expect_truthy { LibGL.get_string(LibGL::StringName::{{pname.id}}) }
-            %value = String.new(%ptr)
+            %ptr = expect_truthy { gl.get_string(LibGL::StringName::{{pname.id}}) }
+            %return = String.new(%ptr)
           {% else %}
-            %value = checked do
-              LibGL.get_integer_v(LibGL::GetPName::{{pname.id}}, out value)
-              value
+            %value = uninitialized Int32
+            checked do
+              gl.get_integer_v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
             end
-            %value = {{type}}.new(%value)
+            %return = {{type}}.new(%value)
           {% end %}
 
           {% if block %}
-            {{block.args.splat}} = %value
+            {{block.args.splat}} = %return
             {{yield}}
+          {% else %}
+            %return
           {% end %}
         end
       {% else %}
         def {{name.id}}
-          %value = checked do
-            LibGL.get_integer_v(LibGL::GetPName::{{pname.id}}, out value)
-            value
+          %value = uninitialized Int32
+          checked do
+            gl.get_integer_v(LibGL::GetPName::{{pname.id}}, pointerof(%value))
           end
 
           {% if block %}
             {{block.args.splat}} = %value
             {{yield}}
+          {% else %}
+            %value
           {% end %}
         end
       {% end %}
