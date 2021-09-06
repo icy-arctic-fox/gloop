@@ -1,4 +1,3 @@
-require "./error_handling"
 require "./parameters"
 
 module Gloop
@@ -7,8 +6,6 @@ module Gloop
   #
   # Types including this module must define `#object_type` and `#name`.
   module Labelable
-    extend ErrorHandling
-    include ErrorHandling
     include Parameters
 
     # Enum value corresponding to the OpenGL object type.
@@ -25,7 +22,7 @@ module Gloop
     # ```
     #
     # Minimum required version: 4.3
-    class_parameter MaxLabelLength, max_label_size : Int32
+    parameter MaxLabelLength, max_label_size : Int32
 
     # Attempts to retrieve the label set for this object.
     # If there is no label, an empty string is returned.
@@ -37,11 +34,11 @@ module Gloop
     #
     # Minimum required version: 4.3
     def label : String
-      buffer_size = Labelable.max_label_size
+      buffer_size = max_label_size
 
       String.new(buffer_size) do |buffer|
         checked do
-          LibGL.get_object_label(object_type, name, buffer_size, out length, buffer)
+          gl_call get_object_label(object_type, name, buffer_size, out length, buffer)
           {length, 0}
         end
       end
@@ -58,7 +55,7 @@ module Gloop
     # Minimum required version: 4.3
     def label=(label)
       string = label.to_s
-      checked { LibGL.object_label(object_type, name, string.bytesize, string) }
+      checked { gl_call object_label(object_type, name, string.bytesize, string) }
     end
 
     # Removes any previously set label for this object.
@@ -70,7 +67,7 @@ module Gloop
     #
     # Minimum required version: 4.3
     def label=(label : Nil)
-      checked { LibGL.object_label(object_type, name, 0, nil) }
+      checked { gl_call object_label(object_type, name, 0, nil) }
     end
   end
 end
