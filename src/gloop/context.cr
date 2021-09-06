@@ -134,12 +134,20 @@ module Gloop
     # ```
     # gl_call get_integer_v(LibGL::GetPName::MajorVersion, pointerof(value))
     # ```
-    private macro gl_call(call)
+    private macro unchecked_gl_call(call)
       {% if flag?(:release) && !flag?(:error_checking) %}
         gl.{{call.name}}!({{call.args.splat}})
       {% else %}
         gl.{{call}}
       {% end %}
+    end
+
+    # Calls an OpenGL function and checks for errors.
+    # Does the same thing as `#unchecked_gl_call`, but with error handling.
+    private macro gl_call(call)
+      checked do
+        unchecked_gl_call {{call}}
+      end
     end
 
     # Retrieves the extensions supported by this implementation of OpenGL.
@@ -159,7 +167,7 @@ module Gloop
     #
     # Minimum required version: 2.0
     def enable(capability)
-      checked { gl_call enable(capability.to_unsafe) }
+      gl_call enable(capability.to_unsafe)
     end
 
     # Disables an OpenGL capability.
@@ -173,7 +181,7 @@ module Gloop
     #
     # Minimum required version: 2.0
     def disable(capability)
-      checked { gl_call disable(capability.to_unsafe) }
+      gl_call disable(capability.to_unsafe)
     end
 
     # Checks if an OpenGL capability is enabled.
@@ -187,7 +195,7 @@ module Gloop
     #
     # Minimum required version: 2.0
     def enabled?(capability)
-      value = checked { gl_call is_enabled(capability.to_unsafe) }
+      value = gl_call is_enabled(capability.to_unsafe)
       !value.false?
     end
   end

@@ -14,7 +14,7 @@ module Gloop
     # NOTE: Normal usage of the Gloop library doesn't require the consumer to check this method.
     # Gloop will automatically check for errors (unless this feature is disabled).
     def error_code : Error
-      code = gl_call get_error
+      code = unchecked_gl_call get_error
       Error.from_value(code)
     end
 

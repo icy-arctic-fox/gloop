@@ -20,6 +20,12 @@ module Gloop
     # ```
     # gl_call get_integer_v(LibGL::GetPName::MajorVersion, pointerof(value))
     # ```
+    private macro unchecked_gl_call(call)
+      context.unchecked_gl_call {{call}}
+    end
+
+    # Calls an OpenGL function and checks for errors.
+    # Does the same thing as `#unchecked_gl_call`, but with error handling.
     private macro gl_call(call)
       context.gl_call {{call}}
     end
