@@ -1,7 +1,7 @@
 require "../spec_helper"
 
 Spectator.describe Gloop::Attributes do
-  let(vao) { Gloop::VertexArray.create }
+  let(vao) { Gloop::VertexArray.create(context) }
   subject(attributes) { described_class }
   before_each { vao.bind }
   after_each { Gloop::VertexArray.unbind }
@@ -59,7 +59,7 @@ Spectator.describe Gloop::Attributes do
 
     context "with AttributePointer" do
       let(attribute) { Gloop::Float32AttributePointer.new(3, Float32, 32, 64) }
-      let(buffer) { Gloop::Buffer.mutable(Bytes[0, 1, 2, 3, 4, 5, 6, 7]) }
+      let(buffer) { Gloop::Buffer.mutable(context, Bytes[0, 1, 2, 3, 4, 5, 6, 7]) }
       before_each { buffer.bind(:array) }
 
       it "applies the attribute information" do

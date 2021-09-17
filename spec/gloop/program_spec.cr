@@ -1,7 +1,7 @@
 require "../spec_helper"
 
 Spectator.describe Gloop::Program do
-  subject(program) { described_class.create }
+  subject(program) { described_class.create(context) }
 
   let(vertex_shader) do
     Gloop::VertexShader.compile!(<<-END_SHADER

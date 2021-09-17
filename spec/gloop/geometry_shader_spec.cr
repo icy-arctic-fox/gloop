@@ -1,9 +1,9 @@
 require "../spec_helper"
 
 Spectator.describe Gloop::GeometryShader do
-  subject(valid_shader) { described_class.compile(VALID_SHADER) }
-  subject(invalid_shader) { described_class.compile(INVALID_SHADER) }
-  subject(uncompiled_shader) { described_class.create }
+  subject(valid_shader) { described_class.compile(context, VALID_SHADER) }
+  subject(invalid_shader) { described_class.compile(context, INVALID_SHADER) }
+  subject(uncompiled_shader) { described_class.create(context) }
 
   VALID_SHADER = <<-END_SHADER
     #version 460 core
@@ -47,7 +47,7 @@ Spectator.describe Gloop::GeometryShader do
     subject { shader.exists? }
 
     context "with a non-existent shader" do
-      let(shader) { described_class.new(0_u32) } # Zero is an invalid shader name.
+      let(shader) { described_class.new(context, 0_u32) } # Zero is an invalid shader name.
       it { is_expected.to be_false }
     end
 

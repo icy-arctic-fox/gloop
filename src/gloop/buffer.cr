@@ -43,7 +43,7 @@ module Gloop
     # Unlike `.generate`, resources are created in advance instead of on the first binding.
     def self.create(context, count)
       names = Slice(UInt32).new(count)
-      gl_call context, create_buffers(count, names)
+      gl_call context, create_buffers(count, names.to_unsafe)
       names.map { |name| new(context, name) }
     end
 
@@ -63,7 +63,7 @@ module Gloop
     # See: `.create`
     def self.generate(context, count)
       names = Slice(UInt32).new(count)
-      gl_call context, gen_buffers(count, names)
+      gl_call context, gen_buffers(count, names.to_unsafe)
       names.map { |name| new(context, name) }
     end
 
@@ -109,7 +109,7 @@ module Gloop
     # Binds this buffer to the specified target.
     # The previously bound buffer (if any) is restored after the block exits.
     def bind(target : Target)
-      target = BindTarget.new(target)
+      target = BindTarget.new(context, target)
       bind(target) { yield }
     end
 
@@ -152,7 +152,7 @@ module Gloop
     # Retrieves all data in the buffer.
     def data
       Bytes.new(size).tap do |bytes|
-        gl_call get_named_buffer_sub_data(self, 0, bytes.bytesize, bytes)
+        gl_call get_named_buffer_sub_data(name, 0_i64, bytes.bytesize.to_i64, bytes.to_unsafe.as(Void*))
       end
     end
 
@@ -164,7 +164,7 @@ module Gloop
       slice = data.to_slice
       pointer = slice.to_unsafe.as(Void*)
       size = slice.bytesize.to_i64
-      gl_call named_buffer_storage(name, size, pointer, flags)
+      gl_call named_buffer_storage(name, size, pointer, flags.to_unsafe)
     end
 
     # Initializes the buffer of a given size with undefined contents.

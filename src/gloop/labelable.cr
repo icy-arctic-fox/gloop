@@ -37,10 +37,9 @@ module Gloop
       buffer_size = max_label_size
 
       String.new(buffer_size) do |buffer|
-        checked do
-          gl_call get_object_label(object_type, name, buffer_size, out length, buffer)
-          {length, 0}
-        end
+        length = uninitialized Int32
+        gl_call get_object_label(object_type.to_unsafe, name, buffer_size, pointerof(length), buffer)
+        {length, 0}
       end
     end
 
@@ -55,7 +54,7 @@ module Gloop
     # Minimum required version: 4.3
     def label=(label)
       string = label.to_s
-      checked { gl_call object_label(object_type, name, string.bytesize, string) }
+      gl_call object_label(object_type.to_unsafe, name, string.bytesize, string.to_unsafe)
     end
 
     # Removes any previously set label for this object.
@@ -67,7 +66,7 @@ module Gloop
     #
     # Minimum required version: 4.3
     def label=(label : Nil)
-      checked { gl_call object_label(object_type, name, 0, nil) }
+      gl_call object_label(object_type.to_unsafe, name, 0, nil)
     end
   end
 end

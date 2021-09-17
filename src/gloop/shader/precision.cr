@@ -97,10 +97,8 @@ module Gloop
       # Retrieves the specified precision type and converts it to a `Precision` instance.
       private def precision_format(precision_type)
         range = uninitialized Int32[2]
-        precision = checked do
-          LibGL.get_shader_precision_format(type, precision_type, range, out value)
-          value
-        end
+        precision = uninitialized Int32
+        gl_call context, get_shader_precision_format(type, precision_type, range.to_unsafe, pointerof(precision))
         Precision.new(range[0], range[1], precision)
       end
     end

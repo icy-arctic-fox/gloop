@@ -26,55 +26,50 @@ module Gloop
 
     # Creates a new vertex array.
     # Unlike `.generate`, resources are created in advance instead of on the first binding.
-    def self.create
+    def self.create(context)
       name = checked do
         LibGL.create_vertex_arrays(1, out name)
         name
       end
-      new(name)
+      new(context, name)
     end
 
     # Creates multiple new vertex arrays.
     # The number of vertex arrays to create is given by *count*.
     # Unlike `.generate`, resources are created in advance instead of on the first binding.
-    def self.create(count)
+    def self.create(context, count)
       names = Slice(UInt32).new(count)
       checked do
         LibGL.create_vertex_arrays(count, names)
       end
-      names.map { |name| new(name) }
+      names.map { |name| new(context, name) }
     end
 
     # Generates a new vertex array.
     # This ensures a unique name for a vertex array object.
     # Resources are not allocated for the vertex array until it is bound.
     # See: `.create`
-    def self.generate
+    def self.generate(context)
       name = checked do
         LibGL.gen_vertex_arrays(1, out name)
         name
       end
-      new(name)
+      new(context, name)
     end
 
     # Generates multiple new vertex arrays.
     # This ensures unique names for the vertex array objects.
     # Resources are not allocated for the vertex arrays until they are bound.
     # See: `.create`
-    def self.generate(count)
+    def self.generate(context, count)
       names = Slice(UInt32).new(count)
       checked do
         LibGL.gen_vertex_arrays(count, names)
       end
-      names.map { |name| new(name) }
+      names.map { |name| new(context, name) }
     end
 
-    # Deletes multiple vertex arrays.
-    def self.delete(vertex_arrays)
-      names = vertex_arrays.map(&.to_unsafe)
-      count = names.size
-      checked { LibGL.delete_vertex_arrays(count, names) }
-    end
+    # TODO: Delete multiple
 
     # Deletes this vertex array.
     def delete
@@ -112,7 +107,7 @@ module Gloop
 
     # Removes any previously bound vertex buffers.
     def self.unbind
-      checked { LibGL.bind_vertex_array(none) }
+      checked { LibGL.bind_vertex_array(none(context)) }
     end
 
     # Retrieves the name of the element array buffer tied to this vertex array.

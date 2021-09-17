@@ -1,7 +1,7 @@
 require "../spec_helper"
 
 Spectator.describe Gloop::Shader do
-  let(shader) { Gloop::FragmentShader.create }
+  let(shader) { Gloop::FragmentShader.create(context) }
 
   describe ".type_of" do
     subject { described_class.type_of(shader) }

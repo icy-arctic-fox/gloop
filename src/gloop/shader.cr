@@ -117,13 +117,14 @@ module Gloop
     # Minimum required version: 2.0
     def sources=(sources)
       # Retrieve a pointer to each string source.
-      references = sources.map(&.to_s.to_unsafe)
+      strings = sources.map(&.to_s.to_unsafe)
 
       # Some enumerable types allow unsafe direct access to their internals.
-      # If available, use that, as it is much faster.
+      # Use that if it's available, as it is much faster.
       # Otherwise, convert to an array, which allows direct access via `#to_unsafe`.
-      references = references.to_a unless references.responds_to?(:to_unsafe)
-      gl_call shader_source(name, references.size, references, nil)
+      strings = strings.to_a unless strings.responds_to?(:to_unsafe)
+      size = strings.size
+      gl_call shader_source(name, size, strings.to_unsafe, Pointer(Int32).null)
     end
 
     # Attempts to compile the shader.
@@ -206,6 +207,10 @@ module Gloop
     # Minimum required version: 4.1
     def release_compiler
       gl_call release_shader_compiler
+    end
+
+    def create_shader(type)
+      gl_call create_shader(type.to_unsafe)
     end
   end
 end

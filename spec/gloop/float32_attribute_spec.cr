@@ -3,7 +3,7 @@ require "../spec_helper"
 Spectator.describe Gloop::Float32Attribute do
   subject(attribute) { Gloop::Attributes[0] }
 
-  let(vao) { Gloop::VertexArray.create }
+  let(vao) { Gloop::VertexArray.create(context) }
   before_each { vao.bind }
   after_each { Gloop::VertexArray.unbind }
 

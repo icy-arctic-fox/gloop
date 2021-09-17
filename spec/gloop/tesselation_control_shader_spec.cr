@@ -1,9 +1,9 @@
 require "../spec_helper"
 
 Spectator.describe Gloop::TessellationControlShader do
-  subject(valid_shader) { described_class.compile(VALID_SHADER) }
-  subject(invalid_shader) { described_class.compile(INVALID_SHADER) }
-  subject(uncompiled_shader) { described_class.create }
+  subject(valid_shader) { described_class.compile(context, VALID_SHADER) }
+  subject(invalid_shader) { described_class.compile(context, INVALID_SHADER) }
+  subject(uncompiled_shader) { described_class.create(context) }
 
   # Shader code taken from here:
   # https://voxels.blogspot.com/2011/09/tesselation-shader-tutorial-with-source.html
@@ -57,7 +57,7 @@ Spectator.describe Gloop::TessellationControlShader do
     subject { shader.exists? }
 
     context "with a non-existent shader" do
-      let(shader) { described_class.new(0_u32) } # Zero is an invalid shader name.
+      let(shader) { described_class.new(context, 0_u32) } # Zero is an invalid shader name.
       it { is_expected.to be_false }
     end
 

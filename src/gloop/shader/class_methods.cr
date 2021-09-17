@@ -11,7 +11,7 @@ module Gloop
       #
       # Minimum required version: 2.0
       def create(context)
-        name = gl_call create_shader(type)
+        name = context.create_shader(type)
         new(context, name)
       end
 
