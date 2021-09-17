@@ -7,7 +7,7 @@ module Gloop
     # Provides direct access to loaded OpenGL functions.
     # These methods are unchecked.
     private def gl
-      context.gl
+      context.loader
     end
 
     # Calls an OpenGL function.
@@ -28,11 +28,25 @@ module Gloop
       {% end %}
     end
 
+    private macro unchecked_gl_call(context, call)
+      {% if flag?(:release) && !flag?(:error_checking) %}
+        {{context.id}}.loader.{{call.name}}!({{call.args.splat}})
+      {% else %}
+        {{context.id}}.loader.{{call}}
+      {% end %}
+    end
+
     # Calls an OpenGL function and checks for errors.
     # Does the same thing as `#unchecked_gl_call`, but with error handling.
     private macro gl_call(call)
       checked do
         unchecked_gl_call {{call}}
+      end
+    end
+
+    private macro gl_call(context, call)
+      checked do
+        unchecked_gl_call {{context}}, {{call}}
       end
     end
   end

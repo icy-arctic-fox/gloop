@@ -1,13 +1,14 @@
 require "./buffer/bind_target"
 
 module Gloop
-  module Buffers
-    extend self
-
+  struct Buffers
     private macro buffer_target(name)
       def {{name.id}}
-        Buffer::BindTarget.new({{name.id.symbolize}})
+        Buffer::BindTarget.new(@context, {{name.id.symbolize}})
       end
+    end
+
+    def initialize(@context : Context)
     end
 
     buffer_target :array
@@ -41,13 +42,19 @@ module Gloop
     buffer_target :parameter
 
     def [](target : Buffer::Target)
-      Buffer::BindTarget.new(target)
+      Buffer::BindTarget.new(@context, target)
     end
 
     # Copies a subset of data from a buffer bound to one target into one bound by another target.
     def copy(from read_target : Buffer::Target, to write_target : Buffer::Target,
              read_offset : Int, write_offset : Int, size : Int)
       Buffer::BindTarget.copy(read_target, write_target, read_offset, write_offset, size)
+    end
+  end
+
+  struct Context
+    def buffers
+      Buffer.new(self)
     end
   end
 end

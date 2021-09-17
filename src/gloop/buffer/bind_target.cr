@@ -1,4 +1,5 @@
 require "../error_handling"
+require "../gl_functions"
 require "./buffer_target_parameters"
 require "./target"
 
@@ -10,6 +11,7 @@ module Gloop
       extend ErrorHandling
       include BufferTargetParameters
       include ErrorHandling
+      include GLFunctions
 
       # Indicates whether the buffer is immutable.
       buffer_parameter? BufferImmutableStorage, immutable
@@ -32,32 +34,31 @@ module Gloop
         Usage.new(value.to_u32)
       end
 
+      # Retrieves the context for this target.
+      getter context
+
       # Target this binding refers to.
       getter target : Target
 
-      protected def initialize(@target : Target)
+      protected def initialize(@context : Context, @target : Target)
       end
 
       # Retrieves the buffer currently bound to this target.
       # If there is no buffer bound, nil is returned.
       def buffer? : Buffer?
         pname = binding_pname
-        name = checked do
-          LibGL.get_integer_v(pname, out name)
-          name
-        end
-        Buffer.new(name.to_u32!) unless name.zero?
+        name = uninitialized Int32
+        gl_call get_integer_v(pname, pointerof(name))
+        Buffer.new(@context, name.to_u32!) unless name.zero?
       end
 
       # Retrieves the buffer currently bound to this target.
       # If there is no buffer bound, `Buffer.none` is returned.
       def buffer : Buffer
         pname = binding_pname
-        name = checked do
-          LibGL.get_integer_v(pname, out name)
-          name
-        end
-        Buffer.new(name.to_u32!)
+        name = uninitialized Int32
+        gl_call get_integer_v(pname, pointerof(name))
+        Buffer.new(@context, name.to_u32!)
       end
 
       # Retrieves the corresponding parameter value for `glGet` for this target.
@@ -83,7 +84,7 @@ module Gloop
 
       # Binds a buffer to this target.
       def bind(buffer)
-        checked { LibGL.bind_buffer(self, buffer) }
+        gl_call bind_buffer(target, buffer)
       end
 
       # Binds a buffer to this target.
@@ -101,7 +102,7 @@ module Gloop
 
       # Unbinds any previously bound buffer from this target.
       def unbind
-        checked { LibGL.bind_buffer(self, 0) }
+        gl_call bind_buffer(target, 0)
       end
 
       # Stores data in the buffer currently bound to this target.
@@ -110,12 +111,12 @@ module Gloop
       def data(data, usage : Usage = :static_draw)
         slice = data.to_slice
         size = slice.bytesize
-        checked { LibGL.buffer_data(self, size, slice, usage) }
+        gl_call buffer_data(target, size, slice, usage)
       end
 
       # Initializes the currently bound buffer to a given size with undefined contents.
       def allocate_data(size : Int, usage : Usage = :static_draw)
-        checked { LibGL.buffer_data(self, size, nil, usage) }
+        gl_call buffer_data(target, size, nil, usage)
       end
 
       # Stores data in the buffer currently bound to this target.
@@ -129,7 +130,7 @@ module Gloop
       # Retrieves all data in the buffer currently bound to this target.
       def data
         Bytes.new(size).tap do |bytes|
-          checked { LibGL.get_buffer_sub_data(self, 0, bytes.bytesize, bytes) }
+          gl_call get_buffer_sub_data(target, 0, bytes.bytesize, bytes)
         end
       end
 
@@ -140,20 +141,20 @@ module Gloop
       def storage(data, flags : Storage)
         slice = data.to_slice
         size = slice.bytesize
-        checked { LibGL.buffer_storage(storage_target, size, slice, flags) }
+        gl_call buffer_storage(storage_target, size, slice, flags)
       end
 
       # Initializes the currently bound buffer to a given size with undefined contents.
       # This makes the buffer have a fixed size (immutable).
       def allocate_storage(size : Int, flags : Storage)
-        checked { LibGL.buffer_storage(storage_target, size, nil, flags) }
+        gl_call buffer_storage(storage_target, size, nil, flags)
       end
 
       # Retrieves a subset of data from the buffer currently bound to this target.
       def []?(start : Int, count : Int) : Bytes?
         start, count = Indexable.normalize_start_and_count(start, count, size) { return nil }
         Bytes.new(count).tap do |bytes|
-          checked { LibGL.get_buffer_sub_data(self, start, count, bytes) }
+          gl_call get_buffer_sub_data(target, start, count, bytes)
         end
       end
 
@@ -168,7 +169,7 @@ module Gloop
         start, count = Indexable.range_to_index_and_count(range, size) || return nil
         start, count = Indexable.normalize_start_and_count(start, count, size) { return nil }
         Bytes.new(count).tap do |bytes|
-          checked { LibGL.get_buffer_sub_data(self, start, count, bytes) }
+          gl_call get_buffer_sub_data(target, start, count, bytes)
         end
       end
 
@@ -194,7 +195,7 @@ module Gloop
       # Be sure that *count* is less than or equal to the byte-size length of *data*.
       def []=(start : Int, count : Int, data)
         start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
-        checked { LibGL.buffer_sub_data(self, start, count, data) }
+        gl_call buffer_sub_data(target, start, count, data)
       end
 
       # Updates a subset of the currently bound buffer's data store.
@@ -207,14 +208,14 @@ module Gloop
         size = self.size
         start, count = Indexable.range_to_index_and_count(range, size) || raise IndexError.new
         start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
-        checked { LibGL.buffer_sub_data(self, start, count, data) }
+        gl_call buffer_sub_data(target, start, count, data)
       end
 
       # Copies a subset of data from a buffer bound to one target into one bound by another target.
       def self.copy(from read_target : Target | self, to write_target : Target | self,
                     read_offset : Int, write_offset : Int, size : Int)
         checked do
-          LibGL.copy_buffer_sub_data(
+          gl_call copy_buffer_sub_data(
             read_target.copy_buffer_target, write_target.copy_buffer_target,
             read_offset, write_offset, size)
         end
@@ -232,14 +233,14 @@ module Gloop
 
       # Maps the buffer's memory into client space.
       def map(access : Access) : Bytes
-        pointer = expect_truthy { LibGL.map_buffer(self, access) }
+        pointer = gl_call map_buffer(target, access)
         Bytes.new(pointer.as(UInt8*), size, read_only: access.read_only?)
       end
 
       # Maps a subset of the buffer's memory into client space.
       def map(access : AccessMask, start : Int, count : Int) : Bytes
         start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
-        pointer = expect_truthy { LibGL.map_buffer_range(self, start, count, access) }
+        pointer = gl_call map_buffer_range(target, start, count, access)
         Bytes.new(pointer.as(UInt8*), count, read_only: access.read_only?)
       end
 
@@ -248,7 +249,7 @@ module Gloop
         size = self.size
         start, count = Indexable.range_to_index_and_count(range, size) || raise IndexError.new
         start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
-        pointer = expect_truthy { LibGL.map_buffer_range(self, start, count, access) }
+        pointer = gl_call map_buffer_range(target, start, count, access)
         Bytes.new(pointer.as(UInt8*), count, read_only: access.read_only?)
       end
 
@@ -297,21 +298,21 @@ module Gloop
       # Unmaps the buffer's memory from client space.
       # Returns false if the buffer memory was corrupted while it was mapped.
       def unmap : Bool
-        value = checked { LibGL.unmap_buffer(self) }
+        value = gl_call unmap_buffer(target)
         !value.false?
       end
 
       # Flushes the entire mapped buffer range to indicate changes have been made.
       def flush
         size = mapping.size
-        checked { LibGL.flush_mapped_buffer_range(self, 0, size) }
+        gl_call flush_mapped_buffer_range(target, 0, size)
       end
 
       # Flushes a subset of the mapped buffer to indicate changes have been made.
       def flush(start : Int, count : Int)
         size = mapping.size
         start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
-        checked { LibGL.flush_mapped_buffer_range(self, start, count) }
+        gl_call flush_mapped_buffer_range(target, start, count)
       end
 
       # Flushes a subset of the mapped buffer to indicate changes have been made.
@@ -319,7 +320,7 @@ module Gloop
         size = mapping.size
         start, count = Indexable.range_to_index_and_count(range, size) || raise IndexError.new
         start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
-        checked { LibGL.flush_mapped_buffer_range(self, start, count) }
+        gl_call flush_mapped_buffer_range(target, start, count)
       end
 
       # Retrieves information about the bound buffer's current map.

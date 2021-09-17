@@ -9,7 +9,6 @@ module Gloop
   # Encapsulates functionality for working with a stage of the graphics processing pipeline.
   # See: https://www.khronos.org/opengl/wiki/Shader
   abstract struct Shader < Object
-    extend ErrorHandling
     include ErrorHandling
     include ShaderParameters
     include StringQuery
@@ -18,7 +17,7 @@ module Gloop
       extend ClassMethods
     end
 
-    # Retrieves the type of an existing shader by its name.
+    # Retrieves the type of this shader.
     #
     # Effectively calls:
     # ```c
@@ -26,45 +25,10 @@ module Gloop
     # ```
     #
     # Minimum required version: 2.0
-    def self.type_of(name)
-      value = checked do
-        LibGL.get_shader_iv(name, LibGL::ShaderParameterName::ShaderType, out value)
-        value
-      end
-      Type.from_value(value)
-    end
-
-    # Checks if a shader with the specified *name* (object ID) is known to the graphics driver.
-    #
-    # Effectively calls:
-    # ```c
-    # glIsShader(shader)
-    # ```
-    #
-    # Minimum required version: 2.0
-    def self.exists?(name)
-      value = checked { LibGL.is_shader(name) }
-      !value.false?
-    end
-
-    # Releases resources held by the OpenGL implementation shader compiler.
-    # This method hints that resources held by the compiler can be released.
-    # Additional shaders can be compiled after calling this method,
-    # and the resources will be reallocated first.
-    #
-    # Effectively calls:
-    # ```c
-    # glReleaseShaderCompiler()
-    # ```
-    #
-    # Minimum required version: 4.1
-    def self.release_compiler
-      LibGL.release_shader_compiler
-    end
-
-    # Shader type.
     def type
-      self.class.type
+      value = uninitialized Int32
+      gl_call get_shader_iv(name, LibGL::ShaderParameterName::ShaderType, pointerof(value))
+      Type.from_value(value)
     end
 
     # Indicates that this is a shader object.
@@ -86,7 +50,7 @@ module Gloop
     #
     # Minimum required version: 2.0
     def delete
-      checked { LibGL.delete_shader(self) }
+      gl_call delete_shader(name)
     end
 
     # Checks if the shader is known to the graphics driver.
@@ -98,7 +62,7 @@ module Gloop
     #
     # Minimum required version: 2.0
     def exists?
-      value = checked { LibGL.is_shader(self) }
+      value = gl_call is_shader(name)
       !value.false?
     end
 
@@ -119,7 +83,8 @@ module Gloop
     # Minimum required version: 2.0
     def source
       string_query(source_size) do |buffer, capacity|
-        LibGL.get_shader_source(self, capacity, out length, buffer)
+        length = uninitialized Int32
+        gl_call get_shader_source(name, capacity, pointerof(length), buffer)
         length
       end
     end
@@ -158,7 +123,7 @@ module Gloop
       # If available, use that, as it is much faster.
       # Otherwise, convert to an array, which allows direct access via `#to_unsafe`.
       references = references.to_a unless references.responds_to?(:to_unsafe)
-      checked { LibGL.shader_source(self, references.size, references, nil) }
+      gl_call shader_source(name, references.size, references, nil)
     end
 
     # Attempts to compile the shader.
@@ -178,7 +143,7 @@ module Gloop
     #
     # See also: `#compile!`
     def compile
-      checked { LibGL.compile_shader(self) }
+      gl_call compile_shader(name)
       compiled?
     end
 
@@ -220,13 +185,27 @@ module Gloop
     # Minimum required version: 2.0
     def info_log
       string_query(info_log_size) do |buffer, capacity|
-        LibGL.get_shader_info_log(self, capacity, out length, buffer)
+        length = uninitialized Int32
+        gl_call get_shader_info_log(name, capacity, pointerof(length), buffer)
         length
       end
     end
+  end
 
-    def binary=
-      raise NotImplementedError.new("#binary=")
+  struct Context
+    # Releases resources held by the OpenGL implementation shader compiler.
+    # This method hints that resources held by the compiler can be released.
+    # Additional shaders can be compiled after calling this method,
+    # and the resources will be reallocated first.
+    #
+    # Effectively calls:
+    # ```c
+    # glReleaseShaderCompiler()
+    # ```
+    #
+    # Minimum required version: 4.1
+    def release_compiler
+      gl_call release_shader_compiler
     end
   end
 end

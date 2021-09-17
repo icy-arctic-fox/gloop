@@ -10,11 +10,9 @@ module Gloop
       # ```
       #
       # Minimum required version: 2.0
-      def create
-        name = expect_truthy do
-          LibGL.create_shader(type)
-        end
-        new(name)
+      def create(context)
+        name = gl_call create_shader(type)
+        new(context, name)
       end
 
       # Creates a new shader and compiles it.
@@ -28,8 +26,8 @@ module Gloop
       # ```
       #
       # Minimum required version: 2.0
-      def compile(source)
-        create.tap do |shader|
+      def compile(context, source)
+        create(context).tap do |shader|
           shader.source = source
           shader.compile
         end
@@ -47,8 +45,8 @@ module Gloop
       # ```
       #
       # Minimum required version: 2.0
-      def compile!(source)
-        create.tap do |shader|
+      def compile!(context, source)
+        create(context).tap do |shader|
           shader.source = source
           shader.compile!
         end

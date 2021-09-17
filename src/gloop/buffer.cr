@@ -32,80 +32,67 @@ module Gloop
 
     # Creates a new buffer.
     # Unlike `.generate`, resources are created in advance instead of on the first binding.
-    def self.create
-      name = checked do
-        LibGL.create_buffers(1, out name)
-        name
-      end
-      new(name)
+    def self.create(context)
+      name = uninitialized UInt32
+      gl_call context, create_buffers(1, pointerof(name))
+      new(context, name)
     end
 
     # Creates multiple new buffers.
     # The number of buffers to create is given by *count*.
     # Unlike `.generate`, resources are created in advance instead of on the first binding.
-    def self.create(count)
+    def self.create(context, count)
       names = Slice(UInt32).new(count)
-      checked do
-        LibGL.create_buffers(count, names)
-      end
-      names.map { |name| new(name) }
+      gl_call context, create_buffers(count, names)
+      names.map { |name| new(context, name) }
     end
 
     # Generates a new buffer.
     # This ensures a unique name for a buffer object.
     # Resources are not allocated for the buffer until it is bound.
     # See: `.create`
-    def self.generate
-      name = checked do
-        LibGL.gen_buffers(1, out name)
-        name
-      end
-      new(name)
+    def self.generate(context)
+      name = uninitialized UInt32
+      gl_call context, gen_buffers(1, pointerof(name))
+      new(context, name)
     end
 
     # Generates multiple new buffers.
     # This ensures unique names for the buffer objects.
     # Resources are not allocated for the buffers until they are bound.
     # See: `.create`
-    def self.generate(count)
+    def self.generate(context, count)
       names = Slice(UInt32).new(count)
-      checked do
-        LibGL.gen_buffers(count, names)
-      end
-      names.map { |name| new(name) }
+      gl_call context, gen_buffers(count, names)
+      names.map { |name| new(context, name) }
     end
 
     # Creates a mutable buffer with initial contents.
     # This effectively combines `.create` and `#data`.
-    def self.mutable(data, usage : Usage = :static_draw)
-      create.tap do |buffer|
+    def self.mutable(context, data, usage : Usage = :static_draw)
+      create(context).tap do |buffer|
         buffer.data(data, usage)
       end
     end
 
     # Creates an immutable buffer with initial contents.
     # This effectively combines `.create` and `#storage`.
-    def self.immutable(data, flags : Storage)
-      create.tap do |buffer|
+    def self.immutable(context, data, flags : Storage)
+      create(context).tap do |buffer|
         buffer.storage(data, flags)
       end
     end
 
-    # Deletes multiple buffers.
-    def self.delete(buffers)
-      names = buffers.map(&.to_unsafe)
-      count = names.size
-      checked { LibGL.delete_buffers(count, names) }
-    end
+    # TODO: Delete multiple
 
     # Deletes this buffer.
     def delete
-      checked { LibGL.delete_buffers(1, pointerof(@name)) }
+      gl_call delete_buffers(1, pointerof(@name))
     end
 
     # Checks if the buffer is known by OpenGL.
     def exists?
-      value = checked { LibGL.is_buffer(self) }
+      value = gl_call is_buffer(name)
       !value.false?
     end
 
@@ -116,7 +103,7 @@ module Gloop
 
     # Binds this buffer to the specified target.
     def bind(target : Target | BindTarget)
-      checked { LibGL.bind_buffer(target, self) }
+      gl_call bind_buffer(target.to_unsafe, name)
     end
 
     # Binds this buffer to the specified target.
@@ -144,13 +131,14 @@ module Gloop
     # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
     def data(data, usage : Usage = :static_draw)
       slice = data.to_slice
-      size = slice.bytesize
-      checked { LibGL.named_buffer_data(self, size, slice, usage.named_to_unsafe) }
+      pointer = slice.to_unsafe.as(Void*)
+      size = slice.bytesize.to_i64
+      gl_call named_buffer_data(name, size, pointer, usage.named_to_unsafe)
     end
 
     # Initializes the buffer of a given size with undefined contents.
-    def allocate_data(size : Int, usage : Usage = :static_draw)
-      checked { LibGL.named_buffer_data(self, size, nil, usage.named_to_unsafe) }
+    def allocate_data(size : Int64, usage : Usage = :static_draw)
+      gl_call named_buffer_data(name, size, nil, usage.named_to_unsafe)
     end
 
     # Stores data in this buffer.
@@ -164,7 +152,7 @@ module Gloop
     # Retrieves all data in the buffer.
     def data
       Bytes.new(size).tap do |bytes|
-        checked { LibGL.get_named_buffer_sub_data(self, 0, bytes.bytesize, bytes) }
+        gl_call get_named_buffer_sub_data(self, 0, bytes.bytesize, bytes)
       end
     end
 
@@ -174,21 +162,22 @@ module Gloop
     # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
     def storage(data, flags : Storage)
       slice = data.to_slice
-      size = slice.bytesize
-      checked { LibGL.named_buffer_storage(self, size, slice, flags) }
+      pointer = slice.to_unsafe.as(Void*)
+      size = slice.bytesize.to_i64
+      gl_call named_buffer_storage(name, size, pointer, flags)
     end
 
     # Initializes the buffer of a given size with undefined contents.
     # This makes the buffer have a fixed size (immutable).
-    def allocate_storage(size : Int, flags : Storage)
-      checked { LibGL.named_buffer_storage(self, size, nil, flags) }
+    def allocate_storage(size : Int64, flags : Storage)
+      gl_call named_buffer_storage(name, size, nil, flags)
     end
 
     # Retrieves a subset of data from the buffer.
     def []?(start : Int, count : Int) : Bytes?
       start, count = Indexable.normalize_start_and_count(start, count, size) { return nil }
       Bytes.new(count).tap do |bytes|
-        checked { LibGL.get_named_buffer_sub_data(self, start, count, bytes) }
+        gl_call get_named_buffer_sub_data(name, start, count, bytes)
       end
     end
 
@@ -203,7 +192,7 @@ module Gloop
       start, count = Indexable.range_to_index_and_count(range, size) || return nil
       start, count = Indexable.normalize_start_and_count(start, count, size) { return nil }
       Bytes.new(count).tap do |bytes|
-        checked { LibGL.get_named_buffer_sub_data(self, start, count, bytes) }
+        gl_call get_named_buffer_sub_data(name, start, count, bytes)
       end
     end
 
@@ -229,7 +218,7 @@ module Gloop
     # Be sure that *count* is less than or equal to the byte-size length of *data*.
     def []=(start : Int, count : Int, data)
       start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
-      checked { LibGL.named_buffer_sub_data(self, start, count, data) }
+      gl_call named_buffer_sub_data(name, start, count, data)
     end
 
     # Updates a subset of the buffer's data store.
@@ -242,12 +231,12 @@ module Gloop
       size = self.size
       start, count = Indexable.range_to_index_and_count(range, size) || raise IndexError.new
       start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
-      checked { LibGL.named_buffer_sub_data(self, start, count, data) }
+      gl_call named_buffer_sub_data(name, start, count, data)
     end
 
     # Copies a subset of data from one buffer to another.
     def self.copy(from read_buffer, to write_buffer, read_offset : Int, write_offset : Int, size : Int)
-      checked { LibGL.copy_named_buffer_sub_data(read_buffer, write_buffer, read_offset, write_offset, size) }
+      gl_call copy_named_buffer_sub_data(read_buffer, write_buffer, read_offset, write_offset, size)
     end
 
     # Copies a subset of this buffer into another.
@@ -262,13 +251,13 @@ module Gloop
 
     # Invalidates the entire content of the buffer.
     def invalidate
-      checked { LibGL.invalidate_buffer_data(self) }
+      gl_call invalidate_buffer_data(name)
     end
 
     # Invalidates a subset of the buffer's content.
     def invalidate(start : Int, count : Int)
       start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
-      checked { LibGL.invalidate_buffer_sub_data(self, start, count) }
+      gl_call invalidate_buffer_sub_data(name, start, count)
     end
 
     # Invalidates a subset of the buffer's content.
@@ -276,19 +265,19 @@ module Gloop
       size = self.size
       start, count = Indexable.range_to_index_and_count(range, size) || raise IndexError.new
       start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
-      checked { LibGL.invalidate_buffer_sub_data(self, start, count) }
+      gl_call invalidate_buffer_sub_data(name, start, count)
     end
 
     # Maps the buffer's memory into client space.
     def map(access : Access) : Bytes
-      pointer = expect_truthy { LibGL.map_named_buffer(self, access) }
+      pointer = gl_call map_named_buffer(name, access)
       Bytes.new(pointer.as(UInt8*), size, read_only: access.read_only?)
     end
 
     # Maps a subset of the buffer's memory into client space.
     def map(access : AccessMask, start : Int, count : Int) : Bytes
       start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
-      pointer = expect_truthy { LibGL.map_named_buffer_range(self, start, count, access) }
+      pointer = gl_call.map_named_buffer_range(name, start, count, access)
       Bytes.new(pointer.as(UInt8*), count, read_only: access.read_only?)
     end
 
@@ -297,7 +286,7 @@ module Gloop
       size = self.size
       start, count = Indexable.range_to_index_and_count(range, size) || raise IndexError.new
       start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
-      pointer = expect_truthy { LibGL.map_named_buffer_range(self, start, count, access) }
+      pointer = gl_call map_named_buffer_range(name, start, count, access)
       Bytes.new(pointer.as(UInt8*), count, read_only: access.read_only?)
     end
 
@@ -346,21 +335,21 @@ module Gloop
     # Unmaps the buffer's memory from client space.
     # Returns false if the buffer memory was corrupted while it was mapped.
     def unmap : Bool
-      value = checked { LibGL.unmap_named_buffer(self) }
+      value = gl_call unmap_named_buffer(name)
       !value.false?
     end
 
     # Flushes the entire mapped buffer range to indicate changes have been made.
     def flush
       size = mapping.size
-      checked { LibGL.flush_mapped_named_buffer_range(self, 0, size) }
+      gl_call flush_mapped_named_buffer_range(name, 0, size)
     end
 
     # Flushes a subset of the mapped buffer to indicate changes have been made.
     def flush(start : Int, count : Int)
       size = mapping.size
       start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
-      checked { LibGL.flush_mapped_named_buffer_range(self, start, count) }
+      gl_call flush_mapped_named_buffer_range(name, start, count)
     end
 
     # Flushes a subset of the mapped buffer to indicate changes have been made.
@@ -368,7 +357,7 @@ module Gloop
       size = mapping.size
       start, count = Indexable.range_to_index_and_count(range, size) || raise IndexError.new
       start, count = Indexable.normalize_start_and_count(start, count, size) { raise IndexError.new }
-      checked { LibGL.flush_mapped_named_buffer_range(self, start, count) }
+      gl_call flush_mapped_named_buffer_range(name, start, count)
     end
 
     # Retrieves information about the buffer's current map.
