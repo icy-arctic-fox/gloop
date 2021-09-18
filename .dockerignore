@@ -1,4 +1,7 @@
 .git/
 bin/
+lib/
 
+shard.lock
+shard.override.yml
 Dockerfile
