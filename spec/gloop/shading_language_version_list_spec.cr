@@ -1,6 +1,6 @@
 require "../spec_helper"
 
-Spectator.describe Gloop::GLSLVersionList do
+Spectator.describe Gloop::ShadingLanguageVersionList do
   subject { described_class.new(context) }
 
   describe "#size" do

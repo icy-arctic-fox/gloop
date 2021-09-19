@@ -3,7 +3,7 @@ require "./parameters"
 
 module Gloop
   # Indexed access to all GLSL versions supported by an OpenGL context.
-  struct GLSLVersionList
+  struct ShadingLanguageVersionList
     include Contextual
     include Indexable(String)
     include Parameters
@@ -31,8 +31,8 @@ module Gloop
 
   struct Context
     # Retrieves a list of supported GLSL versions for this context.
-    def glsl_versions : GLSLVersionList
-      GLSLVersionList.new(self)
+    def shading_language_versions : ShadingLanguageVersionList
+      ShadingLanguageVersionList.new(self)
     end
   end
 end
