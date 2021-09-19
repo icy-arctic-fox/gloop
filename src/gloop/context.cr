@@ -21,8 +21,15 @@ module Gloop
 
       # Delegates calls to the OpenGL function loader.
       # Wraps calls with error checking, when enabled.
+      # An `unchecked` option can be provided to conditionally check for errors.
       macro method_missing(call)
-        {% if flag?(:release) && !flag?(:error_checking) %}
+        {% if (args = call.named_args) && (arg = args.find { |arg| arg.name == :unchecked.id }) %}
+          if {{arg.value}}
+            @loader.{{call.name}}!({{call.args.splat}})
+          else
+            checked { @loader.{{call.name}}({{call.args.splat}}) }
+          end
+        {% elsif flag?(:release) && !flag?(:error_checking) %}
           @loader.{{call.name}}!({{call.args.splat}})
         {% else %}
           checked { @loader.{{call}} }
