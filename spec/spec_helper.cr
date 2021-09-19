@@ -3,8 +3,18 @@ require "opengl"
 require "spectator"
 require "../src/gloop"
 
+# Wraps GLFW calls with error checking.
+private def checked
+  value = yield
+  error = LibGLFW.get_error(out description)
+  return value if error.no_error?
+
+  description = String.new(description)
+  raise "GLFW Error - #{description} (#{error})"
+end
+
 # Initializes OpenGL enough for testing.
-def init_opengl
+private def init_opengl
   checked { LibGLFW.init }
   LibGLFW.window_hint(LibGLFW::WindowHint::Visible, LibGLFW::Bool::False)
   LibGLFW.window_hint(LibGLFW::WindowHint::ContextVersionMajor, 4)
@@ -17,11 +27,28 @@ def init_opengl
 end
 
 # Cleans up resources used by OpenGL and GLFW.
-def terminate_opengl
+private def terminate_opengl
   LibGLFW.terminate
 end
 
+# Creates an OpenGL context.
+private def create_context
+  Gloop::Context.new { |name| LibGLFW.get_proc_address(name) }
+end
+
+# Workaround for storing a single context in the global scope.
+CONTEXT_WRAPPER = [] of Gloop::Context
+
+# Shared context used for all tests.
+def context
+  CONTEXT_WRAPPER[0]
+end
+
 Spectator.configure do |config|
-  config.before_suite { init_opengl }
+  config.before_suite do
+    init_opengl
+    CONTEXT_WRAPPER << create_context
+  end
+
   config.after_suite { terminate_opengl }
 end
