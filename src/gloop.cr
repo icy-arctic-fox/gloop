@@ -1,4 +1,5 @@
 require "opengl"
+require "./gloop/**"
 
 # Object oriented OpenGL library.
 module Gloop
