@@ -21,35 +21,7 @@ def terminate_opengl
   LibGLFW.terminate
 end
 
-private def checked
-  value = yield
-  error = LibGLFW.get_error(out description)
-  return value if error.no_error?
-
-  description = String.new(description)
-  raise "GLFW Error - #{description} (#{error})"
-end
-
-# Workaround for using a shared context for all tests.
-CONTEXT_WRAPPER = [] of Gloop::Context
-
-def context
-  CONTEXT_WRAPPER.first
-end
-
-macro gl_call(call)
-  context.loader.{{call}}
-end
-
 Spectator.configure do |config|
-  config.before_suite do
-    init_opengl
-    context = Gloop::Context.new { |name| LibGLFW.get_proc_address(name) }
-    CONTEXT_WRAPPER << context
-  end
-
-  config.after_suite do
-    CONTEXT_WRAPPER.clear
-    terminate_opengl
-  end
+  config.before_suite { init_opengl }
+  config.after_suite { terminate_opengl }
 end
