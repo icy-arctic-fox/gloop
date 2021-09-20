@@ -137,7 +137,7 @@ module Gloop
         {% end %}
 
         value = uninitialized Int32
-        gl_call get_boolean_v(pname, pointerof(value))
+        gl.get_boolean_v(pname, pointerof(value))
         !value.zero?
       end
     end
