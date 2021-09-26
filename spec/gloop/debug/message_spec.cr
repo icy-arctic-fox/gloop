@@ -29,7 +29,7 @@ Spectator.describe Gloop::Debug::Message do
       message.insert(context)
       expect(received).to_not be_nil, "Did not receive debug message"
 
-      expect(received.not_nil!).to have_attributes(
+      expect(received).to have_attributes(
         source: Gloop::Debug::Source::Application,
         type: Gloop::Debug::Type::Other,
         id: 12345,
