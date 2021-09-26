@@ -21,7 +21,8 @@ module Gloop
     # The buffer (pointer to the string contents), capacity, and length pointer are yielded.
     # The block must call an OpenGL method to retrieve the string and the final length.
     # This method returns the string or nil if *capacity* is less than zero.
-    private def string_query(capacity)
+    # Set *null_terminator* to true if the length returned by OpenGL includes a null-terminator.
+    private def string_query(capacity, *, null_terminator = false)
       return unless capacity
       return "" if capacity.zero?
 
@@ -29,6 +30,7 @@ module Gloop
         length = uninitialized Int32
         # Add 1 to capacity because `String.new` adds a byte for the null-terminator.
         yield buffer, capacity + 1, pointerof(length)
+        length -= 1 if null_terminator
         {length, 0}
       end
     end
