@@ -15,6 +15,24 @@ module Gloop
       @context.gl
     end
 
+    # Wrapper for fetching strings from OpenGL.
+    # Accepts the maximum *capacity* for the string.
+    # A new string will be allocated.
+    # The buffer (pointer to the string contents), capacity, and length pointer are yielded.
+    # The block must call an OpenGL method to retrieve the string and the final length.
+    # This method returns the string or nil if *capacity* is less than zero.
+    private def string_query(capacity)
+      return unless capacity
+      return "" if capacity.zero?
+
+      String.new(capacity) do |buffer|
+        length = uninitialized Int32
+        # Add 1 to capacity because `String.new` adds a byte for the null-terminator.
+        yield buffer, capacity + 1, pointerof(length)
+        {length, 0}
+      end
+    end
+
     # Defines getters and setters for a value associated with the context.
     # The value lives outside of OpenGL, under Gloop's control.
     #
