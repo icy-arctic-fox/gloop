@@ -14,7 +14,7 @@ module Gloop
             {{block.body}}
           end
         {% else %}
-          \{% raise "Loader #{name} is unavailable for this compilation" %}
+          \{% raise "Loader {{name.id}} is unavailable for this compilation" %}
         {% end %}
       end
     end
