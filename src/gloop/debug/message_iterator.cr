@@ -72,8 +72,50 @@ module Gloop
         Message.new(source, type, id, severity, message)
       end
 
+      # Retrieves the first *n* messages from the debug log as an array.
+      #
+      # - OpenGL functions: `glGetDebugMessageLog`
+      # - OpenGL version: 4.3
+      @[GLFunction("glGetDebugMessageLog", version: "4.3")]
+      def first(n : Int)
+        raise ArgumentError.new "Attempted to take negative size: #{n}" if n < 0
+
+        sources = Pointer(LibGL::DebugSource).malloc(n)
+        types = Pointer(LibGL::DebugType).malloc(n)
+        ids = Pointer(UInt32).malloc(n)
+        severities = Pointer(LibGL::DebugSeverity).malloc(n)
+        lengths = Pointer(Int32).malloc(n)
+        buffer_size = max_message_size * n
+        buffer = Pointer(UInt8).malloc(buffer_size)
+
+        count = gl.get_debug_message_log(n.to_u32, buffer_size, sources, types, ids, severities, lengths, buffer)
+        offset = 0
+        Array.new(count) do |i|
+          length = lengths[i]
+          message = Message.new(sources[i], types[i], ids[i], severities[i], length - 1, buffer + offset)
+          offset += length
+          message
+        end
+      end
+
+      # Skips the next *n* messages in the log.
+      #
+      # - OpenGL functions: `glGetDebugMessageLog`
+      # - OpenGL version: 4.3
+      @[GLFunction("glGetDebugMessageLog", version: "4.3")]
+      def skip(n : Int)
+        raise ArgumentError.new "Attempted to skip negative size: #{n}" if n < 0
+
+        n.times { break unless skip } # Bail early if the log is empty.
+        self                          # Return self to match `Iterator#skip`.
+      end
+
       # Skips the next message in the log.
       # Returns true if a message was skipped, false if the log is empty.
+      #
+      # - OpenGL functions: `glGetDebugMessageLog`
+      # - OpenGL version: 4.3
+      @[GLFunction("glGetDebugMessageLog", version: "4.3")]
       def skip : Bool
         source = Pointer(LibGL::DebugSource).null
         type = Pointer(LibGL::DebugType).null
@@ -89,6 +131,11 @@ module Gloop
       # Removes all pending debug messages from the log.
       def clear
         loop { break unless skip }
+      end
+
+      # Retrieves all messages from the debug log as an array.
+      def to_a
+        first(size)
       end
     end
   end

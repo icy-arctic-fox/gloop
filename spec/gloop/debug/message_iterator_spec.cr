@@ -32,6 +32,22 @@ Spectator.describe Gloop::Debug::MessageIterator do
     end
   end
 
+  describe "#first" do
+    let(messages) do
+      Array.new(5) { |i| Gloop::Debug::Message.new(:third_party, :performance, i.to_u32, :high, "#first") }
+    end
+
+    before_each { messages.each(&.insert(context)) }
+
+    it "returns a subset of the log" do
+      expect(&.first(3)).to match_array(messages[0...3]).in_order
+    end
+
+    it "restricts to the amount in the log" do
+      expect(&.first(7)).to match_array(messages).in_order
+    end
+  end
+
   describe "#size" do
     subject { iterator.size }
     let(count) { 2 }
@@ -74,6 +90,17 @@ Spectator.describe Gloop::Debug::MessageIterator do
       expect(&.skip).to be_true
       expect(&.skip).to be_false
     end
+
+    context "with a count" do
+      it "returns an iterator" do
+        expect(&.skip(2)).to be_an(Iterator(Gloop::Debug::Message))
+      end
+
+      it "skips the indicates number of messages" do
+        iter = iterator.skip(1)
+        expect(iter.next).to have_attributes(message: "second")
+      end
+    end
   end
 
   describe "#clear" do
@@ -83,6 +110,19 @@ Spectator.describe Gloop::Debug::MessageIterator do
 
     it "empties the debug log" do
       expect(&.clear).to change(&.size).from(3).to(0)
+    end
+  end
+
+  describe "#to_a" do
+    subject { iterator.to_a }
+    let(messages) do
+      Array.new(5) { |i| Gloop::Debug::Message.new(:third_party, :performance, i.to_u32, :high, "#first") }
+    end
+
+    before_each { messages.each(&.insert(context)) }
+
+    it "returns an array of messages" do
+      is_expected.to match_array(messages).in_order
     end
   end
 end
