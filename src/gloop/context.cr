@@ -112,7 +112,7 @@ module Gloop
       @proxy = Proxy.new(loader)
     end
 
-    # Provides access OpenGL functions.
+    # Provides access to OpenGL functions.
     # OpenGL functions can be called by using their "Crystalized" name.
     #
     # ```
