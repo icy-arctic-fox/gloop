@@ -36,5 +36,24 @@ module Gloop
     loader LibGLFW, glfw do |name|
       LibGLFW.get_proc_address(name)
     end
+
+    # Creates a context from SDL.
+    #
+    # This relies on the [SDL](https://github.com/ysbaddaden/sdl.cr) shard being available.
+    # The context must be current on the calling thread when calling this method.
+    #
+    # ```
+    # # Initialization and window creation code.
+    # SDL.init(SDL::Init::VIDEO)
+    # window = SDL::Window.new("Gloop", 640, 480, flags: SDL::Window::Flags::OPENGL)
+    # context = LibSDL.gl_create_context(window)
+    # LibSDL.gl_make_current(window, context)
+    #
+    # # Create Gloop context from SDL.
+    # context = Gloop::Context.sdl
+    # ```
+    loader LibSDL, sdl do |name|
+      LibSDL.gl_get_proc_address(name)
+    end
   end
 end
