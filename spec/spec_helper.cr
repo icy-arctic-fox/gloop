@@ -33,7 +33,7 @@ end
 
 # Creates an OpenGL context.
 private def create_context
-  Gloop::Context.new { |name| LibGLFW.get_proc_address(name) }
+  Gloop::Context.glfw
 end
 
 # Workaround for storing a single context in the global scope.

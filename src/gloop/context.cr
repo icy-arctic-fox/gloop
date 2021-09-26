@@ -104,8 +104,12 @@ module Gloop
     end
 
     # Constructs a reference to an existing context.
-    # A block must be provided that takes retrieves OpenGL functions.
-    # It takes a function name and returns a pointer (address) to it for the context.
+    #
+    # Uses a generic loader to retrieve addresses of OpenGL functions.
+    # A block must be provided that retrieves OpenGL functions.
+    # It takes a function name as an argument and returns a pointer (address) to the function.
+    # The address must correspond to the currently bound context.
+    # If the function is unavailable, a null pointer should be returned by the block.
     def initialize(& : String -> Void*)
       loader = OpenGL::Loader.new
       loader.load_all { |name| yield name }
