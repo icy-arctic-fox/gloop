@@ -140,14 +140,8 @@ Spectator.describe Gloop::Debug do
     track_debug_messages
     clear_debug_log
 
-    before_each do
-      # Disable all message types.
-      debug.reject(
-        source: :dont_care,
-        type: :dont_care,
-        severity: :dont_care
-      )
-    end
+    # Disable all message types.
+    before_each { debug.reject }
 
     # Re-enable all message types.
     after_each { debug.allow }
@@ -268,6 +262,23 @@ Spectator.describe Gloop::Debug do
         # ...
       end
       expect(received).to contain(pop_message)
+    end
+  end
+
+  describe "#messages" do
+    subject { debug.messages }
+
+    it "returns a message iterator" do
+      is_expected.to be_an(Iterator(Gloop::Debug::Message))
+    end
+  end
+
+  describe "#clear" do
+    configure_debug_messaging
+
+    it "empties the debug log" do
+      debug.log("#clear")
+      expect(&.clear).to change { debug.messages.size }.to(0)
     end
   end
 

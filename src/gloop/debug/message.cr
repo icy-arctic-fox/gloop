@@ -28,11 +28,16 @@ module Gloop
       end
 
       # Builds a message with the raw data received from OpenGL.
-      protected def initialize(source, type, @id, severity, length, string)
-        @source = Source.from_value(source.to_u32)
-        @type = Type.from_value(type.to_u32)
-        @severity = Severity.from_value(severity.to_u32)
-        @message = String.new(string, length)
+      protected def initialize(source, type, @id : UInt32, severity, @message : String)
+        @source = Source.from_value(source.to_u32!)
+        @type = Type.from_value(type.to_u32!)
+        @severity = Severity.from_value(severity.to_u32!)
+      end
+
+      # Builds a message with the raw data received from OpenGL.
+      protected def initialize(source, type, id, severity, length : Int, string : UInt8*)
+        message = String.new(string, length)
+        initialize(source, type, id, severity, message)
       end
 
       # Inserts this debug message into the specified context.

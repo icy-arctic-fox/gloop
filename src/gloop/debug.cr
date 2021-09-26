@@ -4,6 +4,7 @@ require "./debug/*"
 
 module Gloop
   # Interacts with OpenGL's debugging features.
+  # See: https://www.khronos.org/opengl/wiki/Debug_Output
   struct Debug
     include Capabilities
     include Contextual
@@ -64,13 +65,13 @@ module Gloop
     end
 
     # Provides access to all pending debug messages in the queue.
-    def messages
-      # TODO
+    def messages : MessageIterator
+      MessageIterator.new(context)
     end
 
     # Removes all pending debug messages from the queue.
     def clear
-      # TODO
+      messages.clear
     end
 
     # Specifies debug messages to receive.
