@@ -20,7 +20,7 @@ module Gloop
     # An optional block can be provided to modify the value before returning it.
     # The original value is yielded to the block.
     #
-    # The `#to_unsafe` method is used to retrieve the buffer's name.
+    # The `#name` method is used to retrieve the buffer's name.
     private macro buffer_parameter(pname, name, &block)
       {% if name.is_a?(TypeDeclaration) %}
         {% type = name.type.resolve %}
@@ -34,7 +34,7 @@ module Gloop
               {% end %}
           {% end %}
 
-          %buffer = @name
+          %buffer = self.name
           %return = begin
             {% if type < Enum %}
               %value = uninitialized Int32
@@ -80,9 +80,8 @@ module Gloop
             LibGL::BufferPNameARB::{{pname.id}}
           {% end %}
 
-          %buffer = @name
           %value = uninitialized Int32
-          gl.get_named_buffer_parameter_iv(%buffer, %pname, pointerof(%value))
+          gl.get_named_buffer_parameter_iv(self.name, %pname, pointerof(%value))
 
           {% if block %}
             {{block.args.splat}} = %value
@@ -114,9 +113,8 @@ module Gloop
           LibGL::BufferPNameARB::{{pname.id}}
         {% end %}
 
-        buffer = @name
         value = uninitialized Int32
-        gl.get_named_buffer_parameter_iv(buffer, pname, pointerof(value))
+        gl.get_named_buffer_parameter_iv(name, pname, pointerof(value))
         !value.zero?
       end
     end

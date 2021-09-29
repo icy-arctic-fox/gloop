@@ -20,7 +20,7 @@ module Gloop
     # An optional block can be provided to modify the value before returning it.
     # The original value is yielded to the block.
     #
-    # The `#to_unsafe` method is used to retrieve the program's name.
+    # The `#name` method is used to retrieve the program's name.
     private macro program_parameter(pname, name, &block)
       {% if name.is_a?(TypeDeclaration) %}
         {% type = name.type.resolve %}
@@ -34,7 +34,7 @@ module Gloop
               {% end %}
           {% end %}
 
-          %program = to_unsafe
+          %program = self.name
           %value = uninitialized Int32
           gl.get_program_iv(%program, %pname, pointerof(%value))
           {% begin %}
@@ -66,9 +66,8 @@ module Gloop
             LibGL::ProgramPropertyARB::{{pname.id}}
           {% end %}
 
-          %program = to_unsafe
           %value = uninitialized Int32
-          gl.get_program_iv(%program, %pname, pointerof(%value))
+          gl.get_program_iv(self.name, %pname, pointerof(%value))
 
           {% if block %}
             {{block.args.splat}} = %value
@@ -100,9 +99,8 @@ module Gloop
           LibGL::ProgramPropertyARB::{{pname.id}}
         {% end %}
 
-        program = to_unsafe
         value = uninitialized Int32
-        gl.get_program_iv(program, pname, pointerof(value))
+        gl.get_program_iv(name, pname, pointerof(value))
         !value.zero?
       end
     end
