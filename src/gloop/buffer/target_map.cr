@@ -10,21 +10,54 @@ module Gloop
       include Contextual
       include Parameters
 
+      # Integer type used for size-related operations.
+      #
+      # OpenGL functions will use 32-bit or 64-bit integers depending on the system architecture.
+      {% if flag?(:x86_64) %}
+        alias Size = Int64
+      {% else %}
+        alias Size = Int32
+      {% end %}
+
       # When the buffer is mapped, gives the number of bytes mapped.
-      buffer_target_parameter BufferMapLength, size
+      #
+      # - OpenGL function: `glGetBufferParameteriv`, `glGetBufferParameteri64v`
+      # - OpenGL enum: `GL_BUFFER_MAP_LENGTH`
+      # - OpenGL version: 2.0, 3.2
+      {% if flag?(:x86_64) %}
+        @[GLFunction("glGetBufferParameteri64v", enum: "GL_BUFFER_MAP_LENGTH", version: "3.2")]
+      {% else %}
+        @[GLFunction("glGetBufferParameteriv", enum: "GL_BUFFER_MAP_LENGTH", version: "2.0")]
+      {% end %}
+      buffer_target_parameter BufferMapLength, size : Size
 
       # When the buffer is mapped, gives the offset (in bytes) of the mapped region.
-      buffer_target_parameter BufferMapOffset, offset
+      #
+      # - OpenGL function: `glGetBufferParameteriv`, `glGetBufferParameteri64v`
+      # - OpenGL enum: `GL_BUFFER_MAP_OFFSET`
+      # - OpenGL version: 3.0, 3.2
+      {% if flag?(:x86_64) %}
+        @[GLFunction("glGetBufferParameteri64v", enum: "GL_BUFFER_MAP_OFFSET", version: "3.2")]
+      {% else %}
+        @[GLFunction("glGetBufferParameteriv", enum: "GL_BUFFER_MAP_OFFSET", version: "3.0")]
+      {% end %}
+      buffer_target_parameter BufferMapOffset, offset : Size
 
       # Retrieves the access policy previously set when `Buffer#map` or `BindTarget#map` was called.
-      buffer_target_parameter BufferAccess, access do |value|
-        Access.new(value.to_u32)
-      end
+      #
+      # - OpenGL function: `glGetBufferParameteriv`
+      # - OpenGL enum: `GL_BUFFER_ACCESS`
+      # - OpenGL version: 2.0
+      @[GLFunction("glGetBufferParameteriv", enum: "GL_BUFFER_ACCESS", version: "2.0")]
+      buffer_target_parameter BufferAccess, access : Access
 
       # Retrieves the access mask previously used when `Buffer#map` or `BindTarget#map` was called with a subset.
-      buffer_target_parameter BufferAccessFlags, access_mask do |value|
-        AccessMask.new(value.to_u32)
-      end
+      #
+      # - OpenGL function: `glGetBufferParameteriv`
+      # - OpenGL enum: `GL_BUFFER_ACCESS_FLAGS`
+      # - OpenGL version: 2.0
+      @[GLFunction("glGetBufferParameteriv", enum: "GL_BUFFER_ACCESS_FLAGS", version: "2.0")]
+      buffer_target_parameter BufferAccessFlags, access_mask : AccessMask
 
       # Buffer binding target.
       private getter target : Target
@@ -40,11 +73,15 @@ module Gloop
       end
 
       # Retrieves a pointer to the start of the mapped data.
+      #
+      # - OpenGL function: `glGetBufferPointerv`
+      # - OpenGL enum: `GL_BUFFER_MAP_POINTER`
+      # - OpenGL version: 2.0
+      @[GLFunction("glGetBufferPointerv", enum: "GL_BUFFER_MAP_POINTER", version: "2.0")]
       def to_unsafe
-        checked do
-          LibGL.get_buffer_pointer_v(@target, LibGL::BufferPointerNameARB::BufferMapPointer, out value)
-          value
-        end
+        value = uninitialized Void*
+        gl.get_buffer_pointer_v(@target.to_unsafe, LibGL::BufferPointerNameARB::BufferMapPointer, pointerof(value))
+        value.as(UInt8*)
       end
     end
   end
