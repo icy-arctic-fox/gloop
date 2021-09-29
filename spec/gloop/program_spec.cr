@@ -1,5 +1,24 @@
 require "../spec_helper"
 
+VERTEX_SHADER = <<-END_SHADER
+  #version 460 core
+  in vec3 Position;
+  out vec4 VertColor;
+  void main() {
+    gl_Position = vec4(Position, 1.0);
+    VertColor = vec4(0.03, 0.39, 0.57, 1.0);
+  }
+END_SHADER
+
+FRAGMENT_SHADER = <<-END_SHADER
+  #version 460 core
+  out vec4 FragColor;
+  in vec4 VertColor;
+  void main() {
+    FragColor = VertColor;
+  }
+END_SHADER
+
 Spectator.describe Gloop::Program do
   subject(program) { described_class.create(context) }
 
@@ -9,34 +28,39 @@ Spectator.describe Gloop::Program do
 
   let(vertex_shader) do
     Gloop::Shader.create(context, :vertex).tap do |shader|
-      shader.source = <<-END_SHADER
-        #version 460 core
-        in vec3 Position;
-        out vec4 VertColor;
-        void main() {
-          gl_Position = vec4(Position, 1.0);
-          VertColor = vec4(0.03, 0.39, 0.57, 1.0);
-        }
-      END_SHADER
+      shader.source = VERTEX_SHADER
       shader.compile!
     end
   end
 
   let(fragment_shader) do
     Gloop::Shader.create(context, :fragment).tap do |shader|
-      shader.source = <<-END_SHADER
-        #version 460 core
-        out vec4 FragColor;
-        in vec4 VertColor;
-        void main() {
-          FragColor = VertColor;
-        }
-      END_SHADER
+      shader.source = FRAGMENT_SHADER
       shader.compile!
     end
   end
 
   # TODO: Test program parameters.
+
+  describe ".current?" do
+    subject { described_class.current?(context) }
+
+    before_each do
+      program.attach(vertex_shader)
+      program.attach(fragment_shader)
+      program.link
+    end
+
+    it "is the currently active program" do
+      program.use
+      is_expected.to eq(program)
+    end
+
+    it "is nil when no program is active" do
+      described_class.uninstall(context)
+      is_expected.to be_nil
+    end
+  end
 
   describe ".current" do
     subject { current_program }
@@ -316,6 +340,58 @@ Spectator.describe Gloop::Program do
     it "can be labeled" do
       subject.label = "Test label"
       expect(&.label).to eq("Test label")
+    end
+  end
+end
+
+Spectator.describe Spectator::Context do
+  let(program) { context.create_program }
+
+  let(vertex_shader) do
+    Gloop::Shader.create(context, :vertex).tap do |shader|
+      shader.source = VERTEX_SHADER
+      shader.compile!
+    end
+  end
+
+  let(fragment_shader) do
+    Gloop::Shader.create(context, :fragment).tap do |shader|
+      shader.source = FRAGMENT_SHADER
+      shader.compile!
+    end
+  end
+
+  before_each do
+    program.attach(vertex_shader)
+    program.attach(fragment_shader)
+    program.link
+  end
+
+  describe "#program?" do
+    subject { context.program? }
+
+    it "is the currently active program" do
+      program.use
+      is_expected.to eq(program)
+    end
+
+    it "is nil when no program is active" do
+      context.uninstall_program
+      is_expected.to be_nil
+    end
+  end
+
+  describe "#program" do
+    subject { context.program }
+
+    it "is the currently active program" do
+      program.use
+      is_expected.to eq(program)
+    end
+
+    it "is the null object when no program is active" do
+      context.uninstall_program
+      is_expected.to be_none
     end
   end
 end

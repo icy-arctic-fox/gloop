@@ -335,9 +335,33 @@ module Gloop
 
   struct Context
     # Creates an empty program.
+    #
     # See: `Program.create`
     def create_program
       Program.create(self)
+    end
+
+    # Retrieves the current program in use.
+    #
+    # Returns a `nil` if there isn't a program in use.
+    # See: `Program.current?`
+    def program? : Program?
+      Program.current?(self)
+    end
+
+    # Retrieves the current program in use.
+    #
+    # Returns a null-object (`Object.none`) if there isn't a program in use.
+    # See: `Program.current`
+    def program : Program
+      Program.current(self)
+    end
+
+    # Uninstalls any existing program from the context's rendering state.
+    #
+    # See: `Program.uninstall`
+    def uninstall_program
+      Program.uninstall(self)
     end
   end
 end
