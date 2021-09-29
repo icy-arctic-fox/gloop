@@ -1,4 +1,5 @@
 require "../contextual"
+require "../size"
 require "./parameters"
 require "./storage"
 require "./target"
@@ -11,15 +12,6 @@ module Gloop
     struct BindTarget
       include Contextual
       include Parameters
-
-      # Integer type used for size-related operations.
-      #
-      # OpenGL functions will use 32-bit or 64-bit integers depending on the system architecture.
-      {% if flag?(:x86_64) %}
-        alias Size = Int64
-      {% else %}
-        alias Size = Int32
-      {% end %}
 
       # Indicates whether the buffer is immutable.
       #

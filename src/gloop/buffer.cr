@@ -1,5 +1,6 @@
 require "./object"
 require "./buffer/*"
+require "./size"
 
 module Gloop
   # GPU-hosted storage for arbitrary data.
@@ -12,15 +13,6 @@ module Gloop
   # See: https://www.khronos.org/opengl/wiki/Buffer_Object
   struct Buffer < Object
     include Parameters
-
-    # Integer type used for size-related operations.
-    #
-    # OpenGL functions will use 32-bit or 64-bit integers depending on the system architecture.
-    {% if flag?(:x86_64) %}
-      alias Size = Int64
-    {% else %}
-      alias Size = Int32
-    {% end %}
 
     # Indicates whether the buffer is immutable (fixed size).
     #
