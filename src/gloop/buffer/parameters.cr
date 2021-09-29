@@ -103,10 +103,10 @@ module Gloop
     # The *name* will be the name of the generated method, with a question mark appended to it.
     #
     # ```
-    # buffer_parameter? CompileStatus, compiled
+    # buffer_parameter? BufferMapped, mapped
     # ```
     #
-    # The `#to_unsafe` method is used to retrieve the buffer's name.
+    # The `#name` method is used to retrieve the buffer's name.
     private macro buffer_parameter?(pname, name)
       def {{name.id}}? : Bool
         pname = {% if pname.id.includes? "::" %}

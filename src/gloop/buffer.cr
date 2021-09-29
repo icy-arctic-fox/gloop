@@ -237,6 +237,7 @@ module Gloop
     # - OpenGL function: `glNamedBufferData`
     # - OpenGL version: 4.5
     @[GLFunction("glNamedBufferData", version: "4.5")]
+    @[AlwaysInline]
     def data=(data)
       self.data(data, usage)
     end
@@ -250,10 +251,10 @@ module Gloop
     @[GLFunction("glGetNamedBufferSubData", version: "4.5")]
     def data
       Bytes.new(size).tap do |bytes|
-        start = Size.new(0)
+        start = Size.new!(0)
         size = Size.new(bytes.bytesize)
         pointer = bytes.to_unsafe.as(Void*)
-        gl.get_named_buffer_sub_data(to_unsafe, start, size, pointer.as(Void*))
+        gl.get_named_buffer_sub_data(to_unsafe, start, size, pointer)
       end
     end
 
@@ -263,7 +264,7 @@ module Gloop
     # The *data* must have a `#to_slice` method.
     # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
     #
-    # - OpenGL function: `glNamedBufferData`
+    # - OpenGL function: `glNamedBufferStorage`
     # - OpenGL version: 4.5
     @[GLFunction("glNamedBufferStorage", version: "4.5")]
     def storage(data, flags : Storage)
@@ -276,7 +277,7 @@ module Gloop
     # Initializes the buffer of a given size with undefined contents.
     # This makes the buffer have a fixed size (immutable).
     #
-    # - OpenGL function: `glNamedBufferData`
+    # - OpenGL function: `glNamedBufferStorage`
     # - OpenGL version: 4.5
     @[GLFunction("glNamedBufferStorage", version: "4.5")]
     def allocate_storage(size : Size, flags : Storage)
@@ -285,10 +286,12 @@ module Gloop
 
     # Retrieves a subset of data from the buffer.
     #
+    # NOTE: Modifying the data returned by this method *will not* update the contents of the buffer.
+    #
     # - OpenGL function: `glGetNamedBufferSubData`
     # - OpenGL version: 4.5
     @[GLFunction("glGetNamedBufferSubData", version: "4.5")]
-    def [](start : Size, count : Size) : Bytes?
+    def [](start : Size, count : Size) : Bytes
       Bytes.new(count).tap do |bytes|
         gl.get_named_buffer_sub_data(to_unsafe, start, count, bytes.to_unsafe.as(Void*))
       end
@@ -296,11 +299,13 @@ module Gloop
 
     # Retrieves a range of data from the buffer.
     #
+    # NOTE: Modifying the data returned by this method *will not* update the contents of the buffer.
+    #
     # - OpenGL function: `glGetNamedBufferSubData`
     # - OpenGL version: 4.5
     @[GLFunction("glGetNamedBufferSubData", version: "4.5")]
     @[AlwaysInline]
-    def [](range : Range) : Bytes?
+    def [](range : Range) : Bytes
       start = Size.new(range.begin)
       count = Size.new(range.size)
       self[start, count]
@@ -315,10 +320,11 @@ module Gloop
     # - OpenGL function: `glNamedBufferSubData`
     # - OpenGL version: 4.5
     @[GLFunction("glNamedBufferSubData", version: "4.5")]
-    def update(offset : Size, data)
+    def update(offset : Size, data) : self
       slice = data.to_slice
       count = Size.new(slice.bytesize)
       self[offset, count] = slice
+      self
     end
 
     # Updates a subset of the buffer's data store.
@@ -383,7 +389,7 @@ module Gloop
     # Copies a subset of this buffer into another.
     #
     # The *read_offset* indicates the byte offset to start copying from this buffer.
-    # The *write_offset* indicates the byte offset to start copying into *write_buffer*.
+    # The *write_offset* indicates the byte offset to start copying into *buffer*.
     # The *size* is the number of bytes to copy.
     #
     # - OpenGL function: `glCopyNamedBufferSubData`
@@ -396,7 +402,7 @@ module Gloop
 
     # Copies a subset of another buffer into this one.
     #
-    # The *read_offset* indicates the byte offset to start copying from *read_buffer*.
+    # The *read_offset* indicates the byte offset to start copying from *buffer*.
     # The *write_offset* indicates the byte offset to start copying into this buffer.
     # The *size* is the number of bytes to copy.
     #
@@ -489,7 +495,7 @@ module Gloop
     #
     # The buffer is automatically unmapped when the block completes.
     # Returns false if the buffer memory was corrupted while it was mapped.
-    def map(access : AccessMask, start : Int, count : Int, & : Bytes -> _) : Bool
+    def map(access : AccessMask, start : Size, count : Size, & : Bytes -> _) : Bool
       bytes = map(access, start, count)
       begin
         yield bytes
