@@ -9,6 +9,9 @@ module Gloop
     include Contextual
     include Labelable
 
+    # Type used to represent OpenGL objects.
+    alias Name = UInt32
+
     # Enum indicating the object's type.
     enum Type : LibGL::Enum
       Texture           = LibGL::ObjectIdentifier::Texture
@@ -43,14 +46,14 @@ module Gloop
     getter context : Context
 
     # Unique identifier of this object.
-    getter name
+    getter name : Name
 
     # Enum idicating which type of object this is.
     abstract def object_type
 
     # Creates a reference to an existing object.
     # Requires a reference to the *content* that owns the object and its *name*.
-    def initialize(@context : Context, @name : UInt32)
+    def initialize(@context : Context, @name : Name)
     end
 
     # Retrieves a reference to the object that can be used in C bindings.
