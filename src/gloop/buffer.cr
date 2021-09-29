@@ -1,4 +1,5 @@
 require "./object"
+require "./object_list"
 require "./buffer/*"
 require "./size"
 
@@ -70,7 +71,7 @@ module Gloop
     # - OpenGL version: 4.5
     @[GLFunction("glCreateBuffers", version: "4.5")]
     def self.create(context)
-      name = uninitialized UInt32
+      name = uninitialized Name
       context.gl.create_buffers(1, pointerof(name))
       new(context, name)
     end
@@ -83,10 +84,10 @@ module Gloop
     # - OpenGL function: `glCreateBuffers`
     # - OpenGL version: 4.5
     @[GLFunction("glCreateBuffers", version: "4.5")]
-    def self.create(context, count)
-      names = Slice(UInt32).new(count)
+    def self.create(context, count) : BufferList
+      names = Slice(Name).new(count)
       context.gl.create_buffers(count, names.to_unsafe)
-      names.map { |name| new(context, name) }
+      BufferList.new(context, names)
     end
 
     # Generates a new buffer.
@@ -100,7 +101,7 @@ module Gloop
     # - OpenGL version: 2.0
     @[GLFunction("glGenBuffers", version: "2.0")]
     def self.generate(context)
-      name = uninitialized UInt32
+      name = uninitialized Name
       context.gl.gen_buffers(1, pointerof(name))
       new(context, name)
     end
@@ -115,10 +116,10 @@ module Gloop
     # - OpenGL function: `glGenBuffers`
     # - OpenGL version: 2.0
     @[GLFunction("glGenBuffers", version: "2.0")]
-    def self.generate(context, count)
-      names = Slice(UInt32).new(count)
+    def self.generate(context, count) : BufferList
+      names = Slice(Name).new(count)
       context.gl.gen_buffers(count, names.to_unsafe)
-      names.map { |name| new(context, name) }
+      BufferList.new(context, names)
     end
 
     # Deletes this buffer.
@@ -602,6 +603,18 @@ module Gloop
     # See: `Buffer.generate`
     def generate_buffers(count : Int)
       Buffer.generate(self, count)
+    end
+  end
+
+  # Collection of buffers belonging to the same context.
+  struct BufferList < ObjectList(Buffer)
+    # Deletes all buffers in the list.
+    #
+    # - OpenGL function: `glDeleteBuffers`
+    # - OpenGL version: 2.0
+    @[GLFunction("glDeleteBuffers", version: "2.0")]
+    def delete
+      gl.delete_buffers(size, to_unsafe)
     end
   end
 end
