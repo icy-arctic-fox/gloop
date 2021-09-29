@@ -2,9 +2,10 @@ require "./parameters"
 
 module Gloop
   # Mix-in for OpenGL object types that support labels.
-  # See: https://www.khronos.org/opengl/wiki/Debug_Output#Object_names
   #
   # Types including this module must define `#object_type` and `#name`.
+  #
+  # See: https://www.khronos.org/opengl/wiki/Debug_Output#Object_names
   module Labelable
     include Parameters
 
@@ -23,6 +24,7 @@ module Gloop
     parameter MaxLabelLength, max_label_size : Int32
 
     # Attempts to retrieve the label set for this object.
+    #
     # If there is no label, an empty string is returned.
     #
     # - OpenGL function: `glGetObjectLabel`
@@ -39,6 +41,7 @@ module Gloop
     end
 
     # Sets the label for this object.
+    #
     # The *label* will be stringified before it is stored.
     #
     # - OpenGL function: `glObjectLabel`

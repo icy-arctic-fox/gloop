@@ -4,6 +4,7 @@ require "./debug/*"
 
 module Gloop
   # Interacts with OpenGL's debugging features.
+  #
   # See: https://www.khronos.org/opengl/wiki/Debug_Output
   struct Debug
     include Capabilities
@@ -75,6 +76,7 @@ module Gloop
     end
 
     # Specifies debug messages to receive.
+    #
     # Messages can be allowed by specifying any combination of *source*, *type*, and *severity* flags.
     #
     # See: `#reject`
@@ -94,6 +96,7 @@ module Gloop
     end
 
     # Specifies IDs of debug messages to receive.
+    #
     # Messages can be allowed by specifying any combination of *source* and *type* flags.
     #
     # NOTE: Severity cannot be set with this method.
@@ -120,6 +123,7 @@ module Gloop
     end
 
     # Specifies debug messages to ignore.
+    #
     # Messages can be ignored by specifying any combination of *source*, *type*, and *severity* flags.
     #
     # See: `#reject`
@@ -139,6 +143,7 @@ module Gloop
     end
 
     # Specifies IDs of debug messages to ignore.
+    #
     # Messages can be ignored by specifying any combination of *source* and *type* flags.
     #
     # NOTE: Severity cannot be set with this method.
@@ -169,6 +174,7 @@ module Gloop
     private context_storage message_callback : Void*
 
     # Sets a callback to be invoked when OpenGL sends a debug message.
+    #
     # The block provided to this method will be called when a message is received.
     # This method returns immediately after the callback has been established.
     # Subsequent calls to this method will overwrite the previous callback.
@@ -206,6 +212,7 @@ module Gloop
     end
 
     # Clears a previously set callback.
+    #
     # This effectively undoes `#on_message`.
     #
     # It is recommended to call this method before cleaning up the OpenGL context.

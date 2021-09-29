@@ -3,6 +3,7 @@ require "../parameters"
 module Gloop
   private module Parameters
     # Defines a getter method that retrieves an OpenGL buffer parameter.
+    #
     # The *pname* is the name of the parameter to retrieve.
     # This should be an enum value (just the name) from `LibGL::BufferPNameARB`.
     # If the enum is not in `LibGL::BufferPNameARB` (for instance, a constant under LibGL),
@@ -94,6 +95,7 @@ module Gloop
     end
 
     # Defines a boolean getter method that retrieves an OpenGL buffer parameter.
+    #
     # The *pname* is the parameter name to retrieve.
     # This should be an enum value (just the name) from `LibGL::BufferPNameARB`.
     # If the enum is not in `LibGL::BufferPNameARB` (for instance, a constant under LibGL),

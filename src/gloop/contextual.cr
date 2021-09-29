@@ -2,6 +2,7 @@ require "./context"
 
 module Gloop
   # Mix-in indicating that a type requires an OpenGL context.
+  #
   # This module defines an initializer that takes a `Context`.
   # It exposes a private `#gl` method for calling OpenGL function in the context.
   module Contextual
@@ -10,12 +11,14 @@ module Gloop
     end
 
     # Proxies OpenGL function calls to the context.
+    #
     # See: `Context#gl`.
     private def gl
       @context.gl
     end
 
     # Wrapper for fetching strings from OpenGL.
+    #
     # Accepts the maximum *capacity* for the string.
     # A new string will be allocated.
     # The buffer (pointer to the string contents), capacity, and length pointer are yielded.
@@ -36,6 +39,7 @@ module Gloop
     end
 
     # Defines getters and setters for a value associated with the context.
+    #
     # The value lives outside of OpenGL, under Gloop's control.
     #
     # Must be used as follows:

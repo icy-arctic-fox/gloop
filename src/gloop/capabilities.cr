@@ -3,6 +3,7 @@ module Gloop
   # These methods effectively wrap calls to `glEnable`, `glDisable`, and `glIsEnabled`.
   module Capabilities
     # Defines methods for enabling, disabling, and checking the status of a capability.
+    #
     # The *cap* is the name of the OpenGL capability to operate on.
     # This should be an enum value (just the name) from `LibGL::EnableCap`.
     # If the enum is not in `LibGL::EnableCap` (for instance, a constant under LibGL),
@@ -49,6 +50,7 @@ module Gloop
     end
 
     # Defines methods for enabling, disabling, and checking the status of a capability.
+    #
     # This is similar to `#capability`, but is intended for types that rely on a capability to function.
     # For instance: debug output needs the `GL_DEBUG_OUTPUT` capability.
     # There is a set of methods associated with that capability that are contained in the type `Debug`.

@@ -1,6 +1,7 @@
 module Gloop
   struct Buffer < Object
     # Buffer mapping access settings.
+    #
     # Determines whether the mapped data can be read, written, or both.
     enum Access : LibGL::Enum
       ReadOnly  = LibGL::BufferAccessARB::ReadOnly

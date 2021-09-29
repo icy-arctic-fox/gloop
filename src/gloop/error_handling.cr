@@ -22,6 +22,7 @@ module Gloop
   # ```
   private module ErrorHandling
     # Checks for errors from OpenGL after a method has been called.
+    #
     # Pass a block to this method that calls *one* OpenGL function.
     # The value of the block will be returned if no error occurred.
     # Otherwise, the error will be translated and raised.
@@ -34,6 +35,7 @@ module Gloop
     end
 
     # Expects an OpenGL function to return a truthy value.
+    #
     # The return value of the function is checked to be not false, nil, or zero.
     # Pass a block to this method that calls *one* OpenGL function.
     # The value of the block will be returned if no error occurred.
@@ -65,6 +67,7 @@ module Gloop
     end
 
     # Retrieves the next error reported by OpenGL.
+    #
     # Returns an instance of `OpenGLError`, but does not raise it.
     # If no error occurred, nil is returned.
     #
@@ -79,6 +82,7 @@ module Gloop
     end
 
     # Checks if there was an error from OpenGL.
+    #
     # If there was an error, it is raised.
     # Othwerise, this method does nothing.
     #
@@ -95,6 +99,7 @@ module Gloop
     end
 
     # Translates an OpenGL error code to its corresponding `OpenGLError` concrete type.
+    #
     # Requires the error *code* from OpenGL.
     # Returns nil if there was no error (`Error:None`).
     private def translate_error(code : Error) : OpenGLError?

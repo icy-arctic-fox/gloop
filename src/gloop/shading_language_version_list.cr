@@ -17,6 +17,7 @@ module Gloop
     parameter LibGL::NUM_SHADING_LANGUAGE_VERSIONS, size
 
     # Retrieves the shading version at the specified index.
+    #
     # This method does not perform any bounds checking.
     #
     # - OpenGL function: `glGetStringi`

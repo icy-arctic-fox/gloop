@@ -4,6 +4,7 @@ require "./shader"
 
 module Gloop
   # Represents one or more shaders.
+  #
   # See: https://www.khronos.org/opengl/wiki/GLSL_Object#Program_objects
   struct Program < Object
     include Parameters
@@ -17,6 +18,7 @@ module Gloop
     protected class_parameter CurrentProgram, current_program_name : UInt32
 
     # Retrieves the current program in use.
+    #
     # Returns nil if there isn't a program in use.
     #
     # See: `#use`
@@ -32,6 +34,7 @@ module Gloop
     end
 
     # Retrieves the current program in use.
+    #
     # Returns a null-object (`.none`) if there isn't a program in use.
     #
     # See: `#use`
@@ -78,6 +81,7 @@ module Gloop
     program_parameter? ValidateStatus, valid
 
     # Retrieves the size of the information log for this program.
+    #
     # If the log is unavailable, nil is returned.
     #
     # See: `#info_log`
@@ -101,6 +105,7 @@ module Gloop
     program_parameter AttachedShaders, shader_count
 
     # Retrieves the length, in bytes, of the program's binary.
+    #
     # If linking failed or the binary is unavailable, this will be zero.
     #
     # See: `#binary`
@@ -136,6 +141,7 @@ module Gloop
     end
 
     # Indicates to OpenGL that this program can be deleted.
+    #
     # When there are no more references to the program, its resources will be released.
     #
     # See: `#deleted?`
@@ -194,6 +200,7 @@ module Gloop
     end
 
     # Attempts to link the shaders together to build the final program.
+    #
     # Returns true if the link process was successful, false otherwise.
     #
     # See: `#link!`
@@ -207,6 +214,7 @@ module Gloop
     end
 
     # Attempts to link the shaders together to build the final program.
+    #
     # Raises `LinkError` if the process fails.
     #
     # See: `#link`
@@ -222,6 +230,7 @@ module Gloop
     end
 
     # Retrieves information about the program's link process and validation.
+    #
     # Nil will be returned if there's no log available.
     #
     # The information log is OpenGL's mechanism for conveying information to application developers.
@@ -246,6 +255,7 @@ module Gloop
     end
 
     # Installs this program as part of the context's rendering state.
+    #
     # Restores the previous program after the block returns.
     #
     # - OpenGL function: `glUseProgram`
@@ -271,6 +281,7 @@ module Gloop
     end
 
     # Checks if the program can be used in OpenGL's current state.
+    #
     # Returns true if the program is valid.
     # Stores information about validation in `#info_log`.
     #

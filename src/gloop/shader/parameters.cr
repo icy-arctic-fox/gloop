@@ -3,6 +3,7 @@ require "../parameters"
 module Gloop
   module Parameters
     # Defines a getter method that retrieves an OpenGL shader parameter.
+    #
     # The *pname* is the name of the parameter to retrieve.
     # This should be an enum value (just the name) from `LibGL::ShaderParameterName`.
     # If the enum is not in `LibGL::ShaderParameterName` (for instance, a constant under LibGL),
@@ -79,6 +80,7 @@ module Gloop
     end
 
     # Defines a boolean getter method that retrieves an OpenGL shader parameter.
+    #
     # The *pname* is the parameter name to retrieve.
     # This should be an enum value (just the name) from `LibGL::ShaderParameterName`.
     # If the enum is not in `LibGL::ShaderParameterName` (for instance, a constant under LibGL),

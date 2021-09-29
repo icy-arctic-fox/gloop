@@ -13,6 +13,7 @@ module Gloop
     include Parameters
 
     # Retrieves the major version number of the OpenGL API supported by the current context.
+    #
     # For instance, if the OpenGL version is 4.6, 4 is returned.
     #
     # - OpenGL function: `glGetIntegerv`
@@ -22,6 +23,7 @@ module Gloop
     parameter MajorVersion, major_version : Int32
 
     # Retrieves the minor version number of the OpenGL API supported by the current context.
+    #
     # For instance, if the OpenGL version is 4.6, 6 is returned.
     #
     # - OpenGL function: `glGetIntegerv`
@@ -47,6 +49,7 @@ module Gloop
     parameter ContextFlags, flags : Flags
 
     # Retrieves a string containing the name of the company responsible for this GL implementation.
+    #
     # This name does not change from release to release.
     #
     # - OpenGL function: `glGetString`
@@ -56,6 +59,7 @@ module Gloop
     parameter Vendor, vendor : String
 
     # Retrieves a string containing the name of the renderer.
+    #
     # This name is typically specific to a particular configuration of a hardware platform.
     # It does not change from release to release.
     #
@@ -98,6 +102,7 @@ module Gloop
     parameter ShadingLanguageVersion, shading_language_version : String
 
     # Constructs a reference to an existing context with pre-loaded functions.
+    #
     # The *loader* should be setup with OpenGL function addresses.
     def initialize(loader : OpenGL::Loader)
       @proxy = Proxy.new(loader)
@@ -117,6 +122,7 @@ module Gloop
     end
 
     # Provides access to OpenGL functions.
+    #
     # OpenGL functions can be called by using their "Crystalized" name.
     #
     # ```
@@ -139,17 +145,20 @@ module Gloop
     end
 
     # Wraps calls to OpenGL functions.
+    #
     # All method calls delegate to the OpenGL function loader given in `#initialize`.
     # OpenGL function calls are wrapped with error checking if enabled (see `Context#gl`).
     private struct Proxy
       include ErrorHandling
 
       # Creates the proxy.
+      #
       # Function calls are delegated to *loader*.
       def initialize(@loader : OpenGL::Loader)
       end
 
       # Delegates calls to the OpenGL function loader.
+      #
       # Wraps calls with error checking, when enabled.
       # An `unchecked` option can be provided to conditionally check for errors.
       macro method_missing(call)

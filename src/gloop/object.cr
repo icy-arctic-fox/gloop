@@ -3,7 +3,9 @@ require "./labelable"
 
 module Gloop
   # Base class for all OpenGL objects.
+  #
   # Objects are identified by their name (an integer).
+  #
   # See: https://www.khronos.org/opengl/wiki/OpenGL_Object
   abstract struct Object
     include Contextual
@@ -52,11 +54,13 @@ module Gloop
     abstract def object_type
 
     # Creates a reference to an existing object.
+    #
     # Requires a reference to the *content* that owns the object and its *name*.
     def initialize(@context : Context, @name : Name)
     end
 
     # Retrieves a reference to the object that can be used in C bindings.
+    #
     # This returns the object name.
     def to_unsafe
       @name

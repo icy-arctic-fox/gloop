@@ -17,6 +17,7 @@ module Gloop
     shader_parameter ShaderType, type : Type
 
     # Retrieves the size of the information log for this shader.
+    #
     # If the log is unavailable, nil is returned.
     #
     # See: `#info_log`
@@ -30,6 +31,7 @@ module Gloop
     end
 
     # Retrieves the size of this shadaer's source code.
+    #
     # If the source is unavailable, nil is returned.
     #
     # See: `#source`
@@ -80,6 +82,7 @@ module Gloop
     end
 
     # Deletes this shader object.
+    #
     # Frees memory and invalidates the name associated with this shader object.
     # This method effectively undoes the effects of a call to `.create`.
     #
@@ -96,6 +99,7 @@ module Gloop
     end
 
     # Determines if this shader is known to the context.
+    #
     # Returns true if this shader was previously created with `.create` and not yet deleted with `#delete`.
     #
     # - OpenGL function: `glIsShader`
@@ -107,6 +111,7 @@ module Gloop
     end
 
     # Retrieves the shader's source code.
+    #
     # This will be the concatenation if multiple sources were provided (see `#sources=`).
     # Nil is returned if the source is not available.
     #
@@ -120,6 +125,7 @@ module Gloop
     end
 
     # Updates the source code for the shader.
+    #
     # This does not compile the shader, it merely stores the source code.
     # Any existing source code will be replaced.
     # If *source* is not already a string, it will be stringified by calling `#to_s` on it.
@@ -133,6 +139,7 @@ module Gloop
     end
 
     # Updates the source code for the shader.
+    #
     # This does not compile the shader, it merely stores the source code.
     # Any existing source code will be replaced.
     # The *sources* must be a collection of items that can be stringified (or already strings).
@@ -152,6 +159,7 @@ module Gloop
     end
 
     # Attempts to compile the shader.
+    #
     # Returns true if the compilation was successful, false otherwise.
     #
     # The source of the shader must be previously set by calling `#source=` or `#sources=`.
@@ -169,6 +177,7 @@ module Gloop
     end
 
     # Attempts to compile the shader.
+    #
     # Raises `CompilationError` if the compilation fails.
     #
     # The source of the shader must be previously set by calling `#source=` or `#sources=`.
@@ -187,6 +196,7 @@ module Gloop
     end
 
     # Retrieves information about the shader's compilation.
+    #
     # Nil will be returned if there's no log available.
     #
     # The information log is OpenGL's mechanism
@@ -205,6 +215,7 @@ module Gloop
 
   struct Context
     # Releases resources held by the OpenGL implementation shader compiler.
+    #
     # This method hints that resources held by the compiler can be released.
     # Additional shaders can be compiled after calling this method,
     # and the resources will be reallocated first.
@@ -217,6 +228,7 @@ module Gloop
     end
 
     # Creates an empty shader of the specified type.
+    #
     # See: `Shader.create`
     def create_shader(type : Shader::Type)
       Shader.create(self, type)

@@ -1,5 +1,6 @@
 module Gloop
   # Mix-in providing macros to generate getters for retrieving OpenGL state parameters.
+  #
   # These wrap calls to `glGet` and `glGetString`.
   private module Parameters
     # Defines a getter method that retrieves an OpenGL parameter.
@@ -145,6 +146,7 @@ module Gloop
     end
 
     # Defines a getter method that retrieves an OpenGL parameter.
+    #
     # This is similar to `#parameter`, but takes a context and defines a class method.
     #
     # The *pname* is the name of the OpenGL parameter to retrieve.
@@ -266,6 +268,7 @@ module Gloop
     end
 
     # Defines a boolean getter method that retrieves an OpenGL parameter.
+    #
     # This is similar to `#parameter?`, but takes a context and defines a class method.
     #
     # The *pname* is the OpenGL parameter name to retrieve.

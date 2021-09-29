@@ -5,6 +5,7 @@ require "./message"
 module Gloop
   struct Debug
     # Iterates through messages in the debug log.
+    #
     # Once a message is retrieved, it is removed from the log.
     struct MessageIterator
       include Contextual
@@ -12,6 +13,7 @@ module Gloop
       include Parameters
 
       # Retrieves the size of the next logged message in bytes.
+      #
       # Returns nil if the message log is empty.
       #
       # - OpenGL function: `glGetIntegerv`
@@ -111,6 +113,7 @@ module Gloop
       end
 
       # Skips the next message in the log.
+      #
       # Returns true if a message was skipped, false if the log is empty.
       #
       # - OpenGL functions: `glGetDebugMessageLog`

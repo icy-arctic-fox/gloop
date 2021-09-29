@@ -4,6 +4,7 @@ module Gloop
     @[Flags]
     enum Flags : LibGL::Enum
       # The context is forward compatible.
+      #
       # Any features marked as deprecated in the version after this context's will be unavailable.
       ForwardCompatible = LibGL::ContextFlagMask::ContextFlagForwardCompatible
 
@@ -11,12 +12,14 @@ module Gloop
       Debug = LibGL::ContextFlagMask::ContextFlagDebug
 
       # Memory access is restricted to defined regions.
+      #
       # Attempting to access out-of-bounds memory will result in well-defined results.
       # Such accesses will never abnormally terminate the program or step on other processes.
       # Conflicts with `NoError`.
       RobustAccess = LibGL::ContextFlagMask::ContextFlagRobustAccess
 
       # All error handling is disabled.
+      #
       # No errors will be reported by OpenGL except for out-of-memory errors.
       # Conflicts with `RobustAccess`.
       NoError = LibGL::ContextFlagMask::ContextFlagNoError

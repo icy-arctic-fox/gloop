@@ -14,6 +14,7 @@ module Gloop
     include Parameters
 
     # Integer type used for size-related operations.
+    #
     # OpenGL functions will use 32-bit or 64-bit integers depending on the system architecture.
     {% if flag?(:x86_64) %}
       alias Size = Int64
@@ -66,6 +67,7 @@ module Gloop
     buffer_parameter BufferUsage, usage : Usage
 
     # Creates a new buffer.
+    #
     # Unlike `.generate`, resources are created in advance instead of on the first binding.
     #
     # - OpenGL function: `glCreateBuffers`
@@ -78,6 +80,7 @@ module Gloop
     end
 
     # Creates multiple new buffers.
+    #
     # The number of buffers to create is given by *count*.
     # Unlike `.generate`, resources are created in advance instead of on the first binding.
     #
@@ -91,6 +94,7 @@ module Gloop
     end
 
     # Generates a new buffer.
+    #
     # This ensures a unique name for a buffer object.
     # Resources are not allocated for the buffer until it is bound.
     #
@@ -106,6 +110,7 @@ module Gloop
     end
 
     # Generates multiple new buffers.
+    #
     # This ensures unique names for the buffer objects.
     # Resources are not allocated for the buffers until they are bound.
     #
@@ -166,6 +171,7 @@ module Gloop
     end
 
     # Binds this buffer to the specified target.
+    #
     # The previously bound buffer (if any) is restored after the block completes.
     #
     # - OpenGL function: `glBindBuffer`
@@ -177,6 +183,7 @@ module Gloop
     end
 
     # Binds this buffer to the specified target.
+    #
     # The previously bound buffer (if any) is restored after the block completes.
     #
     # - OpenGL function: `glBindBuffer`
@@ -194,6 +201,7 @@ module Gloop
     end
 
     # Stores data in this buffer.
+    #
     # The *data* must have a `#to_slice` method.
     # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
     #
@@ -217,6 +225,7 @@ module Gloop
     end
 
     # Stores data in this buffer.
+    #
     # The *data* must have a `#to_slice` method.
     # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
     # Previously set `#usage` hint is reapplied for this data.
@@ -246,6 +255,7 @@ module Gloop
 
     # Stores data in this buffer.
     # This makes the buffer have a fixed size (immutable).
+    #
     # The *data* must have a `#to_slice` method.
     # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
     #
@@ -502,6 +512,7 @@ module Gloop
     end
 
     # Unmaps the buffer's memory from client space.
+    #
     # Returns false if the buffer memory was corrupted while it was mapped.
     #
     # - OpenGL function: `glUnmapNamedBuffer`
@@ -544,6 +555,7 @@ module Gloop
     end
 
     # Retrieves information about the buffer's current map.
+    #
     # Returns nil if the buffer isn't mapped.
     def mapping? : Map?
       return unless mapped?
@@ -552,6 +564,7 @@ module Gloop
     end
 
     # Retrieves information about the buffer's current map.
+    #
     # Raises if the buffer isn't mapped.
     def mapping : Map
       mapping? || raise NilAssertionError.new("Buffer not mapped")
@@ -560,24 +573,28 @@ module Gloop
 
   struct Context
     # Creates a buffer in this context.
+    #
     # See: `Buffer.create`
     def create_buffer
       Buffer.create(self)
     end
 
     # Creates multiple buffers in this context.
+    #
     # See: `Buffer.create`
     def create_buffers(count : Int)
       Buffer.create(self, count)
     end
 
     # Generates a buffer in this context.
+    #
     # See: `Buffer.generate`
     def generate_buffer
       Buffer.generate(self)
     end
 
     # Generates multiple buffer in this context.
+    #
     # See: `Buffer.generate`
     def generate_buffers(count : Int)
       Buffer.generate(self, count)

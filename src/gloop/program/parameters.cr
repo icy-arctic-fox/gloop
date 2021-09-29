@@ -3,6 +3,7 @@ require "../parameters"
 module Gloop
   module Parameters
     # Defines a getter method that retrieves an OpenGL program parameter.
+    #
     # The *pname* is the name of the parameter to retrieve.
     # This should be an enum value (just the name) from `LibGL::ProgramPropertyARB`.
     # If the enum is not in `LibGL::ProgramPropertyARB` (for instance, a constant under LibGL),
@@ -80,6 +81,7 @@ module Gloop
     end
 
     # Defines a boolean getter method that retrieves an OpenGL program parameter.
+    #
     # The *pname* is the parameter name to retrieve.
     # This should be an enum value (just the name) from `LibGL::ProgramPropertyARB`.
     # If the enum is not in `LibGL::ProgramPropertyARB` (for instance, a constant under LibGL),

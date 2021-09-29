@@ -18,6 +18,7 @@ module Gloop
     parameter NumExtensions, size
 
     # Retrieves the extension at the specified index.
+    #
     # This method does not perform any bounds checking.
     #
     # - OpenGL function: `glGetStringi`
