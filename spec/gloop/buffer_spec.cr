@@ -418,8 +418,13 @@ Spectator.describe Gloop::Buffer do
     end
 
     context "with a start and count" do
-      let(start) { 1_i64 }
-      let(count) { 6_i64 }
+      {% if flag?(:x86_64) %}
+        let(start) { 1_i64 }
+        let(count) { 6_i64 }
+      {% else %}
+        let(start) { 1_i32 }
+        let(count) { 6_i32 }
+      {% end %}
       let(subdata) { data[start, count] }
       let(access_mask) { Gloop::Buffer::AccessMask.flags(Read, Write) }
 
@@ -575,8 +580,13 @@ Spectator.describe Gloop::Buffer do
       end
 
       context "with a start and count" do
-        let(start) { 1_i64 }
-        let(count) { 6_i64 }
+        {% if flag?(:x86_64) %}
+          let(start) { 1_i64 }
+          let(count) { 6_i64 }
+        {% else %}
+          let(start) { 1_i32 }
+          let(count) { 6_i32 }
+        {% end %}
         let(subdata) { data[start, count] }
         let(access_mask) { Gloop::Buffer::AccessMask.flags(Read, Write) }
 

@@ -540,7 +540,9 @@ module Gloop
     @[GLFunction("glFlushMappedNamedBufferRange", version: "4.5")]
     @[AlwaysInline]
     def flush
-      flush(0, mapping.size)
+      start = Size.new!(0)
+      count = Size.new(mapping.size)
+      flush(start, count)
     end
 
     # Flushes a subset of the mapped buffer to indicate changes have been made.
