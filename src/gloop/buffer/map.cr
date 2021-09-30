@@ -11,33 +11,47 @@ module Gloop
       include Contextual
       include Parameters
 
-      # When the buffer is mapped, gives the number of bytes mapped.
-      #
-      # See: `TargetMap#size`
-      #
-      # - OpenGL function: `glGetNamedBufferParameteriv`, `glGetNamedBufferParameteri64v`
-      # - OpenGL enum: `GL_BUFFER_MAP_LENGTH`
-      # - OpenGL version: 4.5
       {% if flag?(:x86_64) %}
+        # When the buffer is mapped, gives the number of bytes mapped.
+        #
+        # See: `TargetMap#size`
+        #
+        # - OpenGL function: `glGetNamedBufferParameteri64v`
+        # - OpenGL enum: `GL_BUFFER_MAP_LENGTH`
+        # - OpenGL version: 4.5
         @[GLFunction("glGetNamedBufferParameteri64v", enum: "GL_BUFFER_MAP_LENGTH", version: "4.5")]
-      {% else %}
-        @[GLFunction("glGetNamedBufferParameteriv", enum: "GL_BUFFER_MAP_LENGTH", version: "4.5")]
-      {% end %}
-      buffer_parameter BufferMapLength, size : Size
+        buffer_parameter BufferMapLength, size : Size
 
-      # When the buffer is mapped, gives the offset (in bytes) of the mapped region.
-      #
-      # See: `TargetMap#offset`
-      #
-      # - OpenGL function: `glGetNamedBufferParameteriv`, `glGetNamedBufferParameteri64v`
-      # - OpenGL enum: `GL_BUFFER_MAP_OFFSET`
-      # - OpenGL version: 4.5
-      {% if flag?(:x86_64) %}
+        # When the buffer is mapped, gives the offset (in bytes) of the mapped region.
+        #
+        # See: `TargetMap#offset`
+        #
+        # - OpenGL function: `glGetNamedBufferParameteri64v`
+        # - OpenGL enum: `GL_BUFFER_MAP_OFFSET`
+        # - OpenGL version: 4.5
         @[GLFunction("glGetNamedBufferParameteri64v", enum: "GL_BUFFER_MAP_OFFSET", version: "4.5")]
+        buffer_parameter BufferMapOffset, offset : Size
       {% else %}
+        # When the buffer is mapped, gives the number of bytes mapped.
+        #
+        # See: `TargetMap#size`
+        #
+        # - OpenGL function: `glGetNamedBufferParameteriv`
+        # - OpenGL enum: `GL_BUFFER_MAP_LENGTH`
+        # - OpenGL version: 4.5
+        @[GLFunction("glGetNamedBufferParameteriv", enum: "GL_BUFFER_MAP_LENGTH", version: "4.5")]
+        buffer_parameter BufferMapLength, size : Size
+
+        # When the buffer is mapped, gives the offset (in bytes) of the mapped region.
+        #
+        # See: `TargetMap#offset`
+        #
+        # - OpenGL function: `glGetNamedBufferParameteriv`
+        # - OpenGL enum: `GL_BUFFER_MAP_OFFSET`
+        # - OpenGL version: 4.5
         @[GLFunction("glGetNamedBufferParameteriv", enum: "GL_BUFFER_MAP_OFFSET", version: "4.5")]
+        buffer_parameter BufferMapOffset, offset : Size
       {% end %}
-      buffer_parameter BufferMapOffset, offset : Size
 
       # Retrieves the access policy previously set when `Buffer#map` or `BindTarget#map` was called.
       #

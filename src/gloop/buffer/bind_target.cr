@@ -19,8 +19,8 @@ module Gloop
       #
       # - OpenGL function: `glGetBufferParameteriv`
       # - OpenGL enum: `GL_BUFFER_IMMUTABLE_STORAGE`
-      # - OpenGL version: 4.5
-      @[GLFunction("glGetBufferParameteriv", enum: "GL_BUFFER_IMMUTABLE_STORAGE", version: "4.5")]
+      # - OpenGL version: 4.4
+      @[GLFunction("glGetBufferParameteriv", enum: "GL_BUFFER_IMMUTABLE_STORAGE", version: "4.4")]
       buffer_target_parameter? BufferImmutableStorage, immutable
 
       # Indicates whether the buffer is currently mapped.
@@ -29,23 +29,31 @@ module Gloop
       #
       # - OpenGL function: `glGetBufferParameteriv`
       # - OpenGL enum: `GL_BUFFER_MAPPED`
-      # - OpenGL version: 4.5
-      @[GLFunction("glGetBufferParameteriv", enum: "GL_BUFFER_MAPPED", version: "4.5")]
+      # - OpenGL version: 2.0
+      @[GLFunction("glGetBufferParameteriv", enum: "GL_BUFFER_MAPPED", version: "2.0")]
       buffer_target_parameter? BufferMapped, mapped
 
-      # Size of the buffer's contents in bytes.
-      #
-      # See: `Buffer#size`
-      #
-      # - OpenGL function: `glGetBufferParameteriv`, `glGetBufferParameteri64v`
-      # - OpenGL enum: `GL_BUFFER_SIZE`
-      # - OpenGL version: 2.0, 3.2
       {% if flag?(:x86_64) %}
-        @[GLFunction("glGetBufferParameteri64v", enum: "GL_BUFFER_SIZE", version: "4.5")]
+        # Size of the buffer's contents in bytes.
+        #
+        # See: `Buffer#size`
+        #
+        # - OpenGL function: `glGetBufferParameteri64v`
+        # - OpenGL enum: `GL_BUFFER_SIZE`
+        # - OpenGL version: 3.2
+        @[GLFunction("glGetBufferParameteri64v", enum: "GL_BUFFER_SIZE", version: "3.2")]
+        buffer_target_parameter BufferSize, size
       {% else %}
-        @[GLFunction("glGetBufferParameteriv", enum: "GL_BUFFER_SIZE", version: "4.5")]
+        # Size of the buffer's contents in bytes.
+        #
+        # See: `Buffer#size`
+        #
+        # - OpenGL function: `glGetBufferParameteriv`
+        # - OpenGL enum: `GL_BUFFER_SIZE`
+        # - OpenGL version: 2.0
+        @[GLFunction("glGetBufferParameteriv", enum: "GL_BUFFER_SIZE", version: "2.0")]
+        buffer_target_parameter BufferSize, size
       {% end %}
-      buffer_target_parameter BufferSize, size
 
       # Retrieves the flags previously set for the buffer's immutable storage.
       #
@@ -56,7 +64,7 @@ module Gloop
       # - OpenGL function: `glGetBufferParameteriv`
       # - OpenGL enum: `GL_BUFFER_STORAGE_FLAGS`
       # - OpenGL version: 4.4
-      @[GLFunction("glGetBufferParameteriv", enum: "GL_BUFFER_STORAGE_FLAGS", version: "4.5")]
+      @[GLFunction("glGetBufferParameteriv", enum: "GL_BUFFER_STORAGE_FLAGS", version: "4.4")]
       buffer_target_parameter BufferStorageFlags, storage_flags : Storage
 
       # Retrieves the usage hints previously provided for the buffer's data.
@@ -68,7 +76,7 @@ module Gloop
       # - OpenGL function: `glGetBufferParameteriv`
       # - OpenGL enum: `GL_BUFFER_USAGE`
       # - OpenGL version: 2.0
-      @[GLFunction("glGetNamedBufferParameteriv", enum: "GL_BUFFER_USAGE", version: "4.5")]
+      @[GLFunction("glGetNamedBufferParameteriv", enum: "GL_BUFFER_USAGE", version: "2.0")]
       buffer_target_parameter BufferUsage, usage : Usage
 
       # Retrieves the context for this target.
