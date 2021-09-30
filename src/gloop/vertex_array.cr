@@ -228,6 +228,36 @@ module Gloop
     end
   end
 
+  struct Context
+    # Creates a vertex array in this context.
+    #
+    # See: `VertexArray.create`
+    def create_vertex_array : VertexArray
+      VertexArray.create(self)
+    end
+
+    # Creates multiple vertex arrays in this context.
+    #
+    # See: `VertexArray.create`
+    def create_vertex_arrays(count : Int) : VertexArrayList
+      VertexArray.create(self, count)
+    end
+
+    # Generates a vertex array in this context.
+    #
+    # See: `VertexArray.generate`
+    def generate_vertex_array : VertexArray
+      VertexArray.generate(self)
+    end
+
+    # Generates multiple vertex arrays in this context.
+    #
+    # See: `VertexArray.generate`
+    def generate_vertex_arrays(count : Int) : VertexArrayList
+      VertexArray.generate(self, count)
+    end
+  end
+
   # Collection of vertex arrays belonging to the same context.
   struct VertexArrayList < ObjectList(VertexArray)
     # Deletes all vertex arrays in the list.
