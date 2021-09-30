@@ -344,7 +344,7 @@ Spectator.describe Gloop::Program do
   end
 end
 
-Spectator.describe Spectator::Context do
+Spectator.describe Gloop::Context do
   let(program) { context.create_program }
 
   let(vertex_shader) do
