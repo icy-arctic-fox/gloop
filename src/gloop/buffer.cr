@@ -88,7 +88,7 @@ module Gloop
     # - OpenGL function: `glCreateBuffers`
     # - OpenGL version: 4.5
     @[GLFunction("glCreateBuffers", version: "4.5")]
-    def self.create(context)
+    def self.create(context) : self
       name = uninitialized Name
       context.gl.create_buffers(1, pointerof(name))
       new(context, name)
@@ -118,7 +118,7 @@ module Gloop
     # - OpenGL function: `glGenBuffers`
     # - OpenGL version: 2.0
     @[GLFunction("glGenBuffers", version: "2.0")]
-    def self.generate(context)
+    def self.generate(context) : self
       name = uninitialized Name
       context.gl.gen_buffers(1, pointerof(name))
       new(context, name)
@@ -656,28 +656,28 @@ module Gloop
     # Creates a buffer in this context.
     #
     # See: `Buffer.create`
-    def create_buffer
+    def create_buffer : Buffer
       Buffer.create(self)
     end
 
     # Creates multiple buffers in this context.
     #
     # See: `Buffer.create`
-    def create_buffers(count : Int)
+    def create_buffers(count : Int) : BufferList
       Buffer.create(self, count)
     end
 
     # Generates a buffer in this context.
     #
     # See: `Buffer.generate`
-    def generate_buffer
+    def generate_buffer : Buffer
       Buffer.generate(self)
     end
 
     # Generates multiple buffer in this context.
     #
     # See: `Buffer.generate`
-    def generate_buffers(count : Int)
+    def generate_buffers(count : Int) : BufferList
       Buffer.generate(self, count)
     end
   end
