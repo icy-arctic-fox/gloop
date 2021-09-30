@@ -275,7 +275,7 @@ module Gloop
     # - OpenGL version: 2.0
     @[GLFunction("glUseProgram", version: "2.0")]
     def self.uninstall(context)
-      context.gl.use_program(0_u32)
+      none(context).use
     end
 
     # Checks if the program can be used in OpenGL's current state.
