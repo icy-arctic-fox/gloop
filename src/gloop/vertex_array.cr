@@ -256,6 +256,31 @@ module Gloop
     def generate_vertex_arrays(count : Int) : VertexArrayList
       VertexArray.generate(self, count)
     end
+
+    # Retrieves the currently bound vertex array.
+    #
+    # Returns a `nil` if there isn't a vertex array bound.
+    #
+    # See: `VertexArray.current?`
+    def vertex_array? : VertexArray?
+      VertexArray.current?(self)
+    end
+
+    # Retrieves the currently bound vertex array.
+    #
+    # Returns a null-object (`Object.none`) if there isn't a vertex array bound.
+    #
+    # See: `VertexArray.current`
+    def vertex_array : VertexArray
+      VertexArray.current(self)
+    end
+
+    # Unbinds any existing vertex array from the context's rendering state.
+    #
+    # See: `VertexArray.unbind`
+    def unbind_vertex_array
+      VertexArray.unbind(self)
+    end
   end
 
   # Collection of vertex arrays belonging to the same context.

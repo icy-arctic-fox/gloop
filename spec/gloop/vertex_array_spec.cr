@@ -174,3 +174,35 @@ Spectator.describe Gloop::VertexArray do
     end
   end
 end
+
+Spectator.describe Gloop::Context do
+  let(vertex_array) { context.create_vertex_array }
+
+  describe "#vertex_array?" do
+    subject { context.vertex_array? }
+
+    it "is the currently bound vertex array" do
+      vertex_array.bind
+      is_expected.to eq(vertex_array)
+    end
+
+    it "is nil when no vertex array is bound" do
+      context.unbind_vertex_array
+      is_expected.to be_nil
+    end
+  end
+
+  describe "#vertex_array" do
+    subject { context.vertex_array }
+
+    it "is the currently bound vertex array" do
+      vertex_array.bind
+      is_expected.to eq(vertex_array)
+    end
+
+    it "is the null object when no vertex array is bound" do
+      context.unbind_vertex_array
+      is_expected.to be_none
+    end
+  end
+end
