@@ -59,6 +59,13 @@ module Gloop
     def initialize(@context : Context, @name : Name)
     end
 
+    # Constructs a string representation of the object.
+    #
+    # Contains the object type and its name (unique identifier).
+    def to_s(io)
+      io << object_type << '#' << name
+    end
+
     # Retrieves a reference to the object that can be used in C bindings.
     #
     # This returns the object name.
