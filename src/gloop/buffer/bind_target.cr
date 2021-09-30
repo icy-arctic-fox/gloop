@@ -15,6 +15,8 @@ module Gloop
 
       # Indicates whether the buffer is immutable.
       #
+      # See: `Buffer#immutable?`
+      #
       # - OpenGL function: `glGetBufferParameteriv`
       # - OpenGL enum: `GL_BUFFER_IMMUTABLE_STORAGE`
       # - OpenGL version: 4.5
@@ -23,6 +25,8 @@ module Gloop
 
       # Indicates whether the buffer is currently mapped.
       #
+      # See: `Buffer#mapped?`
+      #
       # - OpenGL function: `glGetBufferParameteriv`
       # - OpenGL enum: `GL_BUFFER_MAPPED`
       # - OpenGL version: 4.5
@@ -30,6 +34,8 @@ module Gloop
       buffer_target_parameter? BufferMapped, mapped
 
       # Size of the buffer's contents in bytes.
+      #
+      # See: `Buffer#size`
       #
       # - OpenGL function: `glGetBufferParameteriv`, `glGetBufferParameteri64v`
       # - OpenGL enum: `GL_BUFFER_SIZE`
@@ -45,6 +51,8 @@ module Gloop
       #
       # See: `#storage`
       #
+      # See: `Buffer#storage_flags`
+      #
       # - OpenGL function: `glGetBufferParameteriv`
       # - OpenGL enum: `GL_BUFFER_STORAGE_FLAGS`
       # - OpenGL version: 4.4
@@ -54,6 +62,8 @@ module Gloop
       # Retrieves the usage hints previously provided for the buffer's data.
       #
       # See: `#data`
+      #
+      # See: `Buffer#usage`
       #
       # - OpenGL function: `glGetBufferParameteriv`
       # - OpenGL enum: `GL_BUFFER_USAGE`
@@ -109,6 +119,8 @@ module Gloop
 
       # Binds a buffer to this target.
       #
+      # See: `Buffer#bind`
+      #
       # - OpenGL function: `glBindBuffer`
       # - OpenGL version: 2.0
       @[GLFunction("glBindBuffer", version: "2.0")]
@@ -119,6 +131,8 @@ module Gloop
       # Binds a buffer to this target.
       #
       # The previously bound buffer (if any) is restored after the block completes.
+      #
+      # See: `Buffer#bind`
       #
       # - OpenGL function: `glBindBuffer`
       # - OpenGL version: 2.0
@@ -148,6 +162,8 @@ module Gloop
       # The *data* must have a `#to_slice` method.
       # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
       #
+      # See: `Buffer#data`
+      #
       # - OpenGL function: `glBufferData`
       # - OpenGL version: 2.0
       @[GLFunction("glBufferData", version: "2..0")]
@@ -159,6 +175,8 @@ module Gloop
       end
 
       # Initializes the currently bound buffer to a given size with undefined contents.
+      #
+      # See: `Buffer#allocate_data`
       #
       # - OpenGL function: `glBufferData`
       # - OpenGL version: 2.0
@@ -173,6 +191,8 @@ module Gloop
       # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
       # Previously set `#usage` hint is reapplied for this data.
       #
+      # See: `Buffer#data=`
+      #
       # - OpenGL function: `glBufferData`
       # - OpenGL version: 2.0
       @[GLFunction("glBufferData", version: "2.0")]
@@ -184,6 +204,8 @@ module Gloop
       # Retrieves all data in the buffer currently bound to this target.
       #
       # NOTE: Modifying the data returned by this method *will not* update the contents of the buffer.
+      #
+      # See: `Buffer#data`
       #
       # - OpenGL function: `glGetBufferSubData`
       # - OpenGL version: 2.0
@@ -203,6 +225,8 @@ module Gloop
       # The *data* must have a `#to_slice` method.
       # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
       #
+      # See: `Buffer#storage`
+      #
       # - OpenGL function: `glBufferStorage`
       # - OpenGL version: 4.4
       @[GLFunction("glBufferStorage", version: "4.4")]
@@ -216,6 +240,8 @@ module Gloop
       # Initializes the currently bound buffer to a given size with undefined contents.
       # This makes the buffer have a fixed size (immutable).
       #
+      # See: `Buffer#allocate_storage`
+      #
       # - OpenGL function: `glBufferStorage`
       # - OpenGL version: 4.4
       @[GLFunction("glBufferStorage", version: "4.4")]
@@ -226,6 +252,8 @@ module Gloop
       # Retrieves a subset of data from the buffer currently bound to this target.
       #
       # NOTE: Modifying the data returned by this method *will not* update the contents of the buffer.
+      #
+      # See: `Buffer#[]`
       #
       # - OpenGL function: `glGetBufferSubData`
       # - OpenGL version: 2.0
@@ -239,6 +267,8 @@ module Gloop
       # Retrieves a range of data from the buffer currently bound to this target.
       #
       # NOTE: Modifying the data returned by this method *will not* update the contents of the buffer.
+      #
+      # See: `Buffer#[]`
       #
       # - OpenGL function: `glGetBufferSubData`
       # - OpenGL version: 2.0
@@ -255,6 +285,8 @@ module Gloop
       # The number of bytes updated in the buffer is equal to the byte size of *data*.
       # The *data* must have a `#to_slice`.
       # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
+      #
+      # See: `Buffer#update`
       #
       # - OpenGL function: `glBufferSubData`
       # - OpenGL version: 2.0
@@ -273,6 +305,8 @@ module Gloop
       #
       # NOTE: Any length *data* might have is ignored.
       # Be sure that *count* is less than or equal to the byte size length of *data*.
+      #
+      # See: `Buffer#[]=`
       #
       # - OpenGL function: `glBufferSubData`
       # - OpenGL version: 2.0
@@ -295,6 +329,8 @@ module Gloop
       # NOTE: Any length *data* might have is ignored.
       # Be sure that *count* is less than or equal to the byte-size length of *data*.
       #
+      # See: `Buffer#[]=`
+      #
       # - OpenGL function: `glBufferSubData`
       # - OpenGL version: 2.0
       @[GLFunction("glBufferSubData", version: "2.0")]
@@ -310,6 +346,8 @@ module Gloop
       # The *read_offset* indicates the byte offset to start copying from *read_target*.
       # The *write_offset* indicates the byte offset to start copying into *write_target*.
       # The *size* is the number of bytes to copy.
+      #
+      # See: `Buffer.copy`
       #
       # - OpenGL function: `glCopyBufferSubData`
       # - OpenGL version: 3.1
@@ -331,6 +369,8 @@ module Gloop
       # The *write_offset* indicates the byte offset to start copying into *target*.
       # The *size* is the number of bytes to copy.
       #
+      # See: `Buffer#copy_to`
+      #
       # - OpenGL function: `glCopyBufferSubData`
       # - OpenGL version: 3.1
       @[GLFunction("glCopyBufferSubData", version: "3.1")]
@@ -345,6 +385,8 @@ module Gloop
       # The *write_offset* indicates the byte offset to start copying into the buffer bound to this target..
       # The *size* is the number of bytes to copy.
       #
+      # See: `Buffer#copy_from`
+      #
       # - OpenGL function: `glCopyBufferSubData`
       # - OpenGL version: 3.1
       @[GLFunction("glCopyBufferSubData", version: "3.1")]
@@ -354,6 +396,8 @@ module Gloop
       end
 
       # Maps the buffer's memory into client space.
+      #
+      # See: `Buffer#map`
       #
       # - OpenGL function: `glMapBuffer`
       # - OpenGL version: 2.0
@@ -365,6 +409,8 @@ module Gloop
 
       # Maps a subset of the buffer's memory into client space.
       #
+      # See: `Buffer#map`
+      #
       # - OpenGL function: `glMapBufferRange`
       # - OpenGL version: 3.0
       @[GLFunction("glMapBufferRange", version: "3.0")]
@@ -374,6 +420,8 @@ module Gloop
       end
 
       # Maps a subset of the buffer's memory into client space.
+      #
+      # See: `Buffer#map`
       #
       # - OpenGL function: `glMapBufferRange`
       # - OpenGL version: 3.0
@@ -389,6 +437,8 @@ module Gloop
       #
       # The buffer is automatically unmapped when the block completes.
       # Returns false if the buffer memory was corrupted while it was mapped.
+      #
+      # See: `Buffer#map`
       def map(access : Access, & : Bytes -> _) : Bool
         bytes = map(access)
         begin
@@ -404,6 +454,8 @@ module Gloop
       #
       # The buffer is automatically unmapped when the block completes.
       # Returns false if the buffer memory was corrupted while it was mapped.
+      #
+      # See: `Buffer#map`
       def map(access : AccessMask, start : Size, count : Size, & : Bytes -> _) : Bool
         bytes = map(access, start, count)
         begin
@@ -419,6 +471,8 @@ module Gloop
       #
       # The buffer is automatically unmapped when the block completes.
       # Returns false if the buffer memory was corrupted while it was mapped.
+      #
+      # See: `Buffer#map`
       def map(access : AccessMask, range : Range, & : Bytes -> _) : Bool
         bytes = map(access, range)
         begin
@@ -434,6 +488,8 @@ module Gloop
       #
       # Returns false if the buffer memory was corrupted while it was mapped.
       #
+      # See: `Buffer#unmap`
+      #
       # - OpenGL function: `glUnmapBuffer`
       # - OpenGL version: 2.0
       @[GLFunction("glUnmapBuffer", version: "2.0")]
@@ -443,6 +499,8 @@ module Gloop
       end
 
       # Flushes the entire mapped buffer range to indicate changes have been made.
+      #
+      # See: `Buffer#flush`
       #
       # - OpenGL function: `glFlushMappedBufferRange`
       # - OpenGL version: 3.0
@@ -456,6 +514,8 @@ module Gloop
 
       # Flushes a subset of the mapped buffer to indicate changes have been made.
       #
+      # See: `Buffer#flush`
+      #
       # - OpenGL function: `glFlushMappedBufferRange`
       # - OpenGL version: 3.0
       @[GLFunction("glFlushMappedBufferRange", version: "3.0")]
@@ -464,6 +524,8 @@ module Gloop
       end
 
       # Flushes a subset of the mapped buffer to indicate changes have been made.
+      #
+      # See: `Buffer#flush`
       #
       # - OpenGL function: `glFlushMappedBufferRange`
       # - OpenGL version: 3.0
@@ -478,6 +540,8 @@ module Gloop
       # Retrieves information about the bound buffer's current map.
       #
       # Returns nil if the buffer isn't mapped.
+      #
+      # See: `Buffer#mapping?`
       def mapping? : TargetMap?
         return unless mapped?
 
@@ -487,6 +551,8 @@ module Gloop
       # Retrieves information about the bound buffer's current map.
       #
       # Raises if the buffer isn't mapped.
+      #
+      # See: `Buffer#mapping`
       def mapping : TargetMap
         mapping? || raise NilAssertionError.new("Buffer not mapped")
       end

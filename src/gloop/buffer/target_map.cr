@@ -13,6 +13,8 @@ module Gloop
 
       # When the buffer is mapped, gives the number of bytes mapped.
       #
+      # See: `Map#size`
+      #
       # - OpenGL function: `glGetBufferParameteriv`, `glGetBufferParameteri64v`
       # - OpenGL enum: `GL_BUFFER_MAP_LENGTH`
       # - OpenGL version: 2.0, 3.2
@@ -24,6 +26,8 @@ module Gloop
       buffer_target_parameter BufferMapLength, size : Size
 
       # When the buffer is mapped, gives the offset (in bytes) of the mapped region.
+      #
+      # See: `Map#offset`
       #
       # - OpenGL function: `glGetBufferParameteriv`, `glGetBufferParameteri64v`
       # - OpenGL enum: `GL_BUFFER_MAP_OFFSET`
@@ -37,6 +41,8 @@ module Gloop
 
       # Retrieves the access policy previously set when `Buffer#map` or `BindTarget#map` was called.
       #
+      # See: `Map#access`
+      #
       # - OpenGL function: `glGetBufferParameteriv`
       # - OpenGL enum: `GL_BUFFER_ACCESS`
       # - OpenGL version: 2.0
@@ -44,6 +50,8 @@ module Gloop
       buffer_target_parameter BufferAccess, access : Access
 
       # Retrieves the access mask previously used when `Buffer#map` or `BindTarget#map` was called with a subset.
+      #
+      # See: `Map#access_mask`
       #
       # - OpenGL function: `glGetBufferParameteriv`
       # - OpenGL enum: `GL_BUFFER_ACCESS_FLAGS`
@@ -65,6 +73,8 @@ module Gloop
       end
 
       # Retrieves a pointer to the start of the mapped data.
+      #
+      # See: `Map#to_unsafe`
       #
       # - OpenGL function: `glGetBufferPointerv`
       # - OpenGL enum: `GL_BUFFER_MAP_POINTER`

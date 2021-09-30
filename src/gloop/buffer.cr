@@ -17,6 +17,8 @@ module Gloop
 
     # Indicates whether the buffer is immutable (fixed size).
     #
+    # See: `BindTarget#immutable?`
+    #
     # - OpenGL function: `glGetNamedBufferParameteriv`
     # - OpenGL enum: `GL_BUFFER_IMMUTABLE_STORAGE`
     # - OpenGL version: 4.5
@@ -25,6 +27,8 @@ module Gloop
 
     # Indicates whether the buffer is currently mapped.
     #
+    # See: `BindTarget#mapped?`
+    #
     # - OpenGL function: `glGetNamedBufferParameteriv`
     # - OpenGL enum: `GL_BUFFER_MAPPED`
     # - OpenGL version: 4.5
@@ -32,6 +36,8 @@ module Gloop
     buffer_parameter? BufferMapped, mapped
 
     # Size of the buffer's contents in bytes.
+    #
+    # See: `BindTarget#size`
     #
     # - OpenGL function: `glGetNamedBufferParameteriv`, `glGetNamedBufferParameteri64v`
     # - OpenGL enum: `GL_BUFFER_SIZE`
@@ -47,6 +53,8 @@ module Gloop
     #
     # See: `#storage`
     #
+    # See: `BindTarget#storage_flags`
+    #
     # - OpenGL function: `glGetNamedBufferParameteriv`
     # - OpenGL enum: `GL_BUFFER_STORAGE_FLAGS`
     # - OpenGL version: 4.5
@@ -56,6 +64,8 @@ module Gloop
     # Retrieves the usage hints previously provided for the buffer's data.
     #
     # See: `#data`
+    #
+    # See: `BindTarget#usage`
     #
     # - OpenGL function: `glGetNamedBufferParameteriv`
     # - OpenGL enum: `GL_BUFFER_USAGE`
@@ -160,6 +170,8 @@ module Gloop
 
     # Binds this buffer to the specified target.
     #
+    # See: `BindTarget#bind`
+    #
     # - OpenGL function: `glBindBuffer`
     # - OpenGL version: 2.0
     @[GLFunction("glBindBuffer", version: "2.0")]
@@ -170,6 +182,8 @@ module Gloop
     # Binds this buffer to the specified target.
     #
     # The previously bound buffer (if any) is restored after the block completes.
+    #
+    # See: `BindTarget#bind`
     #
     # - OpenGL function: `glBindBuffer`
     # - OpenGL version: 2.0
@@ -182,6 +196,8 @@ module Gloop
     # Binds this buffer to the specified target.
     #
     # The previously bound buffer (if any) is restored after the block completes.
+    #
+    # See: `BindTarget#bind`
     #
     # - OpenGL function: `glBindBuffer`
     # - OpenGL version: 2.0
@@ -202,6 +218,8 @@ module Gloop
     # The *data* must have a `#to_slice` method.
     # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
     #
+    # See: `BindTarget#data`
+    #
     # - OpenGL function: `glNamedBufferData`
     # - OpenGL version: 4.5
     @[GLFunction("glNamedBufferData", version: "4.5")]
@@ -213,6 +231,8 @@ module Gloop
     end
 
     # Initializes the buffer of a given size with undefined contents.
+    #
+    # See: `BindTarget#allocate_data`
     #
     # - OpenGL function: `glNamedBufferData`
     # - OpenGL version: 4.5
@@ -227,6 +247,8 @@ module Gloop
     # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
     # Previously set `#usage` hint is reapplied for this data.
     #
+    # See: `BindTarget#data=`
+    #
     # - OpenGL function: `glNamedBufferData`
     # - OpenGL version: 4.5
     @[GLFunction("glNamedBufferData", version: "4.5")]
@@ -238,6 +260,8 @@ module Gloop
     # Retrieves all data in the buffer.
     #
     # NOTE: Modifying the data returned by this method *will not* update the contents of the buffer.
+    #
+    # See: `BindTarget#data`
     #
     # - OpenGL function: `glGetNamedBufferSubData`
     # - OpenGL version: 4.5
@@ -257,6 +281,8 @@ module Gloop
     # The *data* must have a `#to_slice` method.
     # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
     #
+    # See: `BindTarget#storage`
+    #
     # - OpenGL function: `glNamedBufferStorage`
     # - OpenGL version: 4.5
     @[GLFunction("glNamedBufferStorage", version: "4.5")]
@@ -270,6 +296,8 @@ module Gloop
     # Initializes the buffer of a given size with undefined contents.
     # This makes the buffer have a fixed size (immutable).
     #
+    # See: `BindTarget#allocate_storage`
+    #
     # - OpenGL function: `glNamedBufferStorage`
     # - OpenGL version: 4.5
     @[GLFunction("glNamedBufferStorage", version: "4.5")]
@@ -280,6 +308,8 @@ module Gloop
     # Retrieves a subset of data from the buffer.
     #
     # NOTE: Modifying the data returned by this method *will not* update the contents of the buffer.
+    #
+    # See: `BindTarget#[]`
     #
     # - OpenGL function: `glGetNamedBufferSubData`
     # - OpenGL version: 4.5
@@ -293,6 +323,8 @@ module Gloop
     # Retrieves a range of data from the buffer.
     #
     # NOTE: Modifying the data returned by this method *will not* update the contents of the buffer.
+    #
+    # See: `BindTarget#[]`
     #
     # - OpenGL function: `glGetNamedBufferSubData`
     # - OpenGL version: 4.5
@@ -309,6 +341,8 @@ module Gloop
     # The number of bytes updated in the buffer is equal to the byte size of *data*.
     # The *data* must have a `#to_slice`.
     # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
+    #
+    # See: `BindTarget#update`
     #
     # - OpenGL function: `glNamedBufferSubData`
     # - OpenGL version: 4.5
@@ -327,6 +361,8 @@ module Gloop
     #
     # NOTE: Any length *data* might have is ignored.
     # Be sure that *count* is less than or equal to the byte size length of *data*.
+    #
+    # See: `BindTarget#[]=`
     #
     # - OpenGL function: `glNamedBufferSubData`
     # - OpenGL version: 4.5
@@ -349,6 +385,8 @@ module Gloop
     # NOTE: Any length *data* might have is ignored.
     # Be sure that *count* is less than or equal to the byte-size length of *data*.
     #
+    # See: `BindTarget#[]=`
+    #
     # - OpenGL function: `glNamedBufferSubData`
     # - OpenGL version: 4.5
     @[GLFunction("glNamedBufferSubData", version: "4.5")]
@@ -364,6 +402,8 @@ module Gloop
     # The *read_offset* indicates the byte offset to start copying from *read_buffer*.
     # The *write_offset* indicates the byte offset to start copying into *write_buffer*.
     # The *size* is the number of bytes to copy.
+    #
+    # See: `BindTarget.copy`
     #
     # - OpenGL function: `glCopyNamedBufferSubData`
     # - OpenGL version: 4.5
@@ -385,6 +425,8 @@ module Gloop
     # The *write_offset* indicates the byte offset to start copying into *buffer*.
     # The *size* is the number of bytes to copy.
     #
+    # See: `BindTarget#copy_to`
+    #
     # - OpenGL function: `glCopyNamedBufferSubData`
     # - OpenGL version: 4.5
     @[GLFunction("glCopyNamedBufferSubData", version: "4.5")]
@@ -398,6 +440,8 @@ module Gloop
     # The *read_offset* indicates the byte offset to start copying from *buffer*.
     # The *write_offset* indicates the byte offset to start copying into this buffer.
     # The *size* is the number of bytes to copy.
+    #
+    # See: `BindTarget#copy_from`
     #
     # - OpenGL function: `glCopyNamedBufferSubData`
     # - OpenGL version: 4.5
@@ -439,6 +483,8 @@ module Gloop
 
     # Maps the buffer's memory into client space.
     #
+    # See: `BindTarget#map`
+    #
     # - OpenGL function: `glMapNamedBuffer`
     # - OpenGL version: 4.5
     @[GLFunction("glMapNamedBuffer", version: "4.5")]
@@ -449,6 +495,8 @@ module Gloop
 
     # Maps a subset of the buffer's memory into client space.
     #
+    # See: `BindTarget#map`
+    #
     # - OpenGL function: `glMapNamedBufferRange`
     # - OpenGL version: 4.5
     @[GLFunction("glMapNamedBufferRange", version: "4.5")]
@@ -458,6 +506,8 @@ module Gloop
     end
 
     # Maps a subset of the buffer's memory into client space.
+    #
+    # See: `BindTarget#map`
     #
     # - OpenGL function: `glMapNamedBufferRange`
     # - OpenGL version: 4.5
@@ -473,6 +523,8 @@ module Gloop
     #
     # The buffer is automatically unmapped when the block completes.
     # Returns false if the buffer memory was corrupted while it was mapped.
+    #
+    # See: `BindTarget#map`
     def map(access : Access, & : Bytes -> _) : Bool
       bytes = map(access)
       begin
@@ -488,6 +540,8 @@ module Gloop
     #
     # The buffer is automatically unmapped when the block completes.
     # Returns false if the buffer memory was corrupted while it was mapped.
+    #
+    # See: `BindTarget#map`
     def map(access : AccessMask, start : Size, count : Size, & : Bytes -> _) : Bool
       bytes = map(access, start, count)
       begin
@@ -503,6 +557,8 @@ module Gloop
     #
     # The buffer is automatically unmapped when the block completes.
     # Returns false if the buffer memory was corrupted while it was mapped.
+    #
+    # See: `BindTarget#map`
     def map(access : AccessMask, range : Range, & : Bytes -> _) : Bool
       bytes = map(access, range)
       begin
@@ -518,6 +574,8 @@ module Gloop
     #
     # Returns false if the buffer memory was corrupted while it was mapped.
     #
+    # See: `BindTarget#unmap`
+    #
     # - OpenGL function: `glUnmapNamedBuffer`
     # - OpenGL version: 4.5
     @[GLFunction("glUnmapNamedBuffer", version: "4.5")]
@@ -527,6 +585,8 @@ module Gloop
     end
 
     # Flushes the entire mapped buffer range to indicate changes have been made.
+    #
+    # See: `BindTarget#flush`
     #
     # - OpenGL function: `glFlushMappedNamedBufferRange`
     # - OpenGL version: 4.5
@@ -540,6 +600,8 @@ module Gloop
 
     # Flushes a subset of the mapped buffer to indicate changes have been made.
     #
+    # See: `BindTarget#flush`
+    #
     # - OpenGL function: `glFlushMappedNamedBufferRange`
     # - OpenGL version: 4.5
     @[GLFunction("glFlushMappedNamedBufferRange", version: "4.5")]
@@ -548,6 +610,8 @@ module Gloop
     end
 
     # Flushes a subset of the mapped buffer to indicate changes have been made.
+    #
+    # See: `BindTarget#flush`
     #
     # - OpenGL function: `glFlushMappedNamedBufferRange`
     # - OpenGL version: 4.5
@@ -562,6 +626,8 @@ module Gloop
     # Retrieves information about the buffer's current map.
     #
     # Returns nil if the buffer isn't mapped.
+    #
+    # See: `BindTarget#mapping?`
     def mapping? : Map?
       return unless mapped?
 
@@ -571,6 +637,8 @@ module Gloop
     # Retrieves information about the buffer's current map.
     #
     # Raises if the buffer isn't mapped.
+    #
+    # See: `BindTarget#mapping`
     def mapping : Map
       mapping? || raise NilAssertionError.new("Buffer not mapped")
     end
