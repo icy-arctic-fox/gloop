@@ -342,6 +342,7 @@ module Gloop
     # Retrieves the current program in use.
     #
     # Returns a `nil` if there isn't a program in use.
+    #
     # See: `Program.current?`
     def program? : Program?
       Program.current?(self)
@@ -350,6 +351,7 @@ module Gloop
     # Retrieves the current program in use.
     #
     # Returns a null-object (`Object.none`) if there isn't a program in use.
+    #
     # See: `Program.current`
     def program : Program
       Program.current(self)
