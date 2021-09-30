@@ -21,7 +21,6 @@ development_dependencies:
     version: ~> 3.3.2
   sdl:
     github: ysbaddaden/sdl.cr
-    version: ~> 0.1.0
 
 crystal: 1.1.0
 
