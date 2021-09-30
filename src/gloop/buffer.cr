@@ -139,7 +139,7 @@ module Gloop
     def self.delete(buffers : Enumerable(self))
       buffers.group_by(&.context).each do |context, subset|
         names = subset.map(&.to_unsafe)
-        context.gl.delete_buffers(buffers.size, names.to_unsafe)
+        context.gl.delete_buffers(names.size, names.to_unsafe)
       end
     end
 
