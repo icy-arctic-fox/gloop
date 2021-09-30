@@ -15,7 +15,7 @@ module Gloop
     # - OpenGL enum: `GL_VERTEX_ARRAY_BINDING`
     # - OpenGL version: 3.0
     @[GLFunction("glGetIntegerv", enum: "GL_VERTEX_ARRAY_BINDING", version: "3.0")]
-    protected class_parameter VertexArrayBinding, current_name : UInt32
+    protected class_parameter VertexArrayBinding, current_name : Name
 
     # Retrieves the currently bound vertex array.
     #
