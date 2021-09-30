@@ -15,7 +15,7 @@ module Gloop
     # - OpenGL enum: `GL_CURRENT_PROGRAM`
     # - OpenGL version: 2.0
     @[GLFunction("glGetIntegerv", enum: "GL_CURRENT_PROGRAM", version: "2.0")]
-    protected class_parameter CurrentProgram, current_program_name : UInt32
+    protected class_parameter CurrentProgram, current_name : Name
 
     # Retrieves the current program in use.
     #
@@ -27,10 +27,8 @@ module Gloop
     # - OpenGL enum: `GL_CURRENT_PROGRAM`
     # - OpenGL version: 2.0
     @[GLFunction("glGetIntegerv", enum: "GL_CURRENT_PROGRAM", version: "2.0")]
-    class_parameter(CurrentProgram, current?) do |name|
-      return if name.zero? # No active program.
-
-      new(context, name.to_u32!)
+    class_parameter(CurrentProgram, current?) do |value|
+      new(context, Name.new!(value)) unless value.zero?
     end
 
     # Retrieves the current program in use.
@@ -43,8 +41,8 @@ module Gloop
     # - OpenGL enum: `GL_CURRENT_PROGRAM`
     # - OpenGL version: 2.0
     @[GLFunction("glGetIntegerv", enum: "GL_CURRENT_PROGRAM", version: "2.0")]
-    class_parameter(CurrentProgram, current) do |name|
-      new(context, name.to_u32!)
+    class_parameter(CurrentProgram, current) do |value|
+      new(context, Name.new!(value))
     end
 
     # Checks if the program has been deleted.
@@ -189,7 +187,7 @@ module Gloop
     def shaders : Indexable(Shader)
       # Fetch the number of shaders and their names.
       count = shader_count
-      names = Slice(UInt32).new(count)
+      names = Slice(Name).new(count)
       gl.get_attached_shaders(to_unsafe, count, pointerof(count), names.to_unsafe)
 
       # Use the number of shaders reported by OpenGL, in case it returned less.
@@ -262,7 +260,7 @@ module Gloop
     # - OpenGL version: 2.0
     @[GLFunction("glUseProgram", version: "2.0")]
     def use
-      previous = self.class.current_program_name(context)
+      previous = self.class.current_name(context)
 
       begin
         yield
