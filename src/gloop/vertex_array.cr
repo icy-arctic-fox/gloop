@@ -52,7 +52,7 @@ module Gloop
     # - OpenGL function: `glCreateVertexArrays`
     # - OpenGL version: 4.5
     @[GLFunction("glCreateVertexArrays", version: "4.5")]
-    def self.create(context)
+    def self.create(context) : self
       name = uninitialized Name
       context.gl.create_vertex_arrays(1, pointerof(name))
       new(context, name)
@@ -66,10 +66,10 @@ module Gloop
     # - OpenGL function: `glCreateVertexArrays`
     # - OpenGL version: 4.5
     @[GLFunction("glCreateVertexArrays", version: "4.5")]
-    def self.create(context, count)
+    def self.create(context, count) : VertexArrayList
       names = Slice(Name).new(count)
       context.gl.create_vertex_arrays(count, names.to_unsafe)
-      names.map { |name| new(context, name) }
+      VertexArrayList.new(context, names)
     end
 
     # Generates a new vertex array.
@@ -82,7 +82,7 @@ module Gloop
     # - OpenGL function: `glGenVertexArrays`
     # - OpenGL version: 3.0
     @[GLFunction("glGenVertexArrays", version: "3.")]
-    def self.generate(context)
+    def self.generate(context) : self
       name = uninitialized Name
       context.gl.gen_vertex_arrays(1, pointerof(name))
       new(context, name)
@@ -98,10 +98,10 @@ module Gloop
     # - OpenGL function: `glGenVertexArrays`
     # - OpenGL version: 3.0
     @[GLFunction("glGenVertexArrays", version: "3.0")]
-    def self.generate(context, count)
+    def self.generate(context, count) : VertexArrayList
       names = Slice(Name).new(count)
       context.gl.gen_vertex_arrays(count, names.to_unsafe)
-      names.map { |name| new(context, name) }
+      VertexArrayList.new(context, names)
     end
 
     # Deletes this vertex array.
@@ -225,6 +225,18 @@ module Gloop
     @[GLFunction("glVertexArrayElementBuffer", version: "4.5")]
     def element_array_buffer=(buffer : Buffer)
       gl.vertex_array_element_buffer(to_unsafe, buffer.to_unsafe)
+    end
+  end
+
+  # Collection of vertex arrays belonging to the same context.
+  struct VertexArrayList < ObjectList(VertexArray)
+    # Deletes all vertex arrays in the list.
+    #
+    # - OpenGL function: `glDeleteVertexArrays`
+    # - OpenGL version: 3.0
+    @[GLFunction("glDeleteVertexArrays", version: "3.0")]
+    def delete
+      gl.delete_vertex_arrays(size, to_unsafe)
     end
   end
 end
