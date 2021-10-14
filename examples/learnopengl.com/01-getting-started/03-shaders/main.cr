@@ -48,10 +48,11 @@ if window.nil?
 end
 LibGLFW.make_context_current(window)
 LibGLFW.set_framebuffer_size_callback(window, ->framebuffer_size_callback)
+context = Gloop::Context.glfw
 
 # build and compile our shader program
 # ------------------------------------
-our_shader = Shader.new("shader.vs", "shader.fs") # you can name your shader files however you like
+our_shader = Shader.new(context, "shader.vs", "shader.fs") # you can name your shader files however you like
 
 # set up vertex data (and buffer(s)) and configure vertex attributes
 # ------------------------------------------------------------------
@@ -63,12 +64,12 @@ vertices = Float32.static_array(
 )
 
 LibGL.gen_vertex_arrays(1, out vao)
-vbo = Gloop::Buffer.generate
+vbo = context.generate_buffer
 # bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
 LibGL.bind_vertex_array(vao)
 
-Gloop::Buffers.array.bind(vbo)
-Gloop::Buffers.array.data(vertices, :static_draw)
+context.buffers.array.bind(vbo)
+context.buffers.array.data(vertices, :static_draw)
 
 # position attribute
 LibGL.vertex_attrib_pointer(0, 3, LibGL::VertexAttribPointerType::Float, LibGL::Boolean::False, 6 * sizeof(Float32), nil)
@@ -78,7 +79,7 @@ LibGL.vertex_attrib_pointer(1, 3, LibGL::VertexAttribPointerType::Float, LibGL::
 LibGL.enable_vertex_attrib_array(1)
 
 # note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-Gloop::Buffers.array.unbind
+context.buffers.array.unbind
 
 # You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
 # VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.

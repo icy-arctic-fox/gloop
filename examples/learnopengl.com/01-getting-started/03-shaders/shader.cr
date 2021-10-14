@@ -10,23 +10,23 @@ class Shader
 
   # constructor generates the shader on the fly
   # ------------------------------------------------------------------------
-  def initialize(vertex_path, fragment_path)
+  def initialize(context, vertex_path, fragment_path)
     # 1. retrieve the vertex/fragment source code from filePath
     v_shader_code = File.read(vertex_path)
     f_shader_code = File.read(fragment_path)
     # 2. compile shaders
     # vertex shader
-    vertex = Gloop::VertexShader.create
+    vertex = context.create_shader(:vertex)
     vertex.source = v_shader_code
     vertex.compile
     check_compile_errors(vertex)
     # fragment Shader
-    fragment = Gloop::FragmentShader.create
+    fragment = context.create_shader(:fragment)
     fragment.source = f_shader_code
     fragment.compile
     check_compile_errors(fragment)
     # shader Program
-    @program = Gloop::Program.create
+    @program = context.create_program
     @program.attach(vertex)
     @program.attach(fragment)
     @program.link
@@ -39,7 +39,7 @@ class Shader
   # activate the shader
   # ------------------------------------------------------------------------
   def use
-    @program.activate
+    @program.use
   end
 
   # utility uniform functions

@@ -65,11 +65,12 @@ if window.nil?
 end
 LibGLFW.make_context_current(window)
 LibGLFW.set_framebuffer_size_callback(window, ->framebuffer_size_callback)
+context = Gloop::Context.glfw
 
 # build and compile our shader program
 # ------------------------------------
 # vertex shader
-vertex_shader = Gloop::VertexShader.create
+vertex_shader = context.create_shader(:vertex)
 vertex_shader.source = VERTEX_SHADER_SOURCE
 vertex_shader.compile
 # check for shader compile errors
@@ -78,7 +79,7 @@ unless vertex_shader.compiled?
   puts vertex_shader.info_log
 end
 # fragment shader
-fragment_shader = Gloop::FragmentShader.create
+fragment_shader = context.create_shader(:fragment)
 fragment_shader.source = FRAGMENT_SHADER_SOURCE
 fragment_shader.compile
 # check for shader compile errors
@@ -87,7 +88,7 @@ unless fragment_shader.compiled?
   puts fragment_shader.info_log
 end
 # link shaders
-shader_program = Gloop::Program.create
+shader_program = context.create_program
 shader_program.attach(vertex_shader)
 shader_program.attach(fragment_shader)
 shader_program.link
@@ -112,22 +113,22 @@ indices = UInt32.static_array( # note that we start from 0!
   1, 2, 3                      # second Triangle
 )
 LibGL.gen_vertex_arrays(1, out vao)
-vbo = Gloop::Buffer.generate
-ebo = Gloop::Buffer.generate
+vbo = context.generate_buffer
+ebo = context.generate_buffer
 # bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
 LibGL.bind_vertex_array(vao)
 
-Gloop::Buffers.array.bind(vbo)
-Gloop::Buffers.array.data(vertices, :static_draw)
+context.buffers.array.bind(vbo)
+context.buffers.array.data(vertices, :static_draw)
 
-Gloop::Buffers.element_array.bind(ebo)
-Gloop::Buffers.element_array.data(indices, :static_draw)
+context.buffers.element_array.bind(ebo)
+context.buffers.element_array.data(indices, :static_draw)
 
 LibGL.vertex_attrib_pointer(0, 3, LibGL::VertexAttribPointerType::Float, LibGL::Boolean::False, 3 * sizeof(Float32), nil)
 LibGL.enable_vertex_attrib_array(0)
 
 # note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-Gloop::Buffers.array.unbind
+context.buffers.array.unbind
 
 # remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
 # LibGL.bind_buffer(LibGL::BufferTargetARB::ElementArrayBuffer, 0)
@@ -152,7 +153,7 @@ while LibGLFW.window_should_close(window).false?
   LibGL.clear(LibGL::ClearBufferMask::ColorBuffer)
 
   # draw our first triangle
-  shader_program.activate
+  shader_program.use
   LibGL.bind_vertex_array(vao) # seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
   # LibGL.draw_arrays(LibGL::PrimitiveType::Triangles, 0, 6)
   LibGL.draw_elements(LibGL::PrimitiveType::Triangles, 6, LibGL::DrawElementsType::UnsignedInt, nil)
