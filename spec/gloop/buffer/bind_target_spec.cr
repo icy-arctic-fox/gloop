@@ -272,6 +272,52 @@ Spectator.describe Gloop::Buffer::BindTarget do
     end
   end
 
+  describe "#clear" do
+    before_each { target.data = Bytes[0, 1, 2, 3, 4, 5, 6, 7] }
+
+    it "sets the contents of the buffer to zero" do
+      target.clear
+      expect(&.data).to eq(Bytes[0, 0, 0, 0, 0, 0, 0, 0])
+    end
+
+    context "with a single value" do
+      it "sets the contents of the buffer (Int8)" do
+        target.clear(3_i8)
+        expect(&.data).to eq(Bytes[3, 3, 3, 3, 3, 3, 3, 3])
+      end
+
+      it "sets the contents of the buffer (UInt8)" do
+        target.clear(200_u8)
+        expect(&.data).to eq(Bytes[200, 200, 200, 200, 200, 200, 200, 200])
+      end
+
+      it "sets the contents of the buffer (Int16)" do
+        target.clear(258_i16)
+        expect(&.data).to eq(Bytes[2, 1, 2, 1, 2, 1, 2, 1])
+      end
+
+      it "sets the contents of the buffer (UInt16)" do
+        target.clear(4128_u16)
+        expect(&.data).to eq(Bytes[32, 16, 32, 16, 32, 16, 32, 16])
+      end
+
+      it "sets the contents of the buffer (Int32)" do
+        target.clear(16909060_i32)
+        expect(&.data).to eq(Bytes[4, 3, 2, 1, 4, 3, 2, 1])
+      end
+
+      it "sets the contents of the buffer (UInt32)" do
+        target.clear(270544960_u32)
+        expect(&.data).to eq(Bytes[64, 48, 32, 16, 64, 48, 32, 16])
+      end
+
+      it "sets the contents of the buffer (Float32)" do
+        target.clear(1.234_f32)
+        expect(&.data).to eq(Bytes[182, 243, 157, 63, 182, 243, 157, 63])
+      end
+    end
+  end
+
   describe "#map" do
     let(data) { Bytes[10, 20, 30, 40, 50, 60, 70, 80] }
     before_each { target.data = data }

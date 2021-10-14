@@ -403,6 +403,41 @@ module Gloop
         self.class.copy(target, self, read_offset, write_offset, size)
       end
 
+      # Sets the contents of the buffer to zero.
+      #
+      # - OpenGL function: `glClearBufferData`
+      # - OpenGL version: 4.3
+      @[GLFunction("glClearBufferData", version: "4.3")]
+      def clear
+        internal_format = LibGL::SizedInternalFormat::R8
+        format = LibGL::PixelFormat::Red
+        type = LibGL::PixelType::Byte
+        data = Pointer(Void).null
+        gl.clear_buffer_data(storage_target, internal_format, format, type, data)
+      end
+
+      {% for combo in [%i[Int8 Byte R8I], %i[UInt8 UnsignedByte R8UI],
+                       %i[Int16 Short R16I], %i[UInt16 UnsignedShort R16UI],
+                       %i[Int32 Int R32I], %i[UInt32 UnsignedInt R32UI],
+                       %i[Float32 Float R32F]] %}
+        {% type, value, internal_format = combo %}
+        # Clears the contents of the buffer to a single value.
+        #
+        # The value is repeated throughout the buffer.
+        # Ensure the correct numerical type is used.
+        #
+        # - OpenGL function: `glClearNamedBufferData`
+        # - OpenGL version: 4.5
+        @[GLFunction("glClearNamedBufferData", version: "4.5")]
+        def clear(value : {{type.id}})
+          internal_format = LibGL::SizedInternalFormat::{{internal_format.id}}
+          format = LibGL::PixelFormat::Red
+          type = LibGL::PixelType::{{value.id}}
+          data = pointerof(value).as(Void*)
+          gl.clear_buffer_data(storage_target, internal_format, format, type, data)
+        end
+      {% end %}
+
       # Maps the buffer's memory into client space.
       #
       # See: `Buffer#map`
