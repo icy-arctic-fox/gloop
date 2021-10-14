@@ -37,5 +37,5 @@ end
 
 # Creates an OpenGL context.
 def create_context
-  Gloop::Context.sdl
+  Gloop::Context.from_sdl
 end

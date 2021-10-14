@@ -31,9 +31,9 @@ module Gloop
     # LibGLFW.make_context_current(window)
     #
     # # Create Gloop context from GLFW.
-    # context = Gloop::Context.glfw
+    # context = Gloop::Context.from_glfw
     # ```
-    loader LibGLFW, glfw do |name|
+    loader LibGLFW, from_glfw do |name|
       LibGLFW.get_proc_address(name)
     end
 
@@ -50,9 +50,9 @@ module Gloop
     # LibSDL.gl_make_current(window, context)
     #
     # # Create Gloop context from SDL.
-    # context = Gloop::Context.sdl
+    # context = Gloop::Context.from_sdl
     # ```
-    loader LibSDL, sdl do |name|
+    loader LibSDL, from_sdl do |name|
       LibSDL.gl_get_proc_address(name)
     end
   end
