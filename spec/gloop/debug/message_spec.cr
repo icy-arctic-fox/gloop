@@ -19,8 +19,17 @@ Spectator.describe Gloop::Debug::Message do
   end
 
   describe "#insert" do
-    before_each { debug.clear }
-    after_each { debug.clear_on_message }
+    before_each do
+      debug.enable
+      debug.enable_sync
+      debug.clear
+    end
+
+    after_each do
+      debug.clear
+      debug.clear_on_message
+      debug.disable
+    end
 
     it "logs the message" do
       received = nil.as(Gloop::Debug::Message?)
