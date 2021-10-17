@@ -4,6 +4,7 @@ require "./shader/*"
 module Gloop
   # Base type for all shaders.
   # Encapsulates functionality for working with a stage of the graphics processing pipeline.
+  #
   # See: https://www.khronos.org/opengl/wiki/Shader
   struct Shader < Object
     include Parameters

@@ -4,6 +4,7 @@ require "./contextual"
 require "./size"
 
 module Gloop
+  # Reference to all buffer binding targets for a context.
   struct Buffers
     include Contextual
 
