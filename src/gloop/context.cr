@@ -55,7 +55,7 @@ module Gloop
     # - OpenGL function: `glGetString`
     # - OpenGL enum: `GL_VENDOR`
     # - OpenGL version: 2.0
-    @[GLFunction("glGetString", enum: "GL_VENDOR")]
+    @[GLFunction("glGetString", enum: "GL_VENDOR", version: "2.0")]
     parameter Vendor, vendor : String
 
     # Retrieves a string containing the name of the renderer.
@@ -66,7 +66,7 @@ module Gloop
     # - OpenGL function: `glGetString`
     # - OpenGL enum: `GL_RENDERER`
     # - OpenGL version: 2.0
-    @[GLFunction("glGetString", enum: "GL_RENDERER")]
+    @[GLFunction("glGetString", enum: "GL_RENDERER", version: "2.0")]
     parameter Renderer, renderer : String
 
     # Retrieves a version or release number.
@@ -82,7 +82,7 @@ module Gloop
     # - OpenGL function: `glGetString`
     # - OpenGL enum: `GL_VERSION`
     # - OpenGL version: 2.0
-    @[GLFunction("glGetString", enum: "GL_VERSION")]
+    @[GLFunction("glGetString", enum: "GL_VERSION", version: "2.0")]
     parameter Version, version : String
 
     # Retrieves a version or release number for the shading language (GLSL).
@@ -98,7 +98,7 @@ module Gloop
     # - OpenGL function: `glGetString`
     # - OpenGL enum: `GL_SHADING_LANGUAGE_VERSION`
     # - OpenGL version: 2.0
-    @[GLFunction("glGetString", enum: "GL_SHADING_LANGUAGE_VERSION")]
+    @[GLFunction("glGetString", enum: "GL_SHADING_LANGUAGE_VERSION", version: "2.0")]
     parameter ShadingLanguageVersion, shading_language_version : String
 
     # Constructs a reference to an existing context with pre-loaded functions.
