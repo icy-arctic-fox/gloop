@@ -124,7 +124,7 @@ module Gloop
     # - OpenGL version: 2.0
     @[GLFunction("glGetVertexAttribPointerv", enum: "GL_VERTEX_ATTRIB_ARRAY_POINTER", version: "2.0")]
     def address : Size
-      Size.new(pointer.address)
+      Size.new(data_pointer.address)
     end
 
     # Retrieves the pointer within buffer data to the first value of the attribute.
@@ -133,7 +133,7 @@ module Gloop
     # - OpenGL enum: `GL_VERTEX_ATTRIB_ARRAY_POINTER`
     # - OpenGL version: 2.0
     @[GLFunction("glGetVertexAttribPointerv", enum: "GL_VERTEX_ATTRIB_ARRAY_POINTER", version: "2.0")]
-    def pointer : Void*
+    def data_pointer : Void*
       pname = LibGL::VertexAttribPointerPropertyARB::VertexAttribArrayPointer
       pointer = uninitialized Void*
       gl.get_vertex_attrib_pointer_v(@index, pname, pointerof(pointer))
@@ -218,7 +218,7 @@ module Gloop
     end
 
     # Retrieves all format information about the attribute.
-    def pointer_format : AttributePointer
+    def pointer : AttributePointer
       case
       when integer? then IntAttributePointer.new(size, type.unsafe_as(IntAttributePointer::Type), stride, address)
       when float64? then Float64AttributePointer.new(size, stride, address)

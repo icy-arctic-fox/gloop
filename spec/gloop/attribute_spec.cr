@@ -258,8 +258,8 @@ Spectator.describe Gloop::Attribute do
     end
   end
 
-  describe "#pointer_format" do
-    subject { attribute.pointer_format }
+  describe "#pointer" do
+    subject { attribute.pointer }
     let(buffer) { Gloop::Buffer.generate(context) }
 
     before_each { context.buffers.array.bind(buffer) }
