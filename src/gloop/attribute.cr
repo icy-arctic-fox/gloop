@@ -1,7 +1,10 @@
 require "./contextual"
 require "./float32_attribute_format"
+require "./float32_attribute_pointer"
 require "./float64_attribute_format"
+require "./float64_attribute_pointer"
 require "./int_attribute_format"
+require "./int_attribute_pointer"
 require "./vertex_array/parameters"
 
 module Gloop
@@ -112,6 +115,29 @@ module Gloop
       gl.disable_vertex_attrib_array(@index)
     end
 
+    # Retrieves the offset within buffer data to the first value of the attribute.
+    #
+    # - OpenGL function: `glGetVertexAttribPointerv`
+    # - OpenGL enum: `GL_VERTEX_ATTRIB_ARRAY_POINTER`
+    # - OpenGL version: 2.0
+    @[GLFunction("glGetVertexAttribPointerv", enum: "GL_VERTEX_ATTRIB_ARRAY_POINTER", version: "2.0")]
+    def address : Size
+      Size.new(pointer.address)
+    end
+
+    # Retrieves the pointer within buffer data to the first value of the attribute.
+    #
+    # - OpenGL function: `glGetVertexAttribPointerv`
+    # - OpenGL enum: `GL_VERTEX_ATTRIB_ARRAY_POINTER`
+    # - OpenGL version: 2.0
+    @[GLFunction("glGetVertexAttribPointerv", enum: "GL_VERTEX_ATTRIB_ARRAY_POINTER", version: "2.0")]
+    def pointer : Void*
+      pname = LibGL::VertexAttribPointerPropertyARB::VertexAttribArrayPointer
+      pointer = uninitialized Void*
+      gl.get_vertex_attrib_pointer_v(@index, pname, pointerof(pointer))
+      pointer
+    end
+
     # Specifies the format of the attribute.
     #
     # The data will be 32-bit floating-point values on the GPU.
@@ -120,8 +146,7 @@ module Gloop
     # - OpenGL version: 4.3
     @[GLFunction("glVertexAttribFormat", version: "4.3")]
     def float32_format(size : Int32, type : Float32AttributeFormat::Type, normalized : Bool, offset : UInt32)
-      bool = normalized ? LibGL::Boolean::True : LibGL::Boolean::False
-      gl.vertex_attrib_format(@index, size, type.to_unsafe, bool, offset)
+      gl.vertex_attrib_format(@index, size, type.to_unsafe, gl_bool(normalized), offset)
     end
 
     # Specifies the format of the attribute.
@@ -144,6 +169,41 @@ module Gloop
     @[GLFunction("glVertexAttribLFormat", version: "4.3")]
     def float64_format(size : Int32, offset : UInt32, type : Float64AttributeFormat::Type = :float64)
       gl.vertex_attrib_l_format(@index, size, type.to_unsafe, offset)
+    end
+
+    # Specifies a pointer to attribute data.
+    #
+    # The data will be 32-bit floating-point values on the GPU.
+    #
+    # - OpenGL function: `glVertexAttribPointer`
+    # - OpenGL version: 2.0
+    @[GLFunction("glVertexAttribPointer", version: "2.0")]
+    def float32_pointer(size : Int32, type : Float32AttributePointer::Type, normalized : Bool,
+                        stride : Int32 = 0, address : Size = 0)
+      gl.vertex_attrib_pointer(@index, size, type.to_unsafe, gl_bool(normalized), stride, gl_pointer(address))
+    end
+
+    # Specifies a pointer to attribute data.
+    #
+    # The data will be integer values on the GPU.
+    #
+    # - OpenGL function: `glVertexAttribIPointer`
+    # - OpenGL version: 3.0
+    @[GLFunction("glVertexAttribIPointer", version: "3.0")]
+    def int_pointer(size : Int32, type : IntAttributePointer::Type, stride : Int32 = 0, address : Size = 0)
+      gl.vertex_attrib_i_pointer(@index, size, type.to_unsafe, stride, gl_pointer(address))
+    end
+
+    # Specifies a pointer to attribute data.
+    #
+    # The data will be 64-bit floating-point values on the GPU.
+    #
+    # - OpenGL function: `glVertexAttribLPointer`
+    # - OpenGL version: 4.1
+    @[GLFunction("glVertexAttribLPointer", version: "4.1")]
+    def float64_pointer(size : Int32, stride : Int32 = 0, address : Size = 0,
+                        type : Float64AttributePointer::Type = :float64)
+      gl.vertex_attrib_l_pointer(@index, size, type.to_unsafe, stride, gl_pointer(address))
     end
 
     # Sets the format of the attribute.
@@ -177,6 +237,49 @@ module Gloop
     @[GLFunction("glVertexAttribLFormat", version: "4.3")]
     def format=(format : Float64AttributeFormat)
       float64_format(format.size, format.offset, format.type)
+    end
+
+    # Specifies a pointer to attribute data.
+    #
+    # The data will be 32-bit floating-point values on the GPU.
+    #
+    # - OpenGL function: `glVertexAttribPointer`
+    # - OpenGL version: 2.0
+    @[GLFunction("glVertexAttribPointer", version: "2.0")]
+    def pointer=(pointer : Float32AttributePointer)
+      float32_pointer(pointer.size, pointer.type, pointer.normalized?, pointer.stride, pointer.address)
+    end
+
+    # Specifies a pointer to attribute data.
+    #
+    # The data will be integer values on the GPU.
+    #
+    # - OpenGL function: `glVertexAttribIPointer`
+    # - OpenGL version: 3.0
+    @[GLFunction("glVertexAttribIPointer", version: "3.0")]
+    def pointer=(pointer : IntAttributePointer)
+      int_pointer(pointer.size, pointer.type, pointer.stride, pointer.address)
+    end
+
+    # Specifies a pointer to attribute data.
+    #
+    # The data will be 64-bit floating-point values on the GPU.
+    #
+    # - OpenGL function: `glVertexAttribLPointer`
+    # - OpenGL version: 4.1
+    @[GLFunction("glVertexAttribLPointer", version: "4.1")]
+    def pointer=(pointer : Float64AttributePointer)
+      float64_pointer(pointer.size, pointer.stride, pointer.address, pointer.type)
+    end
+
+    # Converts a Crystal boolean to an OpenGL boolean enum.
+    private def gl_bool(flag)
+      flag ? LibGL::Boolean::True : LibGL::Boolean::False
+    end
+
+    # Converts an integer address to a pointer (of sorts).
+    private def gl_pointer(address)
+      Pointer(Void).new(address)
     end
   end
 end
