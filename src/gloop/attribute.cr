@@ -1,4 +1,7 @@
 require "./contextual"
+require "./float32_attribute_format"
+require "./float64_attribute_format"
+require "./int_attribute_format"
 require "./vertex_array/parameters"
 
 module Gloop
@@ -52,7 +55,7 @@ module Gloop
     # - OpenGL function: `glVertexAttribFormat`
     # - OpenGL version: 4.3
     @[GLFunction("glVertexAttribFormat", version: "4.3")]
-    def float32_format(size : Int32, type : AttributeFormat::Type, normalized : Bool, offset : UInt32)
+    def float32_format(size : Int32, type : Float32AttributeFormat::Type, normalized : Bool, offset : UInt32)
       bool = normalized ? LibGL::Boolean::True : LibGL::Boolean::False
       gl.vertex_attrib_format(@index, size, type.to_unsafe, bool, offset)
     end
@@ -64,7 +67,7 @@ module Gloop
     # - OpenGL function: `glVertexAttribIFormat`
     # - OpenGL version: 4.3
     @[GLFunction("glVertexAttribIFormat", version: "4.3")]
-    def int_format(size : Int32, type : AttributeFormat::Type, offset : UInt32)
+    def int_format(size : Int32, type : IntAttributeFormat::Type, offset : UInt32)
       gl.vertex_attrib_i_format(@index, size, type.to_unsafe, offset)
     end
 

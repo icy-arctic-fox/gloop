@@ -1,5 +1,4 @@
 require "../contextual"
-require "../attribute_format"
 require "../float32_attribute_format"
 require "../float64_attribute_format"
 require "../int_attribute_format"
@@ -69,7 +68,7 @@ module Gloop
       # - OpenGL enum: `GL_VERTEX_ATTRIB_ARRAY_TYPE`
       # - OpenGL version: 4.5
       @[GLFunction("glGetVertexArrayIndexediv", enum: "GL_VERTEX_ATTRIB_ARRAY_TYPE", version: "4.5")]
-      array_attribute_parameter VertexAttribArrayType, type : AttributeFormat::Type
+      array_attribute_parameter VertexAttribArrayType, type : Float32AttributeFormat::Type
 
       # Returns the frequency divisor for instanced rendering.
       #
@@ -122,7 +121,7 @@ module Gloop
       # - OpenGL function: `glVertexArrayAttribFormat`
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribFormat", version: "4.5")]
-      def float32_format(size : Int32, type : AttributeFormat::Type, normalized : Bool, offset : UInt32)
+      def float32_format(size : Int32, type : Float32AttributeFormat::Type, normalized : Bool, offset : UInt32)
         bool = normalized ? LibGL::Boolean::True : LibGL::Boolean::False
         gl.vertex_array_attrib_format(@name, @index, size, type.to_unsafe, bool, offset)
       end
@@ -134,7 +133,7 @@ module Gloop
       # - OpenGL function: `glVertexArrayAttribIFormat`
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribIFormat", version: "4.5")]
-      def int_format(size : Int32, type : AttributeFormat::Type, offset : UInt32)
+      def int_format(size : Int32, type : IntAttributeFormat::Type, offset : UInt32)
         gl.vertex_array_attrib_i_format(@name, @index, size, type.to_unsafe, offset)
       end
 
@@ -146,7 +145,7 @@ module Gloop
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribLFormat", version: "4.5")]
       def float64_format(size : Int32, offset : UInt32)
-        type = AttributeFormat::Type::Float64
+        type = Float64AttributeFormat::Type::Float64
         gl.vertex_array_attrib_l_format(@name, @index, size, type.to_unsafe, offset)
       end
 

@@ -38,7 +38,7 @@ Spectator.describe Gloop::VertexArray::Attribute do
         expect(&.float64?).to be_false
         expect(&.size).to eq(3)
         expect(&.stride).to eq(0)
-        expect(&.type).to eq(Gloop::AttributeFormat::Type::Int16)
+        expect(&.type).to eq(Gloop::Float32AttributeFormat::Type::Int16)
         expect(&.offset).to eq(16)
       end
     end
@@ -53,7 +53,7 @@ Spectator.describe Gloop::VertexArray::Attribute do
         expect(&.float64?).to be_false
         expect(&.size).to eq(4)
         expect(&.stride).to eq(0)
-        expect(&.type).to eq(Gloop::AttributeFormat::Type::Int8)
+        expect(&.type).to eq(Gloop::Float32AttributeFormat::Type::Int8)
         expect(&.offset).to eq(16)
       end
     end
@@ -68,7 +68,7 @@ Spectator.describe Gloop::VertexArray::Attribute do
         expect(&.float64?).to be_true
         expect(&.size).to eq(2)
         expect(&.stride).to eq(0)
-        expect(&.type).to eq(Gloop::AttributeFormat::Type::Float64)
+        expect(&.type).to eq(Gloop::Float32AttributeFormat::Type::Float64)
         expect(&.offset).to eq(32)
       end
     end
