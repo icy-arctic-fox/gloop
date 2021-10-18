@@ -28,4 +28,49 @@ Spectator.describe Gloop::VertexArray::Attribute do
       expect(&.disable).to change(&.enabled?).from(true).to(false)
     end
   end
+
+  describe "#float32_format" do
+    it "sets the format of the attribute" do
+      attribute.float32_format(3, :int16, true, 16_u32)
+      aggregate_failures "attribute format" do
+        expect(&.normalized?).to be_true
+        expect(&.integer?).to be_false
+        expect(&.float64?).to be_false
+        expect(&.size).to eq(3)
+        expect(&.stride).to eq(0)
+        expect(&.type).to eq(Gloop::AttributeFormat::Type::Int16)
+        expect(&.offset).to eq(16)
+      end
+    end
+  end
+
+  describe "#int_format" do
+    it "sets the format of the attribute" do
+      attribute.int_format(4, :int8, 16_u32)
+      aggregate_failures "attribute format" do
+        expect(&.normalized?).to be_false
+        expect(&.integer?).to be_true
+        expect(&.float64?).to be_false
+        expect(&.size).to eq(4)
+        expect(&.stride).to eq(0)
+        expect(&.type).to eq(Gloop::AttributeFormat::Type::Int8)
+        expect(&.offset).to eq(16)
+      end
+    end
+  end
+
+  describe "#float64_format" do
+    it "sets the format of the attribute" do
+      attribute.float64_format(2, 32_u32)
+      aggregate_failures "attribute format" do
+        expect(&.normalized?).to be_false
+        expect(&.integer?).to be_false
+        expect(&.float64?).to be_true
+        expect(&.size).to eq(2)
+        expect(&.stride).to eq(0)
+        expect(&.type).to eq(Gloop::AttributeFormat::Type::Float64)
+        expect(&.offset).to eq(32)
+      end
+    end
+  end
 end

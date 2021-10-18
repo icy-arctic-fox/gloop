@@ -44,5 +44,73 @@ module Gloop
     def disable
       gl.disable_vertex_attrib_array(@index)
     end
+
+    # Specifies the format of the attribute.
+    #
+    # The data will be 32-bit floating-point values on the GPU.
+    #
+    # - OpenGL function: `glVertexAttribFormat`
+    # - OpenGL version: 4.3
+    @[GLFunction("glVertexAttribFormat", version: "4.3")]
+    def float32_format(size : Int32, type : AttributeFormat::Type, normalized : Bool, offset : UInt32)
+      bool = normalized ? LibGL::Boolean::True : LibGL::Boolean::False
+      gl.vertex_attrib_format(@index, size, type.to_unsafe, bool, offset)
+    end
+
+    # Specifies the format of the attribute.
+    #
+    # The data will be integer values on the GPU.
+    #
+    # - OpenGL function: `glVertexAttribIFormat`
+    # - OpenGL version: 4.3
+    @[GLFunction("glVertexAttribIFormat", version: "4.3")]
+    def int_format(size : Int32, type : AttributeFormat::Type, offset : UInt32)
+      gl.vertex_attrib_i_format(@index, size, type.to_unsafe, offset)
+    end
+
+    # Specifies the format of the attribute.
+    #
+    # The data will be 64-bit floating-point values on the GPU.
+    #
+    # - OpenGL function: `glVertexAttribLFormat`
+    # - OpenGL version: 4.3
+    @[GLFunction("glVertexAttribLFormat", version: "4.3")]
+    def float64_format(size : Int32, offset : UInt32)
+      type = AttributeFormat::Type::Float64
+      gl.vertex_attrib_l_format(@name, @index, size, type.to_unsafe, offset)
+    end
+
+    # Sets the format of the attribute.
+    #
+    # The data will be 32-bit floating-point values on the GPU.
+    #
+    # - OpenGL function: `glVertexAttribFormat`
+    # - OpenGL version: 4.5
+    @[GLFunction("glVertexAttribFormat", version: "4.5")]
+    def format=(format : Float32AttributeFormat)
+      self.format(format.size, format.type, format.normalized, format.offset)
+    end
+
+    # Sets the format of the attribute.
+    #
+    # The data will be integer values on the GPU.
+    #
+    # - OpenGL function: `glVertexAttribIFormat`
+    # - OpenGL version: 4.5
+    @[GLFunction("glVertexAttribIFormat", version: "4.5")]
+    def format=(format : IntAttributeFormat)
+      self.format(format.size, format.type, format.offset)
+    end
+
+    # Sets the format of the attribute.
+    #
+    # The data will be 64-bit floating-point values on the GPU.
+    #
+    # - OpenGL function: `glVertexAttribLFormat`
+    # - OpenGL version: 4.5
+    @[GLFunction("glVertexAttribLFormat", version: "4.5")]
+    def format=(format : Float64AttributeFormat)
+      self.format(format.size, format.offset)
+    end
   end
 end
