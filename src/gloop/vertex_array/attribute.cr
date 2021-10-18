@@ -157,7 +157,7 @@ module Gloop
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribFormat", version: "4.5")]
       def format=(format : Float32AttributeFormat)
-        self.format(format.size, format.type, format.normalized, format.offset)
+        float32_format(format.size, format.type, format.normalized?, format.offset)
       end
 
       # Sets the format of the attribute.
@@ -168,7 +168,7 @@ module Gloop
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribIFormat", version: "4.5")]
       def format=(format : IntAttributeFormat)
-        self.format(format.size, format.type, format.offset)
+        int_format(format.size, format.type, format.offset)
       end
 
       # Sets the format of the attribute.
@@ -179,7 +179,7 @@ module Gloop
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribLFormat", version: "4.5")]
       def format=(format : Float64AttributeFormat)
-        self.format(format.size, format.offset)
+        float64_format(format.size, format.offset)
       end
     end
   end
