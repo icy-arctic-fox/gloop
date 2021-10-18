@@ -144,8 +144,7 @@ module Gloop
       # - OpenGL function: `glVertexArrayAttribLFormat`
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribLFormat", version: "4.5")]
-      def float64_format(size : Int32, offset : UInt32)
-        type = Float64AttributeFormat::Type::Float64
+      def float64_format(size : Int32, offset : UInt32, type : Float64AttributeFormat::Type = :float64)
         gl.vertex_array_attrib_l_format(@name, @index, size, type.to_unsafe, offset)
       end
 
@@ -179,7 +178,7 @@ module Gloop
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribLFormat", version: "4.5")]
       def format=(format : Float64AttributeFormat)
-        float64_format(format.size, format.offset)
+        float64_format(format.size, format.offset, format.type)
       end
     end
   end
