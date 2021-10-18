@@ -31,4 +31,11 @@ module Gloop
       Attribute.new(@context, index.to_u32!)
     end
   end
+
+  struct Context
+    # Information for all attributes in the bound vertex array.
+    def attributes : Attributes
+      Attributes.new(self)
+    end
+  end
 end

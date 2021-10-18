@@ -47,4 +47,13 @@ module Gloop
       end
     end
   end
+
+  struct Context
+    # Always references the currently bound vertex array.
+    #
+    # See: `VertexArray::Current`
+    def bound_vertex_array : VertexArray::Current
+      VertexArray::Current.new(self)
+    end
+  end
 end
