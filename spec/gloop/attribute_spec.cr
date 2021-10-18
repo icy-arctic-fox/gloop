@@ -276,4 +276,10 @@ Spectator.describe Gloop::Attribute do
       )
     end
   end
+
+  describe "#divisor=" do
+    it "sets the divisor" do
+      expect { attribute.divisor = 1 }.to change(&.divisor).to(1)
+    end
+  end
 end

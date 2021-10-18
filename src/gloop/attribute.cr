@@ -80,16 +80,16 @@ module Gloop
     #
     # - OpenGL function: `glGetVertexAttribiv`
     # - OpenGL enum: `GL_VERTEX_ATTRIB_ARRAY_DIVISOR`
-    # - OpenGL version: 4.5
-    @[GLFunction("glGetVertexAttribiv", enum: "GL_VERTEX_ATTRIB_ARRAY_DIVISOR", version: "4.5")]
+    # - OpenGL version: 3.2
+    @[GLFunction("glGetVertexAttribiv", enum: "GL_VERTEX_ATTRIB_ARRAY_DIVISOR", version: "3.2")]
     attribute_parameter VertexAttribArrayDivisor, divisor
 
     # Retrieves the number of bytes from the start of the vertex buffer data to the first instance of this attribute.
     #
     # - OpenGL function: `glGetVertexAttribiv`
     # - OpenGL enum: `GL_VERTEX_ATTRIB_ARRAY_RELATIVE_OFFSET`
-    # - OpenGL version: 4.5
-    @[GLFunction("glGetVertexAttribiv", enum: "GL_VERTEX_ATTRIB_ARRAY_RELATIVE_OFFSET", version: "4.5")]
+    # - OpenGL version: 4.3
+    @[GLFunction("glGetVertexAttribiv", enum: "GL_VERTEX_ATTRIB_ARRAY_RELATIVE_OFFSET", version: "4.3")]
     attribute_parameter VertexAttribRelativeOffset, offset : UInt32
 
     # Index of the attribute.
@@ -290,6 +290,15 @@ module Gloop
     @[GLFunction("glVertexAttribLPointer", version: "4.1")]
     def pointer=(pointer : Float64AttributePointer)
       float64_pointer(pointer.size, pointer.stride, pointer.address, pointer.type)
+    end
+
+    # Sets the rate at which attribute values advance during instances rendering.
+    #
+    # - OpenGL function: `glVertexAttribDivisor`
+    # - OpenGL version: 3.2
+    @[GLFunction("glVertexAttribDivisor", version: "3.2")]
+    def divisor=(divisor : UInt32)
+      gl.vertex_attrib_divisor(@index, divisor)
     end
 
     # Converts a Crystal boolean to an OpenGL boolean enum.
