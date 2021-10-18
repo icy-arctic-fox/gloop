@@ -1,3 +1,5 @@
+require "./attribute_format"
+require "./attribute_pointer"
 require "./contextual"
 require "./float32_attribute_format"
 require "./float32_attribute_pointer"
@@ -88,7 +90,7 @@ module Gloop
     # - OpenGL enum: `GL_VERTEX_ATTRIB_ARRAY_RELATIVE_OFFSET`
     # - OpenGL version: 4.5
     @[GLFunction("glGetVertexAttribiv", enum: "GL_VERTEX_ATTRIB_ARRAY_RELATIVE_OFFSET", version: "4.5")]
-    attribute_parameter VertexAttribRelativeOffset, offset
+    attribute_parameter VertexAttribRelativeOffset, offset : UInt32
 
     # Index of the attribute.
     getter index : UInt32
@@ -171,6 +173,15 @@ module Gloop
       gl.vertex_attrib_l_format(@index, size, type.to_unsafe, offset)
     end
 
+    # Retrieves all format information about the attribute.
+    def format : AttributeFormat
+      case
+      when integer? then IntAttributeFormat.new(size, type.unsafe_as(IntAttributeFormat::Type), offset)
+      when float64? then Float64AttributeFormat.new(size, offset)
+      else               Float32AttributeFormat.new(size, type, normalized?, offset)
+      end
+    end
+
     # Specifies a pointer to attribute data.
     #
     # The data will be 32-bit floating-point values on the GPU.
@@ -204,6 +215,15 @@ module Gloop
     def float64_pointer(size : Int32, stride : Int32 = 0, address : Size = 0,
                         type : Float64AttributePointer::Type = :float64)
       gl.vertex_attrib_l_pointer(@index, size, type.to_unsafe, stride, gl_pointer(address))
+    end
+
+    # Retrieves all format information about the attribute.
+    def pointer_format : AttributePointer
+      case
+      when integer? then IntAttributePointer.new(size, type.unsafe_as(IntAttributePointer::Type), stride, address)
+      when float64? then Float64AttributePointer.new(size, stride, address)
+      else               Float32AttributePointer.new(size, type.unsafe_as(Float32AttributePointer::Type), normalized?, stride, address)
+      end
     end
 
     # Sets the format of the attribute.

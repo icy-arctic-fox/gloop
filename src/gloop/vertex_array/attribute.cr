@@ -1,3 +1,4 @@
+require "../attribute_format"
 require "../contextual"
 require "../float32_attribute_format"
 require "../float64_attribute_format"
@@ -84,7 +85,7 @@ module Gloop
       # - OpenGL enum: `GL_VERTEX_ATTRIB_ARRAY_RELATIVE_OFFSET`
       # - OpenGL version: 4.5
       @[GLFunction("glGetVertexArrayIndexediv", enum: "GL_VERTEX_ATTRIB_ARRAY_RELATIVE_OFFSET", version: "4.5")]
-      array_attribute_parameter VertexAttribRelativeOffset, offset
+      array_attribute_parameter VertexAttribRelativeOffset, offset : UInt32
 
       # Name of the vertex array.
       private getter name : Name
@@ -146,6 +147,15 @@ module Gloop
       @[GLFunction("glVertexArrayAttribLFormat", version: "4.5")]
       def float64_format(size : Int32, offset : UInt32, type : Float64AttributeFormat::Type = :float64)
         gl.vertex_array_attrib_l_format(@name, @index, size, type.to_unsafe, offset)
+      end
+
+      # Retrieves all format information about the attribute.
+      def format : AttributeFormat
+        case
+        when integer? then IntAttributeFormat.new(size, type.unsafe_as(IntAttributeFormat::Type), offset)
+        when float64? then Float64AttributeFormat.new(size, offset)
+        else               Float32AttributeFormat.new(size, type, normalized?, offset)
+        end
       end
 
       # Sets the format of the attribute.

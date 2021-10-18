@@ -191,7 +191,7 @@ Spectator.describe Gloop::Attribute do
     before_each { context.buffers.array.bind(buffer) }
     after_each { buffer.delete }
 
-    context "with Float32AttributeFormat" do
+    context "with Float32AttributePointer" do
       let(pointer) { Gloop::Float32AttributePointer.new(3, :int16, true, 128, 16) }
 
       it "sets the format of the attribute" do
@@ -208,7 +208,7 @@ Spectator.describe Gloop::Attribute do
       end
     end
 
-    context "with IntAttributeFormat" do
+    context "with IntAttributePointer" do
       let(pointer) { Gloop::IntAttributePointer.new(4, :int8, 128, 16) }
 
       it "sets the format of the attribute" do
@@ -225,7 +225,7 @@ Spectator.describe Gloop::Attribute do
       end
     end
 
-    context "with Float64AttributeFormat" do
+    context "with Float64AttributePointer" do
       let(pointer) { Gloop::Float64AttributePointer.new(2, 128, 32) }
 
       it "sets the format of the attribute" do
@@ -240,6 +240,40 @@ Spectator.describe Gloop::Attribute do
           expect(&.address).to eq(32)
         end
       end
+    end
+  end
+
+  describe "#format" do
+    subject { attribute.format }
+
+    before_each { attribute.int_format(4, :int8, 16_u32) }
+
+    it "retrieves the format of the attribute" do
+      is_expected.to be_a(Gloop::IntAttributeFormat)
+      is_expected.to have_attributes(
+        size: 4,
+        type: Gloop::IntAttributeFormat::Type::Int8,
+        offset: 16
+      )
+    end
+  end
+
+  describe "#pointer_format" do
+    subject { attribute.pointer_format }
+    let(buffer) { Gloop::Buffer.generate(context) }
+
+    before_each { context.buffers.array.bind(buffer) }
+    before_each { attribute.int_pointer(4, :int8, 128, 16) }
+    after_each { buffer.delete }
+
+    it "retrieves the format of the attribute" do
+      is_expected.to be_a(Gloop::IntAttributePointer)
+      is_expected.to have_attributes(
+        size: 4,
+        type: Gloop::IntAttributePointer::Type::Int8,
+        stride: 128,
+        address: 16
+      )
     end
   end
 end

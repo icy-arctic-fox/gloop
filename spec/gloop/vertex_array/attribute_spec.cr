@@ -126,4 +126,19 @@ Spectator.describe Gloop::VertexArray::Attribute do
       end
     end
   end
+
+  describe "#format" do
+    subject { attribute.format }
+
+    before_each { attribute.int_format(4, :int8, 16_u32) }
+
+    it "retrieves the format of the attribute" do
+      is_expected.to be_a(Gloop::IntAttributeFormat)
+      is_expected.to have_attributes(
+        size: 4,
+        type: Gloop::IntAttributeFormat::Type::Int8,
+        offset: 16
+      )
+    end
+  end
 end
