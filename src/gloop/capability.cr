@@ -69,7 +69,7 @@ module Gloop
     # - OpenGL function: `glEnable`
     # - OpenGL version: 2.0
     @[GLFunction("glEnable", version: "2.0")]
-    def enable
+    def enable : Nil
       gl.enable(to_unsafe)
     end
 
@@ -78,7 +78,7 @@ module Gloop
     # - OpenGL function: `glDisable`
     # - OpenGL version: 2.0
     @[GLFunction("glDisable", version: "2.0")]
-    def disable
+    def disable : Nil
       gl.disable(to_unsafe)
     end
 

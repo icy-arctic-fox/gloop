@@ -74,13 +74,13 @@ module Gloop
     # - `enabled?` - Checks if the capability is enabled.
     private macro self_capability(cap, *, version = "2.0")
       capability_method_prelude(:glEnable, {{cap}}, "Enables the capability.", version: {{version}})
-      def enable
+      def enable : Nil
         %enum = capability_enum({{cap}})
         gl.enable(%enum)
       end
 
       capability_method_prelude(:glDisable, {{cap}}, "Disables the capability.", version: {{version}})
-      def disable
+      def disable : Nil
         %enum = capability_enum({{cap}})
         gl.disable(%enum)
       end

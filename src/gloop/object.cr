@@ -35,7 +35,7 @@ module Gloop
     end
 
     # Non-existent instance to be used as a null object.
-    def self.none(context)
+    def self.none(context) : self
       new(context, 0_u32)
     end
 

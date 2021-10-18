@@ -109,7 +109,7 @@ module Gloop
     # - OpenGL function: `glDeleteVertexArrays`
     # - OpenGL version: 3.0
     @[GLFunction("glDeleteVertexArrays", version: "3.0")]
-    def delete
+    def delete : Nil
       gl.delete_vertex_arrays(1, pointerof(@name))
     end
 
@@ -118,7 +118,7 @@ module Gloop
     # - OpenGL function: `glDeleteVertexArrays`
     # - OpenGL version: 3.0
     @[GLFunction("glDeleteVertexArrays", version: "3.0")]
-    def self.delete(vertex_arrays : Enumerable(self))
+    def self.delete(vertex_arrays : Enumerable(self)) : Nil
       vertex_arrays.group_by(&.context).each do |context, subset|
         names = subset.map(&.to_unsafe)
         context.gl.delete_vertex_arrays(names.size, names.to_unsafe)
@@ -145,7 +145,7 @@ module Gloop
     # - OpenGL function: `glBindVertexArray`
     # - OpenGL version: 3.0
     @[GLFunction("glBindVertexArray", version: "3.0")]
-    def bind
+    def bind : Nil
       gl.bind_vertex_array(to_unsafe)
     end
 
@@ -172,7 +172,7 @@ module Gloop
     # - OpenGL function: `glBindVertexArray`
     # - OpenGL version: 3.0
     @[GLFunction("glBindVertexArray", version: "3.0")]
-    def self.unbind(context)
+    def self.unbind(context) : Nil
       none(context).bind
     end
 
@@ -283,14 +283,14 @@ module Gloop
     # Unbinds any existing vertex array from the context's rendering state.
     #
     # See: `VertexArray.unbind`
-    def unbind_vertex_array
+    def unbind_vertex_array : Nil
       VertexArray.unbind(self)
     end
 
     # Always references the currently bound vertex array.
     #
     # See: `VertexArray::Current`
-    def bound_vertex_array
+    def bound_vertex_array : VertexArray::Current
       VertexArray::Current.new(self)
     end
   end
@@ -302,7 +302,7 @@ module Gloop
     # - OpenGL function: `glDeleteVertexArrays`
     # - OpenGL version: 3.0
     @[GLFunction("glDeleteVertexArrays", version: "3.0")]
-    def delete
+    def delete : Nil
       gl.delete_vertex_arrays(size, to_unsafe)
     end
   end

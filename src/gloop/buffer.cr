@@ -145,7 +145,7 @@ module Gloop
     # - OpenGL function: `glDeleteBuffers`
     # - OpenGL version: 2.0
     @[GLFunction("glDeleteBuffers", version: "2.0")]
-    def delete
+    def delete : Nil
       gl.delete_buffers(1, pointerof(@name))
     end
 
@@ -154,7 +154,7 @@ module Gloop
     # - OpenGL function: `glDeleteBuffers`
     # - OpenGL version: 2.0
     @[GLFunction("glDeleteBuffers", version: "2.0")]
-    def self.delete(buffers : Enumerable(self))
+    def self.delete(buffers : Enumerable(self)) : Nil
       buffers.group_by(&.context).each do |context, subset|
         names = subset.map(&.to_unsafe)
         context.gl.delete_buffers(names.size, names.to_unsafe)
@@ -183,7 +183,7 @@ module Gloop
     # - OpenGL function: `glBindBuffer`
     # - OpenGL version: 2.0
     @[GLFunction("glBindBuffer", version: "2.0")]
-    def bind(target : Target | BindTarget)
+    def bind(target : Target | BindTarget) : Nil
       gl.bind_buffer(target.to_unsafe, to_unsafe)
     end
 
@@ -196,7 +196,7 @@ module Gloop
     # - OpenGL function: `glBindBuffer`
     # - OpenGL version: 2.0
     @[GLFunction("glBindBuffer", version: "2.0")]
-    def bind(target : Target)
+    def bind(target : Target) : Nil
       target = BindTarget.new(context, target)
       bind(target) { yield }
     end
@@ -231,7 +231,7 @@ module Gloop
     # - OpenGL function: `glNamedBufferData`
     # - OpenGL version: 4.5
     @[GLFunction("glNamedBufferData", version: "4.5")]
-    def data(data, usage : Usage = :static_draw)
+    def data(data, usage : Usage = :static_draw) : Nil
       slice = data.to_slice
       pointer = slice.to_unsafe.as(Void*)
       size = Size.new(slice.bytesize)
@@ -245,7 +245,7 @@ module Gloop
     # - OpenGL function: `glNamedBufferData`
     # - OpenGL version: 4.5
     @[GLFunction("glNamedBufferData", version: "4.5")]
-    def allocate_data(size : Size, usage : Usage = :static_draw)
+    def allocate_data(size : Size, usage : Usage = :static_draw) : Nil
       gl.named_buffer_data(to_unsafe, size, Pointer(Void).null, usage.named_to_unsafe)
     end
 
@@ -274,7 +274,7 @@ module Gloop
     # - OpenGL function: `glGetNamedBufferSubData`
     # - OpenGL version: 4.5
     @[GLFunction("glGetNamedBufferSubData", version: "4.5")]
-    def data
+    def data : Bytes
       Bytes.new(size).tap do |bytes|
         start = Size.new!(0)
         size = Size.new(bytes.bytesize)
@@ -294,7 +294,7 @@ module Gloop
     # - OpenGL function: `glNamedBufferStorage`
     # - OpenGL version: 4.5
     @[GLFunction("glNamedBufferStorage", version: "4.5")]
-    def storage(data, flags : Storage)
+    def storage(data, flags : Storage) : Nil
       slice = data.to_slice
       pointer = slice.to_unsafe.as(Void*)
       size = Size.new(slice.bytesize)
@@ -309,7 +309,7 @@ module Gloop
     # - OpenGL function: `glNamedBufferStorage`
     # - OpenGL version: 4.5
     @[GLFunction("glNamedBufferStorage", version: "4.5")]
-    def allocate_storage(size : Size, flags : Storage)
+    def allocate_storage(size : Size, flags : Storage) : Nil
       gl.named_buffer_storage(to_unsafe, size, Pointer(Void).null, flags.to_unsafe)
     end
 
@@ -417,7 +417,7 @@ module Gloop
     # - OpenGL version: 4.5
     @[GLFunction("glCopyNamedBufferSubData", version: "4.5")]
     def self.copy(from read_buffer : self, to write_buffer : self,
-                  read_offset : Size, write_offset : Size, size : Size)
+                  read_offset : Size, write_offset : Size, size : Size) : Nil
       {% if !flag?(:release) || flag?(:error_checking) %}
         raise "Attempt to copy buffers from different contexts" if read_buffer.context != write_buffer.context
       {% end %}
@@ -439,7 +439,7 @@ module Gloop
     # - OpenGL version: 4.5
     @[GLFunction("glCopyNamedBufferSubData", version: "4.5")]
     @[AlwaysInline]
-    def copy_to(buffer : self, read_offset : Size, write_offset : Size, size : Size)
+    def copy_to(buffer : self, read_offset : Size, write_offset : Size, size : Size) : Nil
       self.class.copy(self, buffer, read_offset, write_offset, size)
     end
 
@@ -455,7 +455,7 @@ module Gloop
     # - OpenGL version: 4.5
     @[GLFunction("glCopyNamedBufferSubData", version: "4.5")]
     @[AlwaysInline]
-    def copy_from(buffer : self, read_offset : Size, write_offset : Size, size : Size)
+    def copy_from(buffer : self, read_offset : Size, write_offset : Size, size : Size) : Nil
       self.class.copy(buffer, self, read_offset, write_offset, size)
     end
 
@@ -464,7 +464,7 @@ module Gloop
     # - OpenGL function: `glClearNamedBufferData`
     # - OpenGL version: 4.5
     @[GLFunction("glClearNamedBufferData", version: "4.5")]
-    def clear
+    def clear : Nil
       internal_format = LibGL::SizedInternalFormat::R8
       format = LibGL::PixelFormat::Red
       type = LibGL::PixelType::Byte
@@ -485,7 +485,7 @@ module Gloop
       # - OpenGL function: `glClearNamedBufferData`
       # - OpenGL version: 4.5
       @[GLFunction("glClearNamedBufferData", version: "4.5")]
-      def clear(value : {{type.id}})
+      def clear(value : {{type.id}}) : Nil
         internal_format = LibGL::SizedInternalFormat::{{internal_format.id}}
         format = LibGL::PixelFormat::Red
         type = LibGL::PixelType::{{value.id}}
@@ -499,7 +499,7 @@ module Gloop
     # - OpenGL function: `glInvalidateBufferData`
     # - OpenGL version: 4.3
     @[GLFunction("glInvalidateBufferData", version: "4.3")]
-    def invalidate
+    def invalidate : Nil
       gl.invalidate_buffer_data(to_unsafe)
     end
 
@@ -508,7 +508,7 @@ module Gloop
     # - OpenGL function: `glInvalidateBufferSubData`
     # - OpenGL version: 4.3
     @[GLFunction("glInvalidateBufferSubData", version: "4.3")]
-    def invalidate(start : Size, count : Size)
+    def invalidate(start : Size, count : Size) : Nil
       gl.invalidate_buffer_sub_data(to_unsafe, start, count)
     end
 
@@ -518,7 +518,7 @@ module Gloop
     # - OpenGL version: 4.3
     @[GLFunction("glInvalidateBufferSubData", version: "4.3")]
     @[AlwaysInline]
-    def invalidate(range : Range)
+    def invalidate(range : Range) : Nil
       start = Size.new(range.begin)
       count = Size.new(range.size)
       invalidate(start, count)
@@ -635,7 +635,7 @@ module Gloop
     # - OpenGL version: 4.5
     @[GLFunction("glFlushMappedNamedBufferRange", version: "4.5")]
     @[AlwaysInline]
-    def flush
+    def flush : Nil
       start = Size.new!(0)
       count = Size.new(mapping.size)
       flush(start, count)
@@ -648,7 +648,7 @@ module Gloop
     # - OpenGL function: `glFlushMappedNamedBufferRange`
     # - OpenGL version: 4.5
     @[GLFunction("glFlushMappedNamedBufferRange", version: "4.5")]
-    def flush(start : Size, count : Size)
+    def flush(start : Size, count : Size) : Nil
       gl.flush_mapped_named_buffer_range(to_unsafe, start, count)
     end
 
@@ -660,7 +660,7 @@ module Gloop
     # - OpenGL version: 4.5
     @[GLFunction("glFlushMappedNamedBufferRange", version: "4.5")]
     @[AlwaysInline]
-    def flush(range : Range)
+    def flush(range : Range) : Nil
       start = Size.new(range.begin)
       count = Size.new(range.size)
       flush(start, count)
@@ -724,7 +724,7 @@ module Gloop
     # - OpenGL function: `glDeleteBuffers`
     # - OpenGL version: 2.0
     @[GLFunction("glDeleteBuffers", version: "2.0")]
-    def delete
+    def delete : Nil
       gl.delete_buffers(size, to_unsafe)
     end
   end

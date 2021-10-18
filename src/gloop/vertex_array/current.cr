@@ -36,13 +36,13 @@ module Gloop
       # - OpenGL function: `glBindVertexArray`
       # - OpenGL version: 3.0
       @[GLFunction("glBindVertexArray", version: "3.0")]
-      def unbind
+      def unbind : Nil
         none = Name.new!(0)
         gl.bind_vertex_array(none)
       end
 
       # Information for all attributes in the bound vertex array.
-      def attributes
+      def attributes : Gloop::Attributes
         Gloop::Attributes.new(@context)
       end
     end

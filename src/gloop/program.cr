@@ -220,7 +220,7 @@ module Gloop
     # - OpenGL function: `glLinkProgram`
     # - OpenGL version: 2.0
     @[GLFunction("glLinkProgram", version: "2.0")]
-    def link!
+    def link! : Nil
       return if link
 
       message = info_log.try(&.each_line.first)
@@ -274,7 +274,7 @@ module Gloop
     # - OpenGL function: `glUseProgram`
     # - OpenGL version: 2.0
     @[GLFunction("glUseProgram", version: "2.0")]
-    def self.uninstall(context)
+    def self.uninstall(context) : Nil
       none(context).use
     end
 
@@ -288,7 +288,7 @@ module Gloop
     # - OpenGL function: `glValidateProgram`
     # - OpenGL version: 2.0
     @[GLFunction("glValidateProgram", version: "2.0")]
-    def validate
+    def validate : Bool
       gl.validate_program(to_unsafe)
       valid?
     end
@@ -298,7 +298,7 @@ module Gloop
     # - OpenGL function: `glGetProgramBinary`
     # - OpenGL version: 4.1
     @[GLFunction("glGetProgramBinary", version: "4.1")]
-    def binary
+    def binary : Binary
       size = binary_size
       format = uninitialized UInt32
       buffer = Bytes.new(size, read_only: true)
@@ -324,7 +324,7 @@ module Gloop
     # Creates a program from an existing binary.
     #
     # See: `.create`, `#binary=`
-    def self.from_binary(context, binary)
+    def self.from_binary(context, binary) : self
       create(context).tap do |program|
         program.binary = binary
       end
@@ -335,7 +335,7 @@ module Gloop
     # Creates an empty program.
     #
     # See: `Program.create`
-    def create_program
+    def create_program : Program
       Program.create(self)
     end
 
@@ -360,7 +360,7 @@ module Gloop
     # Uninstalls any existing program from the context's rendering state.
     #
     # See: `Program.uninstall`
-    def uninstall_program
+    def uninstall_program : Nil
       Program.uninstall(self)
     end
   end

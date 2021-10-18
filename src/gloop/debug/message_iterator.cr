@@ -132,7 +132,7 @@ module Gloop
       end
 
       # Removes all pending debug messages from the log.
-      def clear
+      def clear : Nil
         loop { break unless skip }
       end
 

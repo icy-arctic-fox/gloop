@@ -77,7 +77,7 @@ module Gloop
     # - OpenGL version: 3.1
     @[GLFunction("glCopyBufferSubData", version: "3.1")]
     def copy(from read_target : Buffer::Target, to write_target : Buffer::Target,
-             read_offset : Size, write_offset : Size, size : Size)
+             read_offset : Size, write_offset : Size, size : Size) : Nil
       gl.copy_buffer_sub_data(
         read_target.copy_buffer_target, write_target.copy_buffer_target, read_offset, write_offset, size)
     end

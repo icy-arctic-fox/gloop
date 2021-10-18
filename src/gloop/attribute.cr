@@ -82,7 +82,7 @@ module Gloop
     # - OpenGL enum: `GL_VERTEX_ATTRIB_ARRAY_DIVISOR`
     # - OpenGL version: 3.2
     @[GLFunction("glGetVertexAttribiv", enum: "GL_VERTEX_ATTRIB_ARRAY_DIVISOR", version: "3.2")]
-    attribute_parameter VertexAttribArrayDivisor, divisor
+    attribute_parameter VertexAttribArrayDivisor, divisor : UInt32
 
     # Retrieves the number of bytes from the start of the vertex buffer data to the first instance of this attribute.
     #
@@ -104,7 +104,7 @@ module Gloop
     # - OpenGL function: `glEnableVertexAttribArray`
     # - OpenGL version: 2.0
     @[GLFunction("glEnableVertexAttribArray", version: "2.0")]
-    def enable
+    def enable : Nil
       gl.enable_vertex_attrib_array(@index)
     end
 
@@ -113,7 +113,7 @@ module Gloop
     # - OpenGL function: `glDisableVertexAttribArray`
     # - OpenGL version: 2.0
     @[GLFunction("glDisableVertexAttribArray", version: "2.0")]
-    def disable
+    def disable : Nil
       gl.disable_vertex_attrib_array(@index)
     end
 
@@ -147,7 +147,7 @@ module Gloop
     # - OpenGL function: `glVertexAttribFormat`
     # - OpenGL version: 4.3
     @[GLFunction("glVertexAttribFormat", version: "4.3")]
-    def float32_format(size : Int32, type : Float32AttributeFormat::Type, normalized : Bool, offset : UInt32)
+    def float32_format(size : Int32, type : Float32AttributeFormat::Type, normalized : Bool, offset : UInt32) : Nil
       gl.vertex_attrib_format(@index, size, type.to_unsafe, gl_bool(normalized), offset)
     end
 
@@ -158,7 +158,7 @@ module Gloop
     # - OpenGL function: `glVertexAttribIFormat`
     # - OpenGL version: 4.3
     @[GLFunction("glVertexAttribIFormat", version: "4.3")]
-    def int_format(size : Int32, type : IntAttributeFormat::Type, offset : UInt32)
+    def int_format(size : Int32, type : IntAttributeFormat::Type, offset : UInt32) : Nil
       gl.vertex_attrib_i_format(@index, size, type.to_unsafe, offset)
     end
 
@@ -169,7 +169,7 @@ module Gloop
     # - OpenGL function: `glVertexAttribLFormat`
     # - OpenGL version: 4.3
     @[GLFunction("glVertexAttribLFormat", version: "4.3")]
-    def float64_format(size : Int32, offset : UInt32, type : Float64AttributeFormat::Type = :float64)
+    def float64_format(size : Int32, offset : UInt32, type : Float64AttributeFormat::Type = :float64) : Nil
       gl.vertex_attrib_l_format(@index, size, type.to_unsafe, offset)
     end
 
@@ -190,7 +190,7 @@ module Gloop
     # - OpenGL version: 2.0
     @[GLFunction("glVertexAttribPointer", version: "2.0")]
     def float32_pointer(size : Int32, type : Float32AttributePointer::Type, normalized : Bool,
-                        stride : Int32 = 0, address : Size = 0)
+                        stride : Int32 = 0, address : Size = 0) : Nil
       gl.vertex_attrib_pointer(@index, size, type.to_unsafe, gl_bool(normalized), stride, gl_pointer(address))
     end
 
@@ -201,7 +201,7 @@ module Gloop
     # - OpenGL function: `glVertexAttribIPointer`
     # - OpenGL version: 3.0
     @[GLFunction("glVertexAttribIPointer", version: "3.0")]
-    def int_pointer(size : Int32, type : IntAttributePointer::Type, stride : Int32 = 0, address : Size = 0)
+    def int_pointer(size : Int32, type : IntAttributePointer::Type, stride : Int32 = 0, address : Size = 0) : Nil
       gl.vertex_attrib_i_pointer(@index, size, type.to_unsafe, stride, gl_pointer(address))
     end
 
@@ -213,7 +213,7 @@ module Gloop
     # - OpenGL version: 4.1
     @[GLFunction("glVertexAttribLPointer", version: "4.1")]
     def float64_pointer(size : Int32, stride : Int32 = 0, address : Size = 0,
-                        type : Float64AttributePointer::Type = :float64)
+                        type : Float64AttributePointer::Type = :float64) : Nil
       gl.vertex_attrib_l_pointer(@index, size, type.to_unsafe, stride, gl_pointer(address))
     end
 

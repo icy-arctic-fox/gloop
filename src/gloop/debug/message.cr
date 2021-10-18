@@ -47,7 +47,7 @@ module Gloop
       # - OpenGL function: `glDebugMessageInsert`
       # - OpenGL version: 4.3
       @[GLFunction("glDebugMessageInsert", version: "4.3")]
-      def insert(context)
+      def insert(context) : Nil
         context.gl.debug_message_insert(
           @source.to_unsafe,
           @type.to_unsafe,

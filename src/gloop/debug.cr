@@ -38,7 +38,7 @@ module Gloop
     # - OpenGL function: `glPushDebugGroup`
     # - OpenGL version: 4.3
     @[GLFunction("glPushDebugGroup", version: "4.3")]
-    def push(message, source : Source = :application, id : UInt32 = 0)
+    def push(message, source : Source = :application, id : UInt32 = 0) : Nil
       message = message.to_s
       gl.push_debug_group(source.to_unsafe, id, message.bytesize, message.to_unsafe)
     end
@@ -48,7 +48,7 @@ module Gloop
     # - OpenGL function: `glPopDebugGroup`
     # - OpenGL version: 4.3
     @[GLFunction("glPopDebugGroup", version: "4.3")]
-    def pop
+    def pop : Nil
       gl.pop_debug_group
     end
 
@@ -71,7 +71,7 @@ module Gloop
     end
 
     # Removes all pending debug messages from the queue.
-    def clear
+    def clear : Nil
       messages.clear
     end
 
@@ -84,7 +84,7 @@ module Gloop
     # - OpenGL function: `glDebugMessageControl`
     # - OpenGL version: 4.3
     @[GLFunction("glDebugMessageControl", version: "4.3")]
-    def allow(*, source : Source = :dont_care, type : Type = :dont_care, severity : Severity = :dont_care)
+    def allow(*, source : Source = :dont_care, type : Type = :dont_care, severity : Severity = :dont_care) : Nil
       gl.debug_message_control(
         source.to_unsafe,
         type.to_unsafe,
@@ -106,7 +106,7 @@ module Gloop
     # - OpenGL function: `glDebugMessageControl`
     # - OpenGL version: 4.3
     @[GLFunction("glDebugMessageControl", version: "4.3")]
-    def allow(ids : Indexable(UInt32), *, source : Source = :dont_care, type : Type = :dont_care)
+    def allow(ids : Indexable(UInt32), *, source : Source = :dont_care, type : Type = :dont_care) : Nil
       # Some indexable types allow unsafe direct access to their internals.
       # Use that if it's available, as it is much faster.
       # Otherwise, convert to an array, which allows direct access via `#to_unsafe`.
@@ -131,7 +131,7 @@ module Gloop
     # - OpenGL function: `glDebugMessageControl`
     # - OpenGL version: 4.3
     @[GLFunction("glDebugMessageControl", version: "4.3")]
-    def reject(*, source : Source = :dont_care, type : Type = :dont_care, severity : Severity = :dont_care)
+    def reject(*, source : Source = :dont_care, type : Type = :dont_care, severity : Severity = :dont_care) : Nil
       gl.debug_message_control(
         source.to_unsafe,
         type.to_unsafe,
@@ -153,7 +153,7 @@ module Gloop
     # - OpenGL function: `glDebugMessageControl`
     # - OpenGL version: 4.3
     @[GLFunction("glDebugMessageControl", version: "4.3")]
-    def reject(ids : Indexable(UInt32), *, source : Source = :dont_care, type : Type = :dont_care)
+    def reject(ids : Indexable(UInt32), *, source : Source = :dont_care, type : Type = :dont_care) : Nil
       # Some indexable types allow unsafe direct access to their internals.
       # Use that if it's available, as it is much faster.
       # Otherwise, convert to an array, which allows direct access via `#to_unsafe`.
@@ -220,7 +220,7 @@ module Gloop
     # - OpenGL function: `glDebugMessageCallback`
     # - OpenGL version: 4.3
     @[GLFunction("glDebugMessageCallback", version: "4.3")]
-    def clear_on_message
+    def clear_on_message : Nil
       null = Pointer(Void).null
       self.message_callback = null
       gl.debug_message_callback(null, null)

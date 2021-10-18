@@ -77,7 +77,7 @@ module Gloop
       # - OpenGL enum: `GL_VERTEX_ATTRIB_ARRAY_DIVISOR`
       # - OpenGL version: 4.5
       @[GLFunction("glGetVertexArrayIndexediv", enum: "GL_VERTEX_ATTRIB_ARRAY_DIVISOR", version: "4.5")]
-      array_attribute_parameter VertexAttribArrayDivisor, divisor
+      array_attribute_parameter VertexAttribArrayDivisor, divisor : UInt32
 
       # Retrieves the number of bytes from the start of the vertex buffer data to the first instance of this attribute.
       #
@@ -102,7 +102,7 @@ module Gloop
       # - OpenGL function: `glEnableVertexArrayAttrib`
       # - OpenGL version: 4.5
       @[GLFunction("glEnableVertexArrayAttrib", version: "4.5")]
-      def enable
+      def enable : Nil
         gl.enable_vertex_array_attrib(@name, @index)
       end
 
@@ -111,7 +111,7 @@ module Gloop
       # - OpenGL function: `glDisableVertexArrayAttrib`
       # - OpenGL version: 4.5
       @[GLFunction("glDisableVertexArrayAttrib", version: "4.5")]
-      def disable
+      def disable : Nil
         gl.disable_vertex_array_attrib(@name, @index)
       end
 
@@ -122,7 +122,7 @@ module Gloop
       # - OpenGL function: `glVertexArrayAttribFormat`
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribFormat", version: "4.5")]
-      def float32_format(size : Int32, type : Float32AttributeFormat::Type, normalized : Bool, offset : UInt32)
+      def float32_format(size : Int32, type : Float32AttributeFormat::Type, normalized : Bool, offset : UInt32) : Nil
         bool = normalized ? LibGL::Boolean::True : LibGL::Boolean::False
         gl.vertex_array_attrib_format(@name, @index, size, type.to_unsafe, bool, offset)
       end
@@ -134,7 +134,7 @@ module Gloop
       # - OpenGL function: `glVertexArrayAttribIFormat`
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribIFormat", version: "4.5")]
-      def int_format(size : Int32, type : IntAttributeFormat::Type, offset : UInt32)
+      def int_format(size : Int32, type : IntAttributeFormat::Type, offset : UInt32) : Nil
         gl.vertex_array_attrib_i_format(@name, @index, size, type.to_unsafe, offset)
       end
 
@@ -145,7 +145,7 @@ module Gloop
       # - OpenGL function: `glVertexArrayAttribLFormat`
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribLFormat", version: "4.5")]
-      def float64_format(size : Int32, offset : UInt32, type : Float64AttributeFormat::Type = :float64)
+      def float64_format(size : Int32, offset : UInt32, type : Float64AttributeFormat::Type = :float64) : Nil
         gl.vertex_array_attrib_l_format(@name, @index, size, type.to_unsafe, offset)
       end
 

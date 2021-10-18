@@ -80,7 +80,7 @@ module Gloop
       buffer_target_parameter BufferUsage, usage : Usage
 
       # Retrieves the context for this target.
-      getter context
+      getter context : Context
 
       # Target this binding refers to.
       getter target : Target
@@ -132,7 +132,7 @@ module Gloop
       # - OpenGL function: `glBindBuffer`
       # - OpenGL version: 2.0
       @[GLFunction("glBindBuffer", version: "2.0")]
-      def bind(buffer : Buffer)
+      def bind(buffer : Buffer) : Nil
         gl.bind_buffer(to_unsafe, buffer.to_unsafe)
       end
 
@@ -161,7 +161,7 @@ module Gloop
       # - OpenGL function: `glBindBuffer`
       # - OpenGL version: 2.0
       @[GLFunction("glBindBuffer", version: "2.0")]
-      def unbind
+      def unbind : Nil
         gl.bind_buffer(to_unsafe, 0_u32)
       end
 
@@ -175,7 +175,7 @@ module Gloop
       # - OpenGL function: `glBufferData`
       # - OpenGL version: 2.0
       @[GLFunction("glBufferData", version: "2..0")]
-      def data(data, usage : Usage = :static_draw)
+      def data(data, usage : Usage = :static_draw) : Nil
         slice = data.to_slice
         pointer = slice.to_unsafe.as(Void*)
         size = Size.new(slice.bytesize)
@@ -189,7 +189,7 @@ module Gloop
       # - OpenGL function: `glBufferData`
       # - OpenGL version: 2.0
       @[GLFunction("glBufferData", version: "2.0")]
-      def allocate_data(size : Size, usage : Usage = :static_draw)
+      def allocate_data(size : Size, usage : Usage = :static_draw) : Nil
         gl.buffer_data(to_unsafe, size, Pointer(Void).null, usage.to_unsafe)
       end
 
@@ -218,7 +218,7 @@ module Gloop
       # - OpenGL function: `glGetBufferSubData`
       # - OpenGL version: 2.0
       @[GLFunction("glGetBufferSubData", version: "2.0")]
-      def data
+      def data : Bytes
         Bytes.new(size).tap do |bytes|
           start = Size.new!(0)
           size = Size.new(bytes.bytesize)
@@ -238,7 +238,7 @@ module Gloop
       # - OpenGL function: `glBufferStorage`
       # - OpenGL version: 4.4
       @[GLFunction("glBufferStorage", version: "4.4")]
-      def storage(data, flags : Storage)
+      def storage(data, flags : Storage) : Nil
         slice = data.to_slice
         pointer = slice.to_unsafe.as(Void*)
         size = Size.new(slice.bytesize)
@@ -253,7 +253,7 @@ module Gloop
       # - OpenGL function: `glBufferStorage`
       # - OpenGL version: 4.4
       @[GLFunction("glBufferStorage", version: "4.4")]
-      def allocate_storage(size : Size, flags : Storage)
+      def allocate_storage(size : Size, flags : Storage) : Nil
         gl.buffer_storage(storage_target, size, Pointer(Void).null, flags.to_unsafe)
       end
 
@@ -361,7 +361,7 @@ module Gloop
       # - OpenGL version: 3.1
       @[GLFunction("glCopyBufferSubData", version: "3.1")]
       def self.copy(from read_target : Target | self, to write_target : Target | self,
-                    read_offset : Size, write_offset : Size, size : Size)
+                    read_offset : Size, write_offset : Size, size : Size) : Nil
         {% if !flag?(:release) || flag?(:error_checking) %}
           raise "Attempt to copy buffers from different contexts" if read_target.context != write_target.context
         {% end %}
@@ -383,7 +383,7 @@ module Gloop
       # - OpenGL version: 3.1
       @[GLFunction("glCopyBufferSubData", version: "3.1")]
       @[AlwaysInline]
-      def copy_to(target : Target | self, read_offset : Size, write_offset : Size, size : Size)
+      def copy_to(target : Target | self, read_offset : Size, write_offset : Size, size : Size) : Nil
         self.class.copy(self, target, read_offset, write_offset, size)
       end
 
@@ -399,7 +399,7 @@ module Gloop
       # - OpenGL version: 3.1
       @[GLFunction("glCopyBufferSubData", version: "3.1")]
       @[AlwaysInline]
-      def copy_from(target : Target | self, read_offset : Size, write_offset : Size, size : Size)
+      def copy_from(target : Target | self, read_offset : Size, write_offset : Size, size : Size) : Nil
         self.class.copy(target, self, read_offset, write_offset, size)
       end
 
@@ -408,7 +408,7 @@ module Gloop
       # - OpenGL function: `glClearBufferData`
       # - OpenGL version: 4.3
       @[GLFunction("glClearBufferData", version: "4.3")]
-      def clear
+      def clear : Nil
         internal_format = LibGL::SizedInternalFormat::R8
         format = LibGL::PixelFormat::Red
         type = LibGL::PixelType::Byte
@@ -429,7 +429,7 @@ module Gloop
         # - OpenGL function: `glClearNamedBufferData`
         # - OpenGL version: 4.5
         @[GLFunction("glClearNamedBufferData", version: "4.5")]
-        def clear(value : {{type.id}})
+        def clear(value : {{type.id}}) : Nil
           internal_format = LibGL::SizedInternalFormat::{{internal_format.id}}
           format = LibGL::PixelFormat::Red
           type = LibGL::PixelType::{{value.id}}
@@ -549,7 +549,7 @@ module Gloop
       # - OpenGL version: 3.0
       @[GLFunction("glFlushMappedBufferRange", version: "3.0")]
       @[AlwaysInline]
-      def flush
+      def flush : Nil
         start = Size.new!(0)
         count = Size.new(mapping.size)
         flush(start, count)
@@ -562,7 +562,7 @@ module Gloop
       # - OpenGL function: `glFlushMappedBufferRange`
       # - OpenGL version: 3.0
       @[GLFunction("glFlushMappedBufferRange", version: "3.0")]
-      def flush(start : Size, count : Size)
+      def flush(start : Size, count : Size) : Nil
         gl.flush_mapped_buffer_range(to_unsafe, start, count)
       end
 
@@ -574,7 +574,7 @@ module Gloop
       # - OpenGL version: 3.0
       @[GLFunction("glFlushMappedBufferRange", version: "3.0")]
       @[AlwaysInline]
-      def flush(range : Range)
+      def flush(range : Range) : Nil
         start = Size.new(range.begin)
         count = Size.new(range.size)
         flush(start, count)

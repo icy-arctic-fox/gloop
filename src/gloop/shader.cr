@@ -95,7 +95,7 @@ module Gloop
     # - OpenGL function: `glDeleteShader`
     # - OpenGL version: 2.0
     @[GLFunction("glDeleteShader", version: "2.0")]
-    def delete
+    def delete : Nil
       gl.delete_shader(to_unsafe)
     end
 
@@ -172,7 +172,7 @@ module Gloop
     # - OpenGL function: `glCompileShader`
     # - OpenGL version: 2.0
     @[GLFunction("glCompileShader", version: "2.0")]
-    def compile
+    def compile : Bool
       gl.compile_shader(name)
       compiled?
     end
@@ -189,7 +189,7 @@ module Gloop
     # - OpenGL function: `glCompileShader`
     # - OpenGL version: 2.0
     @[GLFunction("glCompileShader", version: "2.0")]
-    def compile!
+    def compile! : Nil
       return if compile
 
       message = info_log.try(&.each_line.first)
@@ -207,7 +207,7 @@ module Gloop
     # - OpenGL function: `glGetShaderInfoLog`
     # - OpenGL version: 2.0
     @[GLFunction("glGetShaderInfoLog", version: "2.0")]
-    def info_log
+    def info_log : String?
       string_query(info_log_size) do |buffer, capacity, length|
         gl.get_shader_info_log(name, capacity, length, buffer)
       end
@@ -224,14 +224,14 @@ module Gloop
     # - OpenGL function: `glReleaseShaderCompiler`
     # - OpenGL version: 4.1
     @[GLFunction("glReleaseShaderCompiler", version: "4.1")]
-    def release_shader_compiler
+    def release_shader_compiler : Nil
       gl.release_shader_compiler
     end
 
     # Creates an empty shader of the specified type.
     #
     # See: `Shader.create`
-    def create_shader(type : Shader::Type)
+    def create_shader(type : Shader::Type) : Shader
       Shader.create(self, type)
     end
   end
