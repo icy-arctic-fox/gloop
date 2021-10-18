@@ -23,6 +23,70 @@ module Gloop
     @[GLFunction("glGetVertexAttribiv", enum: "GL_VERTEX_ATTRIB_ARRAY_ENABLED", version: "2.0")]
     attribute_parameter? VertexAttribArrayEnabled, enabled
 
+    # Indicates whether the attribute's value is normalized when converted to a float-poing number.
+    #
+    # - OpenGL function: `glGetVertexAttribiv`
+    # - OpenGL enum: `GL_VERTEX_ATTRIB_ARRAY_NORMALIZED`
+    # - OpenGL version: 2.0
+    @[GLFunction("glGetVertexAttribiv", enum: "GL_VERTEX_ATTRIB_ARRAY_NORMALIZED", version: "2.0")]
+    attribute_parameter? VertexAttribArrayNormalized, normalized
+
+    # Indicates whether the attribute's data is an integer on the GPU.
+    #
+    # - OpenGL function: `glGetVertexAttribiv`
+    # - OpenGL enum: `GL_VERTEX_ATTRIB_ARRAY_INTEGER`
+    # - OpenGL version: 2.0
+    @[GLFunction("glGetVertexAttribiv", enum: "GL_VERTEX_ATTRIB_ARRAY_INTEGER", version: "2.0")]
+    attribute_parameter? VertexAttribArrayInteger, integer
+
+    # Indicates whether the attribute's data is a double-precision floating-point value on the GPU.
+    #
+    # - OpenGL function: `glGetVertexAttribiv`
+    # - OpenGL enum: `GL_VERTEX_ATTRIB_ARRAY_LONG`
+    # - OpenGL version: 2.0
+    @[GLFunction("glGetVertexAttribiv", enum: "GL_VERTEX_ATTRIB_ARRAY_LONG", version: "2.0")]
+    attribute_parameter? VertexAttribArrayLong, float64
+
+    # Retrieves the number of components in the attribute.
+    #
+    # - OpenGL function: `glGetVertexAttribiv`
+    # - OpenGL enum: `GL_VERTEX_ATTRIB_ARRAY_SIZE`
+    # - OpenGL version: 2.0
+    @[GLFunction("glGetVertexAttribiv", enum: "GL_VERTEX_ATTRIB_ARRAY_SIZE", version: "2.0")]
+    attribute_parameter VertexAttribArraySize, size
+
+    # Returns the number of bytes between attribute values in the buffer data.
+    #
+    # - OpenGL function: `glGetVertexAttribiv`
+    # - OpenGL enum: `GL_VERTEX_ATTRIB_ARRAY_STRIDE`
+    # - OpenGL version: 2.0
+    @[GLFunction("glGetVertexAttribiv", enum: "GL_VERTEX_ATTRIB_ARRAY_STRIDE", version: "2.0")]
+    attribute_parameter VertexAttribArrayStride, stride
+
+    # Returns the attribute's data type.
+    #
+    # - OpenGL function: `glGetVertexAttribiv`
+    # - OpenGL enum: `GL_VERTEX_ATTRIB_ARRAY_TYPE`
+    # - OpenGL version: 2.0
+    @[GLFunction("glGetVertexAttribiv", enum: "GL_VERTEX_ATTRIB_ARRAY_TYPE", version: "2.0")]
+    attribute_parameter VertexAttribArrayType, type : Float32AttributeFormat::Type
+
+    # Returns the frequency divisor for instanced rendering.
+    #
+    # - OpenGL function: `glGetVertexAttribiv`
+    # - OpenGL enum: `GL_VERTEX_ATTRIB_ARRAY_DIVISOR`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetVertexAttribiv", enum: "GL_VERTEX_ATTRIB_ARRAY_DIVISOR", version: "4.5")]
+    attribute_parameter VertexAttribArrayDivisor, divisor
+
+    # Retrieves the number of bytes from the start of the vertex buffer data to the first instance of this attribute.
+    #
+    # - OpenGL function: `glGetVertexAttribiv`
+    # - OpenGL enum: `GL_VERTEX_ATTRIB_ARRAY_RELATIVE_OFFSET`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetVertexAttribiv", enum: "GL_VERTEX_ATTRIB_ARRAY_RELATIVE_OFFSET", version: "4.5")]
+    attribute_parameter VertexAttribRelativeOffset, offset
+
     # Index of the attribute.
     getter index : UInt32
 
@@ -78,9 +142,8 @@ module Gloop
     # - OpenGL function: `glVertexAttribLFormat`
     # - OpenGL version: 4.3
     @[GLFunction("glVertexAttribLFormat", version: "4.3")]
-    def float64_format(size : Int32, offset : UInt32)
-      type = AttributeFormat::Type::Float64
-      gl.vertex_attrib_l_format(@name, @index, size, type.to_unsafe, offset)
+    def float64_format(size : Int32, offset : UInt32, type : Float64AttributeFormat::Type = :float64)
+      gl.vertex_attrib_l_format(@index, size, type.to_unsafe, offset)
     end
 
     # Sets the format of the attribute.
@@ -88,10 +151,10 @@ module Gloop
     # The data will be 32-bit floating-point values on the GPU.
     #
     # - OpenGL function: `glVertexAttribFormat`
-    # - OpenGL version: 4.5
-    @[GLFunction("glVertexAttribFormat", version: "4.5")]
+    # - OpenGL version: 4.3
+    @[GLFunction("glVertexAttribFormat", version: "4.3")]
     def format=(format : Float32AttributeFormat)
-      self.format(format.size, format.type, format.normalized, format.offset)
+      float32_format(format.size, format.type, format.normalized?, format.offset)
     end
 
     # Sets the format of the attribute.
@@ -99,10 +162,10 @@ module Gloop
     # The data will be integer values on the GPU.
     #
     # - OpenGL function: `glVertexAttribIFormat`
-    # - OpenGL version: 4.5
-    @[GLFunction("glVertexAttribIFormat", version: "4.5")]
+    # - OpenGL version: 4.3
+    @[GLFunction("glVertexAttribIFormat", version: "4.3")]
     def format=(format : IntAttributeFormat)
-      self.format(format.size, format.type, format.offset)
+      int_format(format.size, format.type, format.offset)
     end
 
     # Sets the format of the attribute.
@@ -110,10 +173,10 @@ module Gloop
     # The data will be 64-bit floating-point values on the GPU.
     #
     # - OpenGL function: `glVertexAttribLFormat`
-    # - OpenGL version: 4.5
-    @[GLFunction("glVertexAttribLFormat", version: "4.5")]
+    # - OpenGL version: 4.3
+    @[GLFunction("glVertexAttribLFormat", version: "4.3")]
     def format=(format : Float64AttributeFormat)
-      self.format(format.size, format.offset)
+      float64_format(format.size, format.offset, format.type)
     end
   end
 end
