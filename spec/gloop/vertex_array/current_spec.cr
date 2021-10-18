@@ -30,4 +30,12 @@ Spectator.describe Gloop::VertexArray::Current do
       expect(&.unbind).to change(&.bound?).from(true).to(false)
     end
   end
+
+  describe "#attributes" do
+    subject { current.attributes }
+
+    it "is a collection of attributes" do
+      is_expected.to be_an(Enumerable(Gloop::Attribute))
+    end
+  end
 end

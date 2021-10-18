@@ -1,3 +1,4 @@
+require "../attributes"
 require "../contextual"
 require "../parameters"
 
@@ -38,6 +39,11 @@ module Gloop
       def unbind
         none = Name.new!(0)
         gl.bind_vertex_array(none)
+      end
+
+      # Information for all attributes in the bound vertex array.
+      def attributes
+        Gloop::Attributes.new(@context)
       end
     end
   end

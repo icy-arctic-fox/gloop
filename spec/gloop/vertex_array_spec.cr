@@ -167,6 +167,14 @@ Spectator.describe Gloop::VertexArray do
     end
   end
 
+  describe "#attributes" do
+    subject { vao.attributes }
+
+    it "is a collection of attributes" do
+      is_expected.to be_an(Enumerable(Gloop::VertexArray::Attribute))
+    end
+  end
+
   context "Labelable" do
     it "can be labeled" do
       subject.label = "Test label"

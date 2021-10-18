@@ -226,6 +226,11 @@ module Gloop
     def element_array_buffer=(buffer : Buffer)
       gl.vertex_array_element_buffer(to_unsafe, buffer.to_unsafe)
     end
+
+    # Information for all attributes in this vertex array.
+    def attributes : Attributes
+      Attributes.new(@context, @name)
+    end
   end
 
   struct Context
