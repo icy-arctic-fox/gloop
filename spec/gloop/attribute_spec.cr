@@ -39,7 +39,6 @@ Spectator.describe Gloop::Attribute do
         expect(&.integer?).to be_false
         expect(&.float64?).to be_false
         expect(&.size).to eq(3)
-        expect(&.stride).to eq(0)
         expect(&.type).to eq(Gloop::Float32AttributeFormat::Type::Int16)
         expect(&.offset).to eq(16)
       end
@@ -54,7 +53,6 @@ Spectator.describe Gloop::Attribute do
         expect(&.integer?).to be_true
         expect(&.float64?).to be_false
         expect(&.size).to eq(4)
-        expect(&.stride).to eq(0)
         expect(&.type).to eq(Gloop::Float32AttributeFormat::Type::Int8)
         expect(&.offset).to eq(16)
       end
@@ -69,7 +67,6 @@ Spectator.describe Gloop::Attribute do
         expect(&.integer?).to be_false
         expect(&.float64?).to be_true
         expect(&.size).to eq(2)
-        expect(&.stride).to eq(0)
         expect(&.type).to eq(Gloop::Float32AttributeFormat::Type::Float64)
         expect(&.offset).to eq(32)
       end
@@ -87,7 +84,6 @@ Spectator.describe Gloop::Attribute do
           expect(&.integer?).to be_false
           expect(&.float64?).to be_false
           expect(&.size).to eq(3)
-          expect(&.stride).to eq(0)
           expect(&.type).to eq(Gloop::Float32AttributeFormat::Type::Int16)
           expect(&.offset).to eq(16)
         end
@@ -104,7 +100,6 @@ Spectator.describe Gloop::Attribute do
           expect(&.integer?).to be_true
           expect(&.float64?).to be_false
           expect(&.size).to eq(4)
-          expect(&.stride).to eq(0)
           expect(&.type).to eq(Gloop::Float32AttributeFormat::Type::Int8)
           expect(&.offset).to eq(16)
         end
@@ -121,7 +116,6 @@ Spectator.describe Gloop::Attribute do
           expect(&.integer?).to be_false
           expect(&.float64?).to be_true
           expect(&.size).to eq(2)
-          expect(&.stride).to eq(0)
           expect(&.type).to eq(Gloop::Float32AttributeFormat::Type::Float64)
           expect(&.offset).to eq(32)
         end
