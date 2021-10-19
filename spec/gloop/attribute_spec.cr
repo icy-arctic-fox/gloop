@@ -40,7 +40,7 @@ Spectator.describe Gloop::Attribute do
         expect(&.float64?).to be_false
         expect(&.size).to eq(3)
         expect(&.type).to eq(Gloop::Float32AttributeFormat::Type::Int16)
-        expect(&.offset).to eq(16)
+        expect(&.relative_offset).to eq(16)
       end
     end
   end
@@ -54,7 +54,7 @@ Spectator.describe Gloop::Attribute do
         expect(&.float64?).to be_false
         expect(&.size).to eq(4)
         expect(&.type).to eq(Gloop::Float32AttributeFormat::Type::Int8)
-        expect(&.offset).to eq(16)
+        expect(&.relative_offset).to eq(16)
       end
     end
   end
@@ -68,7 +68,7 @@ Spectator.describe Gloop::Attribute do
         expect(&.float64?).to be_true
         expect(&.size).to eq(2)
         expect(&.type).to eq(Gloop::Float32AttributeFormat::Type::Float64)
-        expect(&.offset).to eq(32)
+        expect(&.relative_offset).to eq(32)
       end
     end
   end
@@ -85,7 +85,7 @@ Spectator.describe Gloop::Attribute do
           expect(&.float64?).to be_false
           expect(&.size).to eq(3)
           expect(&.type).to eq(Gloop::Float32AttributeFormat::Type::Int16)
-          expect(&.offset).to eq(16)
+          expect(&.relative_offset).to eq(16)
         end
       end
     end
@@ -101,7 +101,7 @@ Spectator.describe Gloop::Attribute do
           expect(&.float64?).to be_false
           expect(&.size).to eq(4)
           expect(&.type).to eq(Gloop::Float32AttributeFormat::Type::Int8)
-          expect(&.offset).to eq(16)
+          expect(&.relative_offset).to eq(16)
         end
       end
     end
@@ -117,7 +117,7 @@ Spectator.describe Gloop::Attribute do
           expect(&.float64?).to be_true
           expect(&.size).to eq(2)
           expect(&.type).to eq(Gloop::Float32AttributeFormat::Type::Float64)
-          expect(&.offset).to eq(32)
+          expect(&.relative_offset).to eq(32)
         end
       end
     end
@@ -247,7 +247,7 @@ Spectator.describe Gloop::Attribute do
       is_expected.to have_attributes(
         size: 4,
         type: Gloop::IntAttributeFormat::Type::Int8,
-        offset: 16
+        relative_offset: 16
       )
     end
   end

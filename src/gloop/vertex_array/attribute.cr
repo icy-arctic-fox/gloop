@@ -85,7 +85,7 @@ module Gloop
       # - OpenGL enum: `GL_VERTEX_ATTRIB_ARRAY_RELATIVE_OFFSET`
       # - OpenGL version: 4.5
       @[GLFunction("glGetVertexArrayIndexediv", enum: "GL_VERTEX_ATTRIB_ARRAY_RELATIVE_OFFSET", version: "4.5")]
-      array_attribute_parameter VertexAttribRelativeOffset, offset : UInt32
+      array_attribute_parameter VertexAttribRelativeOffset, relative_offset : UInt32
 
       # Name of the vertex array.
       private getter name : Name
@@ -122,9 +122,9 @@ module Gloop
       # - OpenGL function: `glVertexArrayAttribFormat`
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribFormat", version: "4.5")]
-      def float32_format(size : Int32, type : Float32AttributeFormat::Type, normalized : Bool, offset : UInt32) : Nil
+      def float32_format(size : Int32, type : Float32AttributeFormat::Type, normalized : Bool, relative_offset : UInt32) : Nil
         bool = normalized ? LibGL::Boolean::True : LibGL::Boolean::False
-        gl.vertex_array_attrib_format(@name, @index, size, type.to_unsafe, bool, offset)
+        gl.vertex_array_attrib_format(@name, @index, size, type.to_unsafe, bool, relative_offset)
       end
 
       # Specifies the format of the attribute.
@@ -134,8 +134,8 @@ module Gloop
       # - OpenGL function: `glVertexArrayAttribIFormat`
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribIFormat", version: "4.5")]
-      def int_format(size : Int32, type : IntAttributeFormat::Type, offset : UInt32) : Nil
-        gl.vertex_array_attrib_i_format(@name, @index, size, type.to_unsafe, offset)
+      def int_format(size : Int32, type : IntAttributeFormat::Type, relative_offset : UInt32) : Nil
+        gl.vertex_array_attrib_i_format(@name, @index, size, type.to_unsafe, relative_offset)
       end
 
       # Specifies the format of the attribute.
@@ -145,16 +145,16 @@ module Gloop
       # - OpenGL function: `glVertexArrayAttribLFormat`
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribLFormat", version: "4.5")]
-      def float64_format(size : Int32, offset : UInt32, type : Float64AttributeFormat::Type = :float64) : Nil
-        gl.vertex_array_attrib_l_format(@name, @index, size, type.to_unsafe, offset)
+      def float64_format(size : Int32, relative_offset : UInt32, type : Float64AttributeFormat::Type = :float64) : Nil
+        gl.vertex_array_attrib_l_format(@name, @index, size, type.to_unsafe, relative_offset)
       end
 
       # Retrieves all format information about the attribute.
       def format : AttributeFormat
         case
-        when integer? then IntAttributeFormat.new(size, type.unsafe_as(IntAttributeFormat::Type), offset)
-        when float64? then Float64AttributeFormat.new(size, offset)
-        else               Float32AttributeFormat.new(size, type, normalized?, offset)
+        when integer? then IntAttributeFormat.new(size, type.unsafe_as(IntAttributeFormat::Type), relative_offset)
+        when float64? then Float64AttributeFormat.new(size, relative_offset)
+        else               Float32AttributeFormat.new(size, type, normalized?, relative_offset)
         end
       end
 
@@ -166,7 +166,7 @@ module Gloop
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribFormat", version: "4.5")]
       def format=(format : Float32AttributeFormat)
-        float32_format(format.size, format.type, format.normalized?, format.offset)
+        float32_format(format.size, format.type, format.normalized?, format.relative_offset)
       end
 
       # Sets the format of the attribute.
@@ -177,7 +177,7 @@ module Gloop
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribIFormat", version: "4.5")]
       def format=(format : IntAttributeFormat)
-        int_format(format.size, format.type, format.offset)
+        int_format(format.size, format.type, format.relative_offset)
       end
 
       # Sets the format of the attribute.
@@ -188,7 +188,7 @@ module Gloop
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribLFormat", version: "4.5")]
       def format=(format : Float64AttributeFormat)
-        float64_format(format.size, format.offset, format.type)
+        float64_format(format.size, format.relative_offset, format.type)
       end
     end
   end

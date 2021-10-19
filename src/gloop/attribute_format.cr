@@ -9,10 +9,10 @@ module Gloop
     getter size : Int32
 
     # Relative offset of the attribute's data from the start of the buffer.
-    getter offset : UInt32
+    getter relative_offset : UInt32
 
     # Creates the attribute format descriptor.
-    def initialize(@size : Int32, @offset : UInt32)
+    def initialize(@size : Int32, @relative_offset : UInt32)
     end
   end
 end

@@ -27,8 +27,8 @@ module Gloop
     getter? normalized : Bool
 
     # Creates the attribute format.
-    def initialize(size : Int32, @type : Type, @normalized : Bool, offset : UInt32)
-      super(size, offset)
+    def initialize(size : Int32, @type : Type, @normalized : Bool, relative_offset : UInt32)
+      super(size, relative_offset)
     end
   end
 end

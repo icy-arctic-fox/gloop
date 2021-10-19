@@ -22,8 +22,8 @@ module Gloop
     getter type : Type
 
     # Creates a descriptor of the attribute's format.
-    def initialize(size : Int32, @type : Type, offset : UInt32)
-      super(size, offset)
+    def initialize(size : Int32, @type : Type, relative_offset : UInt32)
+      super(size, relative_offset)
     end
   end
 end
