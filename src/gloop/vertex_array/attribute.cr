@@ -87,6 +87,14 @@ module Gloop
       @[GLFunction("glGetVertexArrayIndexediv", enum: "GL_VERTEX_ATTRIB_ARRAY_RELATIVE_OFFSET", version: "4.5")]
       array_attribute_parameter VertexAttribRelativeOffset, relative_offset : UInt32
 
+      # Retrieves the offset to the first value of this attribute in the currently bound array buffer.
+      #
+      # - OpenGL function: `glGetVertexArrayIndexed64iv`
+      # - OpenGL enum: `GL_VERTEX_BINDING_OFFSET`
+      # - OpenGL version: 4.5
+      @[GLFunction("glGetVertexArrayIndexed64iv", enum: "GL_VERTEX_BINDING_OFFSET", version: "4.5")]
+      array_attribute_parameter LibGL::GetPName::VertexBindingOffset, offset : Int64
+
       # Name of the vertex array.
       private getter name : Name
 
