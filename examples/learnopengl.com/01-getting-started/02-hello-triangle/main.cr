@@ -112,11 +112,11 @@ indices = UInt32.static_array( # note that we start from 0!
 0, 1, 3,                       # first Triangle
   1, 2, 3                      # second Triangle
 )
-LibGL.gen_vertex_arrays(1, out vao)
+vao = context.generate_vertex_array
 vbo = context.generate_buffer
 ebo = context.generate_buffer
 # bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-LibGL.bind_vertex_array(vao)
+vao.bind
 
 context.buffers.array.bind(vbo)
 context.buffers.array.data(vertices, :static_draw)
@@ -124,8 +124,9 @@ context.buffers.array.data(vertices, :static_draw)
 context.buffers.element_array.bind(ebo)
 context.buffers.element_array.data(indices, :static_draw)
 
-LibGL.vertex_attrib_pointer(0, 3, LibGL::VertexAttribPointerType::Float, LibGL::Boolean::False, 3 * sizeof(Float32), nil)
-LibGL.enable_vertex_attrib_array(0)
+attribute = context.attributes[0]
+attribute.float32_pointer(3, :float32, false, 3 * sizeof(Float32), 0)
+attribute.enable
 
 # note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
 context.buffers.array.unbind
@@ -135,7 +136,7 @@ context.buffers.array.unbind
 
 # You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
 # VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-LibGL.bind_vertex_array(0)
+context.unbind_vertex_array
 
 # uncomment this call to draw in wireframe polygons.
 # LibGL.polygon_mode(LibGL::MaterialFace::FrontAndBack, LibGL::PolygonMode::Line)
@@ -154,7 +155,7 @@ while LibGLFW.window_should_close(window).false?
 
   # draw our first triangle
   shader_program.use
-  LibGL.bind_vertex_array(vao) # seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+  vao.bind # seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
   # LibGL.draw_arrays(LibGL::PrimitiveType::Triangles, 0, 6)
   LibGL.draw_elements(LibGL::PrimitiveType::Triangles, 6, LibGL::DrawElementsType::UnsignedInt, nil)
   # LibGL.bind_vertex_array(0) # no need to unbind it every time
@@ -167,7 +168,7 @@ end
 
 # optional: de-allocate all resources once they've outlived their purpose:
 # ------------------------------------------------------------------------
-LibGL.delete_vertex_arrays(1, pointerof(vao))
+vao.delete
 vbo.delete
 ebo.delete
 shader_program.delete

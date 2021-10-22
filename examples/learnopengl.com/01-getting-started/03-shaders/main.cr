@@ -63,20 +63,22 @@ vertices = Float32.static_array(
   0.0, 0.5, 0.0, 0.0, 0.0, 1.0    # top
 )
 
-LibGL.gen_vertex_arrays(1, out vao)
+vao = context.generate_vertex_array
 vbo = context.generate_buffer
 # bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-LibGL.bind_vertex_array(vao)
+vao.bind
 
 context.buffers.array.bind(vbo)
 context.buffers.array.data(vertices, :static_draw)
 
 # position attribute
-LibGL.vertex_attrib_pointer(0, 3, LibGL::VertexAttribPointerType::Float, LibGL::Boolean::False, 6 * sizeof(Float32), nil)
-LibGL.enable_vertex_attrib_array(0)
+attribute = context.attributes[0]
+attribute.float32_pointer(3, :float32, false, 6 * sizeof(Float32), 0)
+attribute.enable
 # color attribute
-LibGL.vertex_attrib_pointer(1, 3, LibGL::VertexAttribPointerType::Float, LibGL::Boolean::False, 6 * sizeof(Float32), Pointer(Void).new(3 * sizeof(Float32)))
-LibGL.enable_vertex_attrib_array(1)
+attribute = context.attributes[1]
+attribute.float32_pointer(3, :float32, false, 6 * sizeof(Float32), 3_i64 * sizeof(Float32))
+attribute.enable
 
 # note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
 context.buffers.array.unbind
@@ -99,7 +101,7 @@ while LibGLFW.window_should_close(window).false?
 
   # render the triangle
   our_shader.use
-  LibGL.bind_vertex_array(vao)
+  vao.bind
   LibGL.draw_arrays(LibGL::PrimitiveType::Triangles, 0, 3)
 
   # glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -110,7 +112,7 @@ end
 
 # optional: de-allocate all resources once they've outlived their purpose:
 # ------------------------------------------------------------------------
-LibGL.delete_vertex_arrays(1, pointerof(vao))
+vao.delete
 vbo.delete
 
 # glfw: terminate, clearing all previously allocated GLFW resources.
