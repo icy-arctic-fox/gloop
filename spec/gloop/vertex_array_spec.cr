@@ -175,6 +175,49 @@ Spectator.describe Gloop::VertexArray do
     end
   end
 
+  describe "#bind_vertex_buffer" do
+    let(slot) { 0_u32 }
+    let(buffer) { Gloop::Buffer.create(context) }
+    let(attribute) { Gloop::VertexArray::Attribute.new(context, vao.name, 0) }
+    let(binding) { Gloop::VertexArray::Binding.new(context, vao.name, slot) }
+
+    before_each do
+      attribute.enable
+      attribute.float32_format(2, :float32, false, 24)
+    end
+
+    it "sets the stride and offset" do
+      vao.bind_attribute(attribute, slot)
+      vao.bind_vertex_buffer(buffer, slot, 64, 256)
+      expect(binding.offset).to eq(64)
+      expect(binding.stride).to eq(256)
+    end
+  end
+
+  describe "#bind_attribute" do
+    let(slot) { 0_u32 }
+    let(attribute) { Gloop::VertexArray::Attribute.new(context, vao.name, 0) }
+    let(binding) { Gloop::VertexArray::Binding.new(context, vao.name, slot) }
+
+    before_each do
+      attribute.enable
+      attribute.float32_format(2, :float32, false, 24)
+    end
+
+    it "sets the stride" do
+      vao.bind_attribute(attribute, slot)
+      expect(binding.stride).to eq(16) # 2 x sizeof(Float32)
+    end
+  end
+
+  describe "#bindings" do
+    subject { vao.bindings }
+
+    it "is a collection of binding slots" do
+      is_expected.to be_an(Enumerable(Gloop::VertexArray::Binding))
+    end
+  end
+
   context "Labelable" do
     it "can be labeled" do
       subject.label = "Test label"
