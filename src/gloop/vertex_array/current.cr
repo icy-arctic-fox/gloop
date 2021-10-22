@@ -69,6 +69,11 @@ module Gloop
       def bind_attribute(attribute : Gloop::Attribute, to slot : UInt32)
         gl.vertex_attrib_binding(attribute.index, slot)
       end
+
+      # Information about vertex buffer and attribute binding slots.
+      def bindings : CurrentBindings
+        CurrentBindings.new(@context)
+      end
     end
   end
 

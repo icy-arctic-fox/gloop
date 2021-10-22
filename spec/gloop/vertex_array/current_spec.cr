@@ -74,4 +74,12 @@ Spectator.describe Gloop::VertexArray::Current do
       expect(binding.stride).to eq(16) # 2 x sizeof(Float32)
     end
   end
+
+  describe "#bindings" do
+    subject { current.bindings }
+
+    it "is a collection of binding slots" do
+      is_expected.to be_an(Enumerable(Gloop::VertexArray::CurrentBinding))
+    end
+  end
 end
