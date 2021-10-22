@@ -132,7 +132,7 @@ attribute.enable
 context.buffers.array.unbind
 
 # remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
-# LibGL.bind_buffer(LibGL::BufferTargetARB::ElementArrayBuffer, 0)
+# context.buffers.element_array.unbind
 
 # You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
 # VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
@@ -158,7 +158,7 @@ while LibGLFW.window_should_close(window).false?
   vao.bind # seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
   # LibGL.draw_arrays(LibGL::PrimitiveType::Triangles, 0, 6)
   LibGL.draw_elements(LibGL::PrimitiveType::Triangles, 6, LibGL::DrawElementsType::UnsignedInt, nil)
-  # LibGL.bind_vertex_array(0) # no need to unbind it every time
+  # context.unbind_vertex_array # no need to unbind it every time
 
   # glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
   # -------------------------------------------------------------------------------

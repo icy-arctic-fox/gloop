@@ -85,7 +85,7 @@ context.buffers.array.unbind
 
 # You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
 # VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-# LibGL.bind_vertex_array(0)
+# context.unbind_vertex_array
 
 # render loop
 # -----------
