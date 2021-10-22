@@ -1,6 +1,7 @@
 require "./buffer"
 require "./object"
 require "./parameters"
+require "./vertex_array/*"
 
 module Gloop
   # Information about the specification of vertex formats.
