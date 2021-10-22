@@ -71,7 +71,7 @@ module Gloop
 
             {% elsif type <= Float64 %}
               %value = uninitialized Float64
-              gl.get_float_64v(%pname, pointerof(%value))
+              gl.get_double_v(%pname, pointerof(%value))
               %value
 
             {% elsif type <= Bool %}
