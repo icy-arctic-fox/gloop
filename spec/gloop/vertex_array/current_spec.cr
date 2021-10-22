@@ -4,6 +4,8 @@ Spectator.describe Gloop::VertexArray::Current do
   subject(current) { described_class.new(context) }
   let(vao) { Gloop::VertexArray.create(context) }
 
+  before_each { vao.bind }
+
   describe "#bound?" do
     subject { current.bound? }
 
@@ -26,7 +28,6 @@ Spectator.describe Gloop::VertexArray::Current do
 
   describe "#unbind" do
     it "unbinds a vertex array" do
-      vao.bind
       expect(&.unbind).to change(&.bound?).from(true).to(false)
     end
   end
@@ -36,6 +37,41 @@ Spectator.describe Gloop::VertexArray::Current do
 
     it "is a collection of attributes" do
       is_expected.to be_an(Enumerable(Gloop::Attribute))
+    end
+  end
+
+  describe "#bind_vertex_buffer" do
+    let(slot) { 0_u32 }
+    let(buffer) { Gloop::Buffer.create(context) }
+    let(attribute) { Gloop::Attribute.new(context, 0) }
+    let(binding) { Gloop::VertexArray::CurrentBinding.new(context, slot) }
+
+    before_each do
+      attribute.enable
+      attribute.float32_format(2, :float32, false, 24)
+    end
+
+    it "sets the stride and offset" do
+      current.bind_attribute(attribute, slot)
+      current.bind_vertex_buffer(buffer, slot, 64, 256)
+      expect(binding.offset).to eq(64)
+      expect(binding.stride).to eq(256)
+    end
+  end
+
+  describe "#bind_attribute" do
+    let(slot) { 0_u32 }
+    let(attribute) { Gloop::Attribute.new(context, 0) }
+    let(binding) { Gloop::VertexArray::CurrentBinding.new(context, slot) }
+
+    before_each do
+      attribute.enable
+      attribute.float32_format(2, :float32, false, 24)
+    end
+
+    it "sets the stride" do
+      current.bind_attribute(attribute, slot)
+      expect(binding.stride).to eq(16) # 2 x sizeof(Float32)
     end
   end
 end

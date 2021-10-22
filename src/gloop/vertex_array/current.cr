@@ -45,6 +45,30 @@ module Gloop
       def attributes : Gloop::Attributes
         Gloop::Attributes.new(@context)
       end
+
+      # Ties a vertex buffer to a binding slot (index) to be associated with an attribute.
+      #
+      # See: `#bind_attribute`
+      #
+      # - OpenGL function: `glBindVertexBuffer`
+      # - OpenGL version: 4.3
+      @[GLFunction("glBindVertexBuffer", version: "4.3")]
+      def bind_vertex_buffer(buffer : Buffer, to slot : UInt32, offset : Size, stride : Int32)
+        gl.bind_vertex_buffer(slot, buffer.to_unsafe, offset, stride)
+      end
+
+      # TODO: bind_vertex_buffers
+
+      # Ties an attribute to a binding slot (index) to be associated with a vertex buffer.
+      #
+      # See: `#bind_vertex_buffer`
+      #
+      # - OpenGL function: `glVertexAttribBinding`
+      # - OpenGL version: 4.3
+      @[GLFunction("glVertexAttribBinding", veresion: "4.5")]
+      def bind_attribute(attribute : Gloop::Attribute, to slot : UInt32)
+        gl.vertex_attrib_binding(attribute.index, slot)
+      end
     end
   end
 
