@@ -1,11 +1,11 @@
 files: ./src/**/*.cr
-run: crystal spec
+run: crystal spec --rand
 ---
 files: ./src/**/*.cr
 run: bin/ameba %file%
 ---
 files: ./spec/**/*.cr
-run: crystal spec %file%
+run: crystal spec --rand %file%
 ---
 files: ./src/**/*.cr
 run: crystal tool format %file%
