@@ -1,7 +1,8 @@
 module Gloop
   # Mix-in providing macros for enabling and disabling OpenGL capabilities.
+  #
   # These methods effectively wrap calls to `glEnable`, `glDisable`, and `glIsEnabled`.
-  module Capabilities
+  private module Capabilities
     # Defines methods for enabling, disabling, and checking the status of a capability.
     #
     # The *cap* is the name of the OpenGL capability to operate on.
