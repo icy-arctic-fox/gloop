@@ -1,4 +1,5 @@
 require "./context/*"
+require "./draw_commands"
 require "./error_handling"
 require "./parameters"
 require "./render_commands"
@@ -11,6 +12,7 @@ module Gloop
   # Another mechanism is needed to create an OpenGL context.
   # Some possibilities are GLFW, SFML, and SDL.
   struct Context
+    include DrawCommands
     include Parameters
     include RenderCommands
 

@@ -4,7 +4,7 @@ require "./parameters"
 module Gloop
   # Methods for basic rendering.
   #
-  # See: `DrawingCommands`
+  # See: `DrawCommands`
   module RenderCommands
     include Parameters
 
