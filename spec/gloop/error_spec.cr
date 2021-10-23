@@ -27,6 +27,7 @@ Spectator.describe "Error handling" do
       end
 
       it "returns an error" do
+        skip_if_error_checking_disabled
         is_expected.to eq(Gloop::Error::InvalidEnum)
       end
     end

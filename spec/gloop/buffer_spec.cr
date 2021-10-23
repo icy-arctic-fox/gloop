@@ -219,6 +219,7 @@ Spectator.describe Gloop::Buffer do
       end
 
       it "raises on out-of-range values" do
+        skip_if_error_checking_disabled
         expect { buffer[-100..100] }.to raise_error(Gloop::InvalidValueError)
       end
     end
@@ -229,10 +230,12 @@ Spectator.describe Gloop::Buffer do
       end
 
       it "raises on negative counts" do
+        skip_if_error_checking_disabled
         expect { buffer[-1, -2] }.to raise_error(ArgumentError)
       end
 
       it "raises on out-of-range values" do
+        skip_if_error_checking_disabled
         expect { buffer[-100, 100] }.to raise_error(Gloop::InvalidValueError)
       end
     end
