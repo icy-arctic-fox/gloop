@@ -345,6 +345,7 @@ Spectator.describe Gloop::Program do
 end
 
 Spectator.describe Gloop::Context do
+  subject { context }
   let(program) { context.create_program }
 
   let(vertex_shader) do
@@ -392,6 +393,13 @@ Spectator.describe Gloop::Context do
     it "is the null object when no program is active" do
       context.uninstall_program
       is_expected.to be_none
+    end
+  end
+
+  describe "#uninstall_program" do
+    it "disables the active program" do
+      program.use
+      expect { context.uninstall_program }.to change(&.program?).from(program).to(nil)
     end
   end
 end

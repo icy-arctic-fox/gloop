@@ -756,3 +756,51 @@ Spectator.describe Gloop::Buffer do
     end
   end
 end
+
+Spectator.describe Gloop::Context do
+  describe "#create_buffer" do
+    it "creates a buffer" do
+      buffer = context.create_buffer
+      expect(buffer.exists?).to be_true
+    ensure
+      buffer.try(&.delete)
+    end
+  end
+
+  describe "#create_buffers" do
+    it "creates multiple buffers" do
+      buffers = context.create_buffers(3)
+      aggregate_failures do
+        expect(buffers[0].exists?).to be_true
+        expect(buffers[1].exists?).to be_true
+        expect(buffers[2].exists?).to be_true
+      end
+    ensure
+      buffers.delete if buffers
+    end
+  end
+
+  describe "#generate_buffer" do
+    it "creates a buffer" do
+      buffer = context.generate_buffer
+      buffer.bind(:array)
+      expect(buffer.exists?).to be_true
+    ensure
+      buffer.try(&.delete)
+    end
+  end
+
+  describe "#generate_buffers" do
+    it "creates multiple buffers" do
+      buffers = context.generate_buffers(3)
+      aggregate_failures do
+        3.times do |i|
+          buffers[i].bind(:array)
+          expect(buffers[i].exists?).to be_true
+        end
+      end
+    ensure
+      buffers.delete if buffers
+    end
+  end
+end

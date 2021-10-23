@@ -169,3 +169,12 @@ Spectator.describe Gloop::Shader do
     end
   end
 end
+
+Spectator.describe Gloop::Context do
+  describe "#create_shader" do
+    it "creates a shader" do
+      shader = context.create_shader(:vertex)
+      expect(shader.exists?).to be_true
+    end
+  end
+end

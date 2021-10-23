@@ -310,3 +310,13 @@ Spectator.describe Gloop::Debug do
     end
   end
 end
+
+Spectator.describe Gloop::Context do
+  describe "#debug" do
+    subject { context.debug }
+
+    it "returns a Debug instance" do
+      is_expected.to be_a(Gloop::Debug)
+    end
+  end
+end

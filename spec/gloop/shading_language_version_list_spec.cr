@@ -25,3 +25,11 @@ Spectator.describe Gloop::ShadingLanguageVersionList do
     end
   end
 end
+
+Spectator.describe Gloop::Context do
+  subject { context }
+
+  describe "#shading_language_versions" do
+    specify { expect(&.shading_language_versions).to be_an(Enumerable(String)) }
+  end
+end

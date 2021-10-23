@@ -83,3 +83,13 @@ Spectator.describe Gloop::VertexArray::Current do
     end
   end
 end
+
+Spectator.describe Gloop::Context do
+  describe "#bound_vertex_array" do
+    subject { context.bound_vertex_array }
+
+    it "returns a Current instance" do
+      is_expected.to be_a(Gloop::VertexArray::Current)
+    end
+  end
+end

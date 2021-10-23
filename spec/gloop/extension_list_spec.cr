@@ -24,3 +24,11 @@ Spectator.describe Gloop::ExtensionList do
     end
   end
 end
+
+Spectator.describe Gloop::Context do
+  subject { context }
+
+  describe "#extensions" do
+    specify { expect(&.extensions).to be_an(Enumerable(Gloop::Extension)) }
+  end
+end

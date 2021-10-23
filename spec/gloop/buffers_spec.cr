@@ -149,3 +149,13 @@ Spectator.describe Gloop::Buffers do
     end
   end
 end
+
+Spectator.describe Gloop::Context do
+  describe "#buffers" do
+    subject { context.buffers }
+
+    it "returns a Buffers instance" do
+      is_expected.to be_a(Gloop::Buffers)
+    end
+  end
+end

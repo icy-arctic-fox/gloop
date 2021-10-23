@@ -20,3 +20,11 @@ Spectator.describe Gloop::VertexArray::CurrentBindings do
     end
   end
 end
+
+Spectator.describe Gloop::Context do
+  subject { context }
+
+  describe "#bindings" do
+    specify { expect(&.bindings).to be_an(Enumerable(Gloop::VertexArray::CurrentBinding)) }
+  end
+end

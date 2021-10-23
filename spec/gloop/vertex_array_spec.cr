@@ -227,14 +227,61 @@ Spectator.describe Gloop::VertexArray do
 end
 
 Spectator.describe Gloop::Context do
-  let(vertex_array) { context.create_vertex_array }
+  subject { context }
+  let(vao) { context.create_vertex_array }
+
+  describe "#create_vertex_array" do
+    it "creates a vertex array" do
+      vao = context.create_vertex_array
+      expect(vao.exists?).to be_true
+    ensure
+      vao.try(&.delete)
+    end
+  end
+
+  describe "#create_vertex_arrays" do
+    it "creates multiple vertex arrays" do
+      vaos = context.create_vertex_arrays(3)
+      aggregate_failures do
+        expect(vaos[0].exists?).to be_true
+        expect(vaos[1].exists?).to be_true
+        expect(vaos[2].exists?).to be_true
+      end
+    ensure
+      vaos.delete if vaos
+    end
+  end
+
+  describe "#generate_vertex_array" do
+    it "creates a vertex array" do
+      vao = context.generate_vertex_array
+      vao.bind
+      expect(vao.exists?).to be_true
+    ensure
+      vao.try(&.delete)
+    end
+  end
+
+  describe "#generate_vertex_arrays" do
+    it "creates multiple vertex arrays" do
+      vaos = context.generate_vertex_arrays(3)
+      aggregate_failures do
+        3.times do |i|
+          vaos[i].bind
+          expect(vaos[i].exists?).to be_true
+        end
+      end
+    ensure
+      vaos.delete if vaos
+    end
+  end
 
   describe "#vertex_array?" do
     subject { context.vertex_array? }
 
     it "is the currently bound vertex array" do
-      vertex_array.bind
-      is_expected.to eq(vertex_array)
+      vao.bind
+      is_expected.to eq(vao)
     end
 
     it "is nil when no vertex array is bound" do
@@ -247,13 +294,20 @@ Spectator.describe Gloop::Context do
     subject { context.vertex_array }
 
     it "is the currently bound vertex array" do
-      vertex_array.bind
-      is_expected.to eq(vertex_array)
+      vao.bind
+      is_expected.to eq(vao)
     end
 
     it "is the null object when no vertex array is bound" do
       context.unbind_vertex_array
       is_expected.to be_none
+    end
+  end
+
+  describe "#unbind_vertex_array" do
+    it "unbinds the current vertex array" do
+      vao.bind
+      expect { context.unbind_vertex_array }.to change(&.vertex_array?).from(vao).to(nil)
     end
   end
 end

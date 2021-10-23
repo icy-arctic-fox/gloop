@@ -23,3 +23,13 @@ Spectator.describe Gloop::Attributes do
     end
   end
 end
+
+Spectator.describe Gloop::Context do
+  describe "#attributes" do
+    subject { context.attributes }
+
+    it "is a collection of attributes" do
+      is_expected.to be_an(Enumerable(Gloop::Attribute))
+    end
+  end
+end

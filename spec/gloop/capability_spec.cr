@@ -38,7 +38,7 @@ end
 
 Spectator.describe Gloop::Context do
   subject { context }
-  let(capability) { Gloop::Capability.new(context, :blend) }
+  let(capability) { context.capability(:blend) }
 
   describe "#enable" do
     before_each { capability.disable }
