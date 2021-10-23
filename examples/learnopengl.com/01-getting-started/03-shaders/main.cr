@@ -96,8 +96,8 @@ while LibGLFW.window_should_close(window).false?
 
   # render
   # ------
-  LibGL.clear_color(0.2, 0.3, 0.3, 1.0)
-  LibGL.clear(LibGL::ClearBufferMask::ColorBuffer)
+  context.clear_color = {0.2, 0.3, 0.3, 1.0}
+  context.clear(:color)
 
   # render the triangle
   our_shader.use

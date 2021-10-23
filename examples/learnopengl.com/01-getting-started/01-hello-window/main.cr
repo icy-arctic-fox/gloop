@@ -47,6 +47,7 @@ if window.nil?
 end
 LibGLFW.make_context_current(window)
 LibGLFW.set_framebuffer_size_callback(window, ->framebuffer_size_callback)
+context = Gloop::Context.from_glfw
 
 # render loop
 # -----------
@@ -57,8 +58,8 @@ while LibGLFW.window_should_close(window).false?
 
   # render
   # ------
-  LibGL.clear_color(0.2, 0.3, 0.3, 1.0)
-  LibGL.clear(LibGL::ClearBufferMask::ColorBuffer)
+  context.clear_color = {0.2, 0.3, 0.3, 1.0}
+  context.clear(:color)
 
   # glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
   # -------------------------------------------------------------------------------

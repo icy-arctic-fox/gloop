@@ -1,6 +1,7 @@
 require "./context/*"
 require "./error_handling"
 require "./parameters"
+require "./render_commands"
 
 module Gloop
   # Provides information about a pre-existing OpenGL context
@@ -11,6 +12,7 @@ module Gloop
   # Some possibilities are GLFW, SFML, and SDL.
   struct Context
     include Parameters
+    include RenderCommands
 
     # Retrieves the major version number of the OpenGL API supported by the current context.
     #
