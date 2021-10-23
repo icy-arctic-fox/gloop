@@ -1,12 +1,49 @@
 require "./clear_mask"
+require "./parameters"
 
 module Gloop
   # Methods for basic rendering.
   #
   # See: `DrawingCommands`
   module RenderCommands
+    include Parameters
+
     # Tuple of color components, each value a floating-point number in the range [0, 1].
     alias FloatColorTuple = Tuple(Float32 | Float64, Float32 | Float64, Float32 | Float64, Float32 | Float64)
+
+    # Retrieves the value used to clear the depth buffer.
+    #
+    # - OpenGL function: `glGetDoublev`
+    # - OpenGL enum: `GL_DEPTH_CLEAR_VALUE`
+    # - OpenGL version: 2.0
+    @[GLFunction("glGetDoublev", enum: "GL_DEPTH_CLEAR_VALUE", version: "2.0")]
+    parameter DepthClearValue, clear_depth : Float64
+
+    # Retrieves the value used to clear the stencil buffer.
+    #
+    # - OpenGL function: `glGetIntegerv`
+    # - OpenGL enum: `GL_STENCIL_CLEAR_VALUE`
+    # - OpenGL version: 2.0
+    @[GLFunction("glGetIntegerv", enum: "GL_STENCIL_CLEAR_VALUE", version: "2.0")]
+    parameter StencilClearValue, clear_stencil : Int32
+
+    # Waits for all previously called GL commands to complete.
+    #
+    # - OpenGL function: `glFinish`
+    # - OpenGL version: 2.0
+    @[GLFunction("glFinish", version: "2.0")]
+    def finish : Nil
+      gl.finish
+    end
+
+    # Forces all GL commands to complete before new ones can be issued.
+    #
+    # - OpenGL function: `glFlush`
+    # - OpenGL version: 2.0
+    @[GLFunction("glFlush", version: "2.0")]
+    def flush : Nil
+      gl.flush
+    end
 
     # Clears selected buffers of the output framebuffer.
     #
@@ -17,7 +54,7 @@ module Gloop
       gl.clear(mask.to_unsafe)
     end
 
-    # Retrieves thte color used to clear the color buffer.
+    # Retrieves the color used to clear the color buffer.
     #
     # - OpenGL function: `glGetFloatv`
     # - OpenGL enum: `GL_COLOR_CLEAR_VALUE`
@@ -50,6 +87,39 @@ module Gloop
     def clear_color=(color : FloatColorTuple)
       floats = color.map(&.to_f32)
       gl.clear_color(*floats)
+    end
+
+    # Sets the value to clear the depth buffer with.
+    #
+    # See: `#clear`
+    #
+    # - OpenGL function: `glClearDepth`
+    # - OpenGL version: 2.0
+    @[GLFunction("glClearDepth", version: "2.0")]
+    def clear_depth=(depth : Float64)
+      gl.clear_depth(depth)
+    end
+
+    # Sets the value to clear the depth buffer with.
+    #
+    # See: `#clear`
+    #
+    # - OpenGL function: `glClearDepthf`
+    # - OpenGL version: 2.0
+    @[GLFunction("glClearDepthf", version: "2.0")]
+    def clear_depth=(depth : Float32)
+      gl.clear_depth_f(depth)
+    end
+
+    # Sets the value to clear the stencil buffer with.
+    #
+    # See `#clear`
+    #
+    # - OpenGL function: `glClearStencil`
+    # - OpenGL version: 2.0
+    @[GLFunction("glClearStencil", value: "2.0")]
+    def clear_stencil=(stencil : Int32)
+      gl.clear_stencil(stencil)
     end
   end
 end
