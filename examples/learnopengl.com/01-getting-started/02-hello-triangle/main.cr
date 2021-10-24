@@ -156,8 +156,8 @@ while LibGLFW.window_should_close(window).false?
   # draw our first triangle
   shader_program.use
   vao.bind # seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-  # LibGL.draw_arrays(LibGL::PrimitiveType::Triangles, 0, 6)
-  LibGL.draw_elements(LibGL::PrimitiveType::Triangles, 6, LibGL::DrawElementsType::UnsignedInt, nil)
+  # context.draw_arrays(:triangles, 0, 6)
+  context.draw_elements(:triangles, 6, :u_int32, 0)
   # context.unbind_vertex_array # no need to unbind it every time
 
   # glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

@@ -102,7 +102,7 @@ while LibGLFW.window_should_close(window).false?
   # render the triangle
   our_shader.use
   vao.bind
-  LibGL.draw_arrays(LibGL::PrimitiveType::Triangles, 0, 3)
+  context.draw_arrays(:triangles, 0, 3)
 
   # glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
   # -------------------------------------------------------------------------------
