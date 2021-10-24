@@ -312,7 +312,7 @@ module Gloop
       # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
       #
       # NOTE: Any length *data* might have is ignored.
-      # Be sure that *count* is less than or equal to the byte size length of *data*.
+      # Be sure that *count* is less than or equal to the byte size of *data*.
       #
       # See: `Buffer#[]=`
       #
@@ -335,7 +335,7 @@ module Gloop
       # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
       #
       # NOTE: Any length *data* might have is ignored.
-      # Be sure that *count* is less than or equal to the byte-size length of *data*.
+      # Be sure that the size of *range* is less than or equal to the byte size of *data*.
       #
       # See: `Buffer#[]=`
       #
