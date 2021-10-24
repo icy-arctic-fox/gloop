@@ -1,3 +1,4 @@
+require "./capabilities"
 require "./parameters"
 
 module Gloop
@@ -5,7 +6,12 @@ module Gloop
   #
   # See: `RenderCommands`
   module DrawCommands
+    include Capabilities
     include Parameters
+
+    capability PrimitiveRestart, primitive_restart
+
+    capability PrimitiveRestartFixedIndex, primitive_restart_fixed_index, version: "4.3"
 
     # Value to treat as non-index and starts a new primitive.
     #
