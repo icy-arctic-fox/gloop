@@ -1,7 +1,7 @@
 # Original post available here:
-# https://learnopengl.com/Getting-started/Hello-Window
+# https://learnopengl.com/Getting-started/Hello-Triangle
 # and source code available here:
-# https://learnopengl.com/code_viewer_gh.php?code=src/1.getting_started/1.2.hello_window_clear/hello_window_clear.cpp
+# https://learnopengl.com/code_viewer_gh.php?code=src/1.getting_started/2.2.hello_triangle_indexed/hello_triangle_indexed.cpp
 
 require "glfw"
 require "gloop"
