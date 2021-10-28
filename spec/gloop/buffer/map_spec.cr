@@ -4,7 +4,7 @@ Spectator.describe Gloop::Buffer::Map do
   let(data) { Bytes.new(8, &.to_u8) }
   let(range) { 1..6 }
   let(subdata) { data[range] }
-  let(buffer) { Gloop::Buffer.create(context).tap(&.data(data)) }
+  let(buffer) { Gloop::Buffer.create(context).tap(&.initialize_data(data)) }
   let(access_mask) { Gloop::Buffer::AccessMask.flags(Read, Write) }
   subject { buffer.mapping }
 

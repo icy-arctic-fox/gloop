@@ -170,12 +170,12 @@ module Gloop
       # The *data* must have a `#to_slice` method.
       # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
       #
-      # See: `Buffer#data`
+      # See: `Buffer#initialize_data`
       #
       # - OpenGL function: `glBufferData`
       # - OpenGL version: 2.0
       @[GLFunction("glBufferData", version: "2..0")]
-      def data(data, usage : Usage = :static_draw) : Nil
+      def initialize_data(data, usage : Usage = :static_draw) : Nil
         slice = data.to_slice
         pointer = slice.to_unsafe.as(Void*)
         size = Size.new(slice.bytesize)
@@ -206,7 +206,7 @@ module Gloop
       @[GLFunction("glBufferData", version: "2.0")]
       @[AlwaysInline]
       def data=(data)
-        self.data(data, usage)
+        initialize_data(data, usage)
       end
 
       # Retrieves all data in the buffer currently bound to this target.
@@ -233,12 +233,12 @@ module Gloop
       # The *data* must have a `#to_slice` method.
       # `Bytes`, `Slice`, and `StaticArray` types are ideal for this.
       #
-      # See: `Buffer#storage`
+      # See: `Buffer#initialize_storage`
       #
       # - OpenGL function: `glBufferStorage`
       # - OpenGL version: 4.4
       @[GLFunction("glBufferStorage", version: "4.4")]
-      def storage(data, flags : Storage) : Nil
+      def initialize_storage(data, flags : Storage) : Nil
         slice = data.to_slice
         pointer = slice.to_unsafe.as(Void*)
         size = Size.new(slice.bytesize)

@@ -119,10 +119,10 @@ ebo = context.generate_buffer
 vao.bind
 
 context.buffers.array.bind(vbo)
-context.buffers.array.data(vertices, :static_draw)
+context.buffers.array.initialize_data(vertices, :static_draw)
 
 context.buffers.element_array.bind(ebo)
-context.buffers.element_array.data(indices, :static_draw)
+context.buffers.element_array.initialize_data(indices, :static_draw)
 
 attribute = context.attributes[0]
 attribute.float32_pointer(3, :float32, false, 3 * sizeof(Float32), 0)

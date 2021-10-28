@@ -117,7 +117,7 @@ Spectator.describe Gloop::Buffer do
     subject { buffer.usage }
 
     it "retrieves the usage hints" do
-      buffer.data(Bytes.empty, :dynamic_draw)
+      buffer.initialize_data(Bytes.empty, :dynamic_draw)
       is_expected.to eq(Gloop::Buffer::Usage::DynamicDraw)
     end
   end
@@ -125,23 +125,23 @@ Spectator.describe Gloop::Buffer do
   describe "#storage_flags" do
     subject { buffer.storage_flags }
     let(flags) { Gloop::Buffer::Storage.flags(MapRead, MapPersistent, MapCoherent) }
-    before_each { buffer.storage(data, flags) }
+    before_each { buffer.initialize_storage(data, flags) }
 
     it "retrieves the storage flags" do
       is_expected.to eq(flags)
     end
   end
 
-  describe "#data" do
+  describe "#initialize_data" do
     subject { buffer.data }
 
     it "stores data in the buffer" do
-      buffer.data(data, :static_draw)
+      buffer.initialize_data(data, :static_draw)
       is_expected.to eq(data)
     end
 
     it "makes the buffer mutable" do
-      buffer.data(data)
+      buffer.initialize_data(data)
       expect(buffer.immutable?).to be_false
     end
   end
@@ -170,7 +170,7 @@ Spectator.describe Gloop::Buffer do
     end
 
     it "retains the usage hint" do
-      buffer.data(data, :dynamic_draw)
+      buffer.initialize_data(data, :dynamic_draw)
       buffer.data = data
       expect(buffer.usage).to eq(Gloop::Buffer::Usage::DynamicDraw)
     end
@@ -181,14 +181,14 @@ Spectator.describe Gloop::Buffer do
     end
   end
 
-  describe "#storage" do
+  describe "#initialize_storage" do
     it "stores data in the buffer" do
-      buffer.storage(data, :none)
+      buffer.initialize_storage(data, :none)
       expect(buffer.data).to eq(data)
     end
 
     it "makes the buffer immutable" do
-      buffer.storage(data, :none)
+      buffer.initialize_storage(data, :none)
       expect(buffer.immutable?).to be_true
     end
   end
@@ -709,7 +709,7 @@ Spectator.describe Gloop::Buffer do
   describe "#flush" do
     let(data) { Bytes[10, 20, 30, 40, 50, 60, 70, 80] }
     let(storage_flags) { Gloop::Buffer::Storage.flags(MapWrite, MapPersistent) }
-    let(buffer) { described_class.create(context).tap(&.storage(data, storage_flags)) }
+    let(buffer) { described_class.create(context).tap(&.initialize_storage(data, storage_flags)) }
     let(access_mask) { Gloop::Buffer::AccessMask.flags(Write, Persistent, FlushExplicit) }
 
     before_each { @bytes = buffer.map(access_mask, 1..6) }

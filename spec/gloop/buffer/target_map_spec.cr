@@ -11,7 +11,7 @@ Spectator.describe Gloop::Buffer::TargetMap do
 
   around_each do |example|
     target.bind(buffer) do
-      target.data(data)
+      target.initialize_data(data)
       target.map(access_mask, range) do |bytes| # ameba:disable Lint/UnusedArgument
         @bytes = bytes
         example.run

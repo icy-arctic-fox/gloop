@@ -69,7 +69,7 @@ vbo = context.generate_buffer
 vao.bind
 
 context.buffers.array.bind(vbo)
-context.buffers.array.data(vertices, :static_draw)
+context.buffers.array.initialize_data(vertices, :static_draw)
 
 # position attribute
 attribute = context.attributes[0]
