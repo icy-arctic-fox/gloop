@@ -130,7 +130,8 @@ module Gloop
       # - OpenGL function: `glVertexArrayAttribFormat`
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribFormat", version: "4.5")]
-      def float32_format(size : Int32, type : Float32AttributeFormat::Type, normalized : Bool, relative_offset : UInt32) : Nil
+      def specify_format(size : Int32, type : Float32AttributeFormat::Type,
+                         normalized : Bool, relative_offset : UInt32) : Nil
         bool = normalized ? LibGL::Boolean::True : LibGL::Boolean::False
         gl.vertex_array_attrib_format(@name, @index, size, type.to_unsafe, bool, relative_offset)
       end
@@ -142,7 +143,7 @@ module Gloop
       # - OpenGL function: `glVertexArrayAttribIFormat`
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribIFormat", version: "4.5")]
-      def int_format(size : Int32, type : IntAttributeFormat::Type, relative_offset : UInt32) : Nil
+      def specify_int_format(size : Int32, type : IntAttributeFormat::Type, relative_offset : UInt32) : Nil
         gl.vertex_array_attrib_i_format(@name, @index, size, type.to_unsafe, relative_offset)
       end
 
@@ -153,7 +154,8 @@ module Gloop
       # - OpenGL function: `glVertexArrayAttribLFormat`
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribLFormat", version: "4.5")]
-      def float64_format(size : Int32, relative_offset : UInt32, type : Float64AttributeFormat::Type = :float64) : Nil
+      def specify_float64_format(size : Int32, relative_offset : UInt32,
+                                 type : Float64AttributeFormat::Type = :float64) : Nil
         gl.vertex_array_attrib_l_format(@name, @index, size, type.to_unsafe, relative_offset)
       end
 
@@ -174,7 +176,7 @@ module Gloop
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribFormat", version: "4.5")]
       def format=(format : Float32AttributeFormat)
-        float32_format(format.size, format.type, format.normalized?, format.relative_offset)
+        specify_format(format.size, format.type, format.normalized?, format.relative_offset)
       end
 
       # Sets the format of the attribute.
@@ -185,7 +187,7 @@ module Gloop
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribIFormat", version: "4.5")]
       def format=(format : IntAttributeFormat)
-        int_format(format.size, format.type, format.relative_offset)
+        specify_int_format(format.size, format.type, format.relative_offset)
       end
 
       # Sets the format of the attribute.
@@ -196,7 +198,7 @@ module Gloop
       # - OpenGL version: 4.5
       @[GLFunction("glVertexArrayAttribLFormat", version: "4.5")]
       def format=(format : Float64AttributeFormat)
-        float64_format(format.size, format.relative_offset, format.type)
+        specify_float64_format(format.size, format.relative_offset, format.type)
       end
     end
   end

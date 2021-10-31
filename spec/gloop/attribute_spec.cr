@@ -31,9 +31,9 @@ Spectator.describe Gloop::Attribute do
     end
   end
 
-  describe "#float32_format" do
+  describe "#specify_format" do
     it "sets the format of the attribute" do
-      attribute.float32_format(3, :int16, true, 16_u32)
+      attribute.specify_format(3, :int16, true, 16_u32)
       aggregate_failures "attribute format" do
         expect(&.normalized?).to be_true
         expect(&.integer?).to be_false
@@ -45,9 +45,9 @@ Spectator.describe Gloop::Attribute do
     end
   end
 
-  describe "#int_format" do
+  describe "#specify_int_format" do
     it "sets the format of the attribute" do
-      attribute.int_format(4, :int8, 16_u32)
+      attribute.specify_int_format(4, :int8, 16_u32)
       aggregate_failures "attribute format" do
         expect(&.normalized?).to be_false
         expect(&.integer?).to be_true
@@ -59,9 +59,9 @@ Spectator.describe Gloop::Attribute do
     end
   end
 
-  describe "#float64_format" do
+  describe "#specify_float64_format" do
     it "sets the format of the attribute" do
-      attribute.float64_format(2, 32_u32)
+      attribute.specify_float64_format(2, 32_u32)
       aggregate_failures "attribute format" do
         expect(&.normalized?).to be_false
         expect(&.integer?).to be_false
@@ -123,13 +123,13 @@ Spectator.describe Gloop::Attribute do
     end
   end
 
-  describe "#float32_pointer" do
+  describe "#specify_pointer" do
     let(buffer) { Gloop::Buffer.generate(context) }
     before_each { context.buffers.array.bind(buffer) }
     after_each { buffer.delete }
 
     it "sets the format of the attribute" do
-      attribute.float32_pointer(3, :int16, true, 128, 16_u32)
+      attribute.specify_pointer(3, :int16, true, 128, 16_u32)
       aggregate_failures "attribute format" do
         expect(&.normalized?).to be_true
         expect(&.integer?).to be_false
@@ -142,13 +142,13 @@ Spectator.describe Gloop::Attribute do
     end
   end
 
-  describe "#int_pointer" do
+  describe "#specify_int_pointer" do
     let(buffer) { Gloop::Buffer.generate(context) }
     before_each { context.buffers.array.bind(buffer) }
     after_each { buffer.delete }
 
     it "sets the format of the attribute" do
-      attribute.int_pointer(4, :int8, 128, 16_u32)
+      attribute.specify_int_pointer(4, :int8, 128, 16_u32)
       aggregate_failures "attribute format" do
         expect(&.normalized?).to be_false
         expect(&.integer?).to be_true
@@ -161,13 +161,13 @@ Spectator.describe Gloop::Attribute do
     end
   end
 
-  describe "#float64_pointer" do
+  describe "#specify_float64_pointer" do
     let(buffer) { Gloop::Buffer.generate(context) }
     before_each { context.buffers.array.bind(buffer) }
     after_each { buffer.delete }
 
     it "sets the format of the attribute" do
-      attribute.float64_pointer(2, 128, 32_u32)
+      attribute.specify_float64_pointer(2, 128, 32_u32)
       aggregate_failures "attribute format" do
         expect(&.normalized?).to be_false
         expect(&.integer?).to be_false
@@ -240,7 +240,7 @@ Spectator.describe Gloop::Attribute do
   describe "#format" do
     subject { attribute.format }
 
-    before_each { attribute.int_format(4, :int8, 16_u32) }
+    before_each { attribute.specify_int_format(4, :int8, 16_u32) }
 
     it "retrieves the format of the attribute" do
       is_expected.to be_a(Gloop::IntAttributeFormat)
@@ -257,7 +257,7 @@ Spectator.describe Gloop::Attribute do
     let(buffer) { Gloop::Buffer.generate(context) }
 
     before_each { context.buffers.array.bind(buffer) }
-    before_each { attribute.int_pointer(4, :int8, 128, 16) }
+    before_each { attribute.specify_int_pointer(4, :int8, 128, 16) }
     after_each { buffer.delete }
 
     it "retrieves the format of the attribute" do

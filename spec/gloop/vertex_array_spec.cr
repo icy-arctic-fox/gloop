@@ -183,7 +183,7 @@ Spectator.describe Gloop::VertexArray do
 
     before_each do
       attribute.enable
-      attribute.float32_format(2, :float32, false, 24)
+      attribute.specify_format(2, :float32, false, 24)
     end
 
     it "sets the stride and offset" do
@@ -201,7 +201,7 @@ Spectator.describe Gloop::VertexArray do
 
     before_each do
       attribute.enable
-      attribute.float32_format(2, :float32, false, 24)
+      attribute.specify_format(2, :float32, false, 24)
     end
 
     it "sets the stride" do

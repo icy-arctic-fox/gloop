@@ -85,15 +85,15 @@ context.buffers.element_array.initialize_data(indices, :static_draw)
 
 # position attribute
 attribute = context.attributes[0]
-attribute.float32_pointer(3, :float32, false, 8 * sizeof(Float32), 0)
+attribute.specify_pointer(3, :float32, false, 8 * sizeof(Float32), 0)
 attribute.enable
 # color attribute
 attribute = context.attributes[1]
-attribute.float32_pointer(3, :float32, false, 8 * sizeof(Float32), 3_i64 * sizeof(Float32))
+attribute.specify_pointer(3, :float32, false, 8 * sizeof(Float32), 3_i64 * sizeof(Float32))
 attribute.enable
 # texture coord attribute
 attribute = context.attributes[2]
-attribute.float32_pointer(2, :float32, false, 8 * sizeof(Float32), 6_i64 * sizeof(Float32))
+attribute.specify_pointer(2, :float32, false, 8 * sizeof(Float32), 6_i64 * sizeof(Float32))
 attribute.enable
 
 # load and create a texture

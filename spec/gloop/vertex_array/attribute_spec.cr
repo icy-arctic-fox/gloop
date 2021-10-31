@@ -29,9 +29,9 @@ Spectator.describe Gloop::VertexArray::Attribute do
     end
   end
 
-  describe "#float32_format" do
+  describe "#specify_format" do
     it "sets the format of the attribute" do
-      attribute.float32_format(3, :int16, true, 16_u32)
+      attribute.specify_format(3, :int16, true, 16_u32)
       aggregate_failures "attribute format" do
         expect(&.normalized?).to be_true
         expect(&.integer?).to be_false
@@ -43,9 +43,9 @@ Spectator.describe Gloop::VertexArray::Attribute do
     end
   end
 
-  describe "#int_format" do
+  describe "#specify_int_format" do
     it "sets the format of the attribute" do
-      attribute.int_format(4, :int8, 16_u32)
+      attribute.specify_int_format(4, :int8, 16_u32)
       aggregate_failures "attribute format" do
         expect(&.normalized?).to be_false
         expect(&.integer?).to be_true
@@ -57,9 +57,9 @@ Spectator.describe Gloop::VertexArray::Attribute do
     end
   end
 
-  describe "#float64_format" do
+  describe "#specify_float64_format" do
     it "sets the format of the attribute" do
-      attribute.float64_format(2, 32_u32)
+      attribute.specify_float64_format(2, 32_u32)
       aggregate_failures "attribute format" do
         expect(&.normalized?).to be_false
         expect(&.integer?).to be_false
@@ -124,7 +124,7 @@ Spectator.describe Gloop::VertexArray::Attribute do
   describe "#format" do
     subject { attribute.format }
 
-    before_each { attribute.int_format(4, :int8, 16_u32) }
+    before_each { attribute.specify_int_format(4, :int8, 16_u32) }
 
     it "retrieves the format of the attribute" do
       is_expected.to be_a(Gloop::IntAttributeFormat)

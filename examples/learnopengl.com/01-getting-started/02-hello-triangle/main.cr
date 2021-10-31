@@ -127,7 +127,7 @@ context.buffers.element_array.bind(ebo)
 context.buffers.element_array.initialize_data(indices, :static_draw)
 
 attribute = context.attributes[0]
-attribute.float32_pointer(3, :float32, false, 3 * sizeof(Float32), 0)
+attribute.specify_pointer(3, :float32, false, 3 * sizeof(Float32), 0)
 attribute.enable
 
 # note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind

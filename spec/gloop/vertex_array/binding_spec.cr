@@ -8,7 +8,7 @@ Spectator.describe Gloop::VertexArray::Binding do
   let(buffer) { Gloop::Buffer.create(context) }
 
   before_each { vao.bind }
-  before_each { attribute.float32_format(2, :float32, false, 24) }
+  before_each { attribute.specify_format(2, :float32, false, 24) }
 
   it "sets the index" do
     expect(&.index).to eq(slot)

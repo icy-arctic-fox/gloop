@@ -75,11 +75,11 @@ context.buffers.array.initialize_data(vertices, :static_draw)
 
 # position attribute
 attribute = context.attributes[0]
-attribute.float32_pointer(3, :float32, false, 6 * sizeof(Float32), 0)
+attribute.specify_pointer(3, :float32, false, 6 * sizeof(Float32), 0)
 attribute.enable
 # color attribute
 attribute = context.attributes[1]
-attribute.float32_pointer(3, :float32, false, 6 * sizeof(Float32), 3_i64 * sizeof(Float32))
+attribute.specify_pointer(3, :float32, false, 6 * sizeof(Float32), 3_i64 * sizeof(Float32))
 attribute.enable
 
 # note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind

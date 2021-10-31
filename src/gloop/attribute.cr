@@ -147,7 +147,7 @@ module Gloop
     # - OpenGL function: `glVertexAttribFormat`
     # - OpenGL version: 4.3
     @[GLFunction("glVertexAttribFormat", version: "4.3")]
-    def float32_format(size : Int32, type : Float32AttributeFormat::Type, normalized : Bool, relative_offset : UInt32) : Nil
+    def specify_format(size : Int32, type : Float32AttributeFormat::Type, normalized : Bool, relative_offset : UInt32) : Nil
       gl.vertex_attrib_format(@index, size, type.to_unsafe, gl_bool(normalized), relative_offset)
     end
 
@@ -158,7 +158,7 @@ module Gloop
     # - OpenGL function: `glVertexAttribIFormat`
     # - OpenGL version: 4.3
     @[GLFunction("glVertexAttribIFormat", version: "4.3")]
-    def int_format(size : Int32, type : IntAttributeFormat::Type, relative_offset : UInt32) : Nil
+    def specify_int_format(size : Int32, type : IntAttributeFormat::Type, relative_offset : UInt32) : Nil
       gl.vertex_attrib_i_format(@index, size, type.to_unsafe, relative_offset)
     end
 
@@ -169,7 +169,7 @@ module Gloop
     # - OpenGL function: `glVertexAttribLFormat`
     # - OpenGL version: 4.3
     @[GLFunction("glVertexAttribLFormat", version: "4.3")]
-    def float64_format(size : Int32, relative_offset : UInt32, type : Float64AttributeFormat::Type = :float64) : Nil
+    def specify_float64_format(size : Int32, relative_offset : UInt32, type : Float64AttributeFormat::Type = :float64) : Nil
       gl.vertex_attrib_l_format(@index, size, type.to_unsafe, relative_offset)
     end
 
@@ -189,7 +189,7 @@ module Gloop
     # - OpenGL function: `glVertexAttribPointer`
     # - OpenGL version: 2.0
     @[GLFunction("glVertexAttribPointer", version: "2.0")]
-    def float32_pointer(size : Int32, type : Float32AttributePointer::Type, normalized : Bool,
+    def specify_pointer(size : Int32, type : Float32AttributePointer::Type, normalized : Bool,
                         stride : Int32 = 0, address : Size = 0) : Nil
       gl.vertex_attrib_pointer(@index, size, type.to_unsafe, gl_bool(normalized), stride, gl_pointer(address))
     end
@@ -201,7 +201,7 @@ module Gloop
     # - OpenGL function: `glVertexAttribIPointer`
     # - OpenGL version: 3.0
     @[GLFunction("glVertexAttribIPointer", version: "3.0")]
-    def int_pointer(size : Int32, type : IntAttributePointer::Type, stride : Int32 = 0, address : Size = 0) : Nil
+    def specify_int_pointer(size : Int32, type : IntAttributePointer::Type, stride : Int32 = 0, address : Size = 0) : Nil
       gl.vertex_attrib_i_pointer(@index, size, type.to_unsafe, stride, gl_pointer(address))
     end
 
@@ -212,8 +212,8 @@ module Gloop
     # - OpenGL function: `glVertexAttribLPointer`
     # - OpenGL version: 4.1
     @[GLFunction("glVertexAttribLPointer", version: "4.1")]
-    def float64_pointer(size : Int32, stride : Int32 = 0, address : Size = 0,
-                        type : Float64AttributePointer::Type = :float64) : Nil
+    def specify_float64_pointer(size : Int32, stride : Int32 = 0, address : Size = 0,
+                                type : Float64AttributePointer::Type = :float64) : Nil
       gl.vertex_attrib_l_pointer(@index, size, type.to_unsafe, stride, gl_pointer(address))
     end
 
@@ -234,7 +234,7 @@ module Gloop
     # - OpenGL version: 4.3
     @[GLFunction("glVertexAttribFormat", version: "4.3")]
     def format=(format : Float32AttributeFormat)
-      float32_format(format.size, format.type, format.normalized?, format.relative_offset)
+      specify_format(format.size, format.type, format.normalized?, format.relative_offset)
     end
 
     # Sets the format of the attribute.
@@ -245,7 +245,7 @@ module Gloop
     # - OpenGL version: 4.3
     @[GLFunction("glVertexAttribIFormat", version: "4.3")]
     def format=(format : IntAttributeFormat)
-      int_format(format.size, format.type, format.relative_offset)
+      specify_int_format(format.size, format.type, format.relative_offset)
     end
 
     # Sets the format of the attribute.
@@ -256,7 +256,7 @@ module Gloop
     # - OpenGL version: 4.3
     @[GLFunction("glVertexAttribLFormat", version: "4.3")]
     def format=(format : Float64AttributeFormat)
-      float64_format(format.size, format.relative_offset, format.type)
+      specify_float64_format(format.size, format.relative_offset, format.type)
     end
 
     # Specifies a pointer to attribute data.
@@ -267,7 +267,7 @@ module Gloop
     # - OpenGL version: 2.0
     @[GLFunction("glVertexAttribPointer", version: "2.0")]
     def pointer=(pointer : Float32AttributePointer)
-      float32_pointer(pointer.size, pointer.type, pointer.normalized?, pointer.stride, pointer.address)
+      specify_pointer(pointer.size, pointer.type, pointer.normalized?, pointer.stride, pointer.address)
     end
 
     # Specifies a pointer to attribute data.
@@ -278,7 +278,7 @@ module Gloop
     # - OpenGL version: 3.0
     @[GLFunction("glVertexAttribIPointer", version: "3.0")]
     def pointer=(pointer : IntAttributePointer)
-      int_pointer(pointer.size, pointer.type, pointer.stride, pointer.address)
+      specify_int_pointer(pointer.size, pointer.type, pointer.stride, pointer.address)
     end
 
     # Specifies a pointer to attribute data.
@@ -289,7 +289,7 @@ module Gloop
     # - OpenGL version: 4.1
     @[GLFunction("glVertexAttribLPointer", version: "4.1")]
     def pointer=(pointer : Float64AttributePointer)
-      float64_pointer(pointer.size, pointer.stride, pointer.address, pointer.type)
+      specify_float64_pointer(pointer.size, pointer.stride, pointer.address, pointer.type)
     end
 
     # Sets the rate at which attribute values advance during instances rendering.
