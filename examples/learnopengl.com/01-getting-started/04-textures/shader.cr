@@ -101,17 +101,17 @@ class Shader
 
   # ------------------------------------------------------------------------
   def set_mat2(name, mat)
-    LibGL.uniform_matrix_2fv(LibGL.get_uniform_location(@program, name), 1, LibGL::Bool::False, mat)
+    LibGL.uniform_matrix_2fv(LibGL.get_uniform_location(@program, name), 1, LibGL::Boolean::False, mat)
   end
 
   # ------------------------------------------------------------------------
   def set_mat3(name, mat)
-    LibGL.uniform_matrix_3fv(LibGL.get_uniform_location(@program, name), 1, LibGL::Bool::False, mat)
+    LibGL.uniform_matrix_3fv(LibGL.get_uniform_location(@program, name), 1, LibGL::Boolean::False, mat)
   end
 
   # ------------------------------------------------------------------------
   def set_mat4(name, mat)
-    LibGL.uniform_matrix_4fv(LibGL.get_uniform_location(@program, name), 1, LibGL::Bool::False, mat)
+    LibGL.uniform_matrix_4fv(LibGL.get_uniform_location(@program, name), 1, LibGL::Boolean::False, mat)
   end
 
   # utility function for checking shader compilation/linking errors.
