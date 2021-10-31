@@ -39,9 +39,10 @@ end
 # glfw: whenever the window size changed (by OS or user resize) this callback function executes
 # ---------------------------------------------------------------------------------------------
 def framebuffer_size_callback(window, width, height)
+  context = LibGLFW.get_window_user_pointer(window).as(Gloop::Context*).value
   # make sure the viewport matches the new window dimensions; note that width and
   # height will be significantly larger than specified on retina displays.
-  CONTEXT.viewport = {0, 0, width, height}
+  context.viewport = {0, 0, width, height}
 end
 
 # glfw: initialize and configure
@@ -64,13 +65,14 @@ if window.nil?
   exit -1
 end
 LibGLFW.make_context_current(window)
-CONTEXT = Gloop::Context.from_glfw
+context = Gloop::Context.from_glfw
+LibGLFW.set_window_user_pointer(window, pointerof(context))
 LibGLFW.set_framebuffer_size_callback(window, ->framebuffer_size_callback)
 
 # build and compile our shader program
 # ------------------------------------
 # vertex shader
-vertex_shader = CONTEXT.create_shader(:vertex)
+vertex_shader = context.create_shader(:vertex)
 vertex_shader.source = VERTEX_SHADER_SOURCE
 vertex_shader.compile
 # check for shader compile errors
@@ -79,7 +81,7 @@ unless vertex_shader.compiled?
   puts vertex_shader.info_log
 end
 # fragment shader
-fragment_shader = CONTEXT.create_shader(:fragment)
+fragment_shader = context.create_shader(:fragment)
 fragment_shader.source = FRAGMENT_SHADER_SOURCE
 fragment_shader.compile
 # check for shader compile errors
@@ -88,7 +90,7 @@ unless fragment_shader.compiled?
   puts fragment_shader.info_log
 end
 # link shaders
-shader_program = CONTEXT.create_program
+shader_program = context.create_program
 shader_program.attach(vertex_shader)
 shader_program.attach(fragment_shader)
 shader_program.link
@@ -112,31 +114,31 @@ indices = UInt32.static_array( # note that we start from 0!
 0, 1, 3,                       # first Triangle
   1, 2, 3                      # second Triangle
 )
-vao = CONTEXT.generate_vertex_array
-vbo = CONTEXT.generate_buffer
-ebo = CONTEXT.generate_buffer
+vao = context.generate_vertex_array
+vbo = context.generate_buffer
+ebo = context.generate_buffer
 # bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
 vao.bind
 
-CONTEXT.buffers.array.bind(vbo)
-CONTEXT.buffers.array.initialize_data(vertices, :static_draw)
+context.buffers.array.bind(vbo)
+context.buffers.array.initialize_data(vertices, :static_draw)
 
-CONTEXT.buffers.element_array.bind(ebo)
-CONTEXT.buffers.element_array.initialize_data(indices, :static_draw)
+context.buffers.element_array.bind(ebo)
+context.buffers.element_array.initialize_data(indices, :static_draw)
 
-attribute = CONTEXT.attributes[0]
+attribute = context.attributes[0]
 attribute.float32_pointer(3, :float32, false, 3 * sizeof(Float32), 0)
 attribute.enable
 
 # note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-CONTEXT.buffers.array.unbind
+context.buffers.array.unbind
 
 # remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
 # context.buffers.element_array.unbind
 
 # You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
 # VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-CONTEXT.unbind_vertex_array
+context.unbind_vertex_array
 
 # uncomment this call to draw in wireframe polygons.
 # LibGL.polygon_mode(LibGL::MaterialFace::FrontAndBack, LibGL::PolygonMode::Line)
@@ -150,14 +152,14 @@ while LibGLFW.window_should_close(window).false?
 
   # render
   # ------
-  CONTEXT.clear_color = {0.2, 0.3, 0.3, 1.0}
-  CONTEXT.clear(:color)
+  context.clear_color = {0.2, 0.3, 0.3, 1.0}
+  context.clear(:color)
 
   # draw our first triangle
   shader_program.use
   vao.bind # seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
   # context.draw_arrays(:triangles, 0, 6)
-  CONTEXT.draw_elements(:triangles, 6, :u_int32, 0)
+  context.draw_elements(:triangles, 6, :u_int32, 0)
   # context.unbind_vertex_array # no need to unbind it every time
 
   # glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
