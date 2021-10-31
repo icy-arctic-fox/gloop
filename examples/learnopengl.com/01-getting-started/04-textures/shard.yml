@@ -1,0 +1,29 @@
+name: textures
+version: 1.0.0
+
+authors:
+  - www.learnopengl.com
+  - Michael Miller <icy.arctic.fox@gmail.com>
+
+dependencies:
+  gloop:
+    path: ../../../../
+  opengl:
+    gitlab: arctic-fox/opengl.cr
+    branch: gl-4.6-core
+  glfw:
+    gitlab: arctic-fox/glfw.cr
+    version: ~> 3.3.1
+  lib_stb_image:
+    github: calebuharrison/LibSTBImage
+
+libraries:
+  libgl: ~> 3.3.0
+
+targets:
+  textures:
+    main: main.cr
+
+crystal: 1.0.0
+
+license: MIT

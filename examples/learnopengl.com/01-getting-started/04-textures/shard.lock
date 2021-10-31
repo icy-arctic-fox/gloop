@@ -1,0 +1,18 @@
+version: 2.0
+shards:
+  glfw:
+    git: https://gitlab.com/arctic-fox/glfw.cr.git
+    version: 3.3.2
+
+  gloop:
+    path: ../../../../
+    version: 0.2.0
+
+  lib_stb_image:
+    git: https://github.com/calebuharrison/libstbimage.git
+    version: 0.1.0+git.commit.32bc23af165dbe004a7468426f09e6701463bc72
+
+  opengl:
+    git: https://gitlab.com/arctic-fox/opengl.cr.git
+    version: 4.6.0+git.commit.f8c1e4c9c6e6ce8c4140b28fef606ee50b5c343e
+
