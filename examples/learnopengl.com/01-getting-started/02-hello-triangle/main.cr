@@ -64,8 +64,8 @@ if window.nil?
   exit -1
 end
 LibGLFW.make_context_current(window)
-LibGLFW.set_framebuffer_size_callback(window, ->framebuffer_size_callback)
 CONTEXT = Gloop::Context.from_glfw
+LibGLFW.set_framebuffer_size_callback(window, ->framebuffer_size_callback)
 
 # build and compile our shader program
 # ------------------------------------
