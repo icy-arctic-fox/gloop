@@ -121,5 +121,35 @@ module Gloop
     def clear_stencil=(stencil : Int32)
       gl.clear_stencil(stencil)
     end
+
+    # Retrieves the bounding area drawn to the window.
+    #
+    # - OpenGL function: `glGetIntegerv`
+    # - OpenGL enum: `GL_VIEWPORT`
+    # - OpenGL version: 2.0
+    @[GLFunction("glGetIntegerv", enum: "GL_VIEWPORT", version: "2.0")]
+    def viewport : Rect
+      rect = uninitialized Int32[4]
+      gl.get_integer_v(LibGL::GetPName::Viewport, rect.to_unsafe)
+      Rect.new(rect[0], rect[1], rect[2], rect[3])
+    end
+
+    # Sets the bounding area drawn to the window.
+    #
+    # - OpenGL function: `glViewport`
+    # - OpenGL version: 2.0
+    @[GLFunction("glViewport", version: "2.0")]
+    def viewport=(rect : Rect)
+      gl.viewport(rect.x, rect.y, rect.width, rect.height)
+    end
+
+    # Sets the bounding area drawn to the window.
+    #
+    # - OpenGL function: `glViewport`
+    # - OpenGL version: 2.0
+    @[GLFunction("glViewport", version: "2.0")]
+    def viewport=(rect : Tuple(Int32, Int32, Int32, Int32))
+      gl.viewport(*rect)
+    end
   end
 end

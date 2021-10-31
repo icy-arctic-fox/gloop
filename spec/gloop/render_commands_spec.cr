@@ -57,4 +57,30 @@ Spectator.describe Gloop::RenderCommands do
       expect(&.clear_stencil).to eq(42)
     end
   end
+
+  describe "#viewport=" do
+    context "with a Rect" do
+      it "sets the viewport" do
+        context.viewport = Gloop::Rect.new(1, 2, 3, 4)
+        expect(&.viewport).to have_attributes(
+          x: 1,
+          y: 2,
+          width: 3,
+          height: 4
+        )
+      end
+    end
+
+    context "with a Tuple" do
+      it "sets the viewport" do
+        context.viewport = {10, 20, 30, 40}
+        expect(&.viewport).to have_attributes(
+          x: 10,
+          y: 20,
+          width: 30,
+          height: 40
+        )
+      end
+    end
+  end
 end
