@@ -24,7 +24,7 @@ end
 def framebuffer_size_callback(window, width, height)
   # make sure the viewport matches the new window dimensions; note that width and
   # height will be significantly larger than specified on retina displays.
-  LibGL.viewport(0, 0, width, height)
+  CONTEXT.viewport = {0, 0, width, height}
 end
 
 # glfw: initialize and configure
@@ -48,11 +48,11 @@ if window.nil?
 end
 LibGLFW.make_context_current(window)
 LibGLFW.set_framebuffer_size_callback(window, ->framebuffer_size_callback)
-context = Gloop::Context.from_glfw
+CONTEXT = Gloop::Context.from_glfw
 
 # build and compile our shader program
 # ------------------------------------
-our_shader = Shader.new(context, "shader.vs", "shader.fs") # you can name your shader files however you like
+our_shader = Shader.new(CONTEXT, "shader.vs", "shader.fs") # you can name your shader files however you like
 
 # set up vertex data (and buffer(s)) and configure vertex attributes
 # ------------------------------------------------------------------
@@ -63,29 +63,29 @@ vertices = Float32.static_array(
   0.0, 0.5, 0.0, 0.0, 0.0, 1.0    # top
 )
 
-vao = context.generate_vertex_array
-vbo = context.generate_buffer
+vao = CONTEXT.generate_vertex_array
+vbo = CONTEXT.generate_buffer
 # bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
 vao.bind
 
-context.buffers.array.bind(vbo)
-context.buffers.array.initialize_data(vertices, :static_draw)
+CONTEXT.buffers.array.bind(vbo)
+CONTEXT.buffers.array.initialize_data(vertices, :static_draw)
 
 # position attribute
-attribute = context.attributes[0]
+attribute = CONTEXT.attributes[0]
 attribute.float32_pointer(3, :float32, false, 6 * sizeof(Float32), 0)
 attribute.enable
 # color attribute
-attribute = context.attributes[1]
+attribute = CONTEXT.attributes[1]
 attribute.float32_pointer(3, :float32, false, 6 * sizeof(Float32), 3_i64 * sizeof(Float32))
 attribute.enable
 
 # note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-context.buffers.array.unbind
+CONTEXT.buffers.array.unbind
 
 # You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
 # VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-# context.unbind_vertex_array
+# CONTEXT.unbind_vertex_array
 
 # render loop
 # -----------
@@ -96,13 +96,13 @@ while LibGLFW.window_should_close(window).false?
 
   # render
   # ------
-  context.clear_color = {0.2, 0.3, 0.3, 1.0}
-  context.clear(:color)
+  CONTEXT.clear_color = {0.2, 0.3, 0.3, 1.0}
+  CONTEXT.clear(:color)
 
   # render the triangle
   our_shader.use
   vao.bind
-  context.draw_arrays(:triangles, 0, 3)
+  CONTEXT.draw_arrays(:triangles, 0, 3)
 
   # glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
   # -------------------------------------------------------------------------------
