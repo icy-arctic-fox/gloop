@@ -262,7 +262,8 @@ Spectator.describe Gloop::Program do
     end
 
     it "validates the program" do
-      expect { program.validate }.to eq(program.valid?)
+      validated = program.validate
+      expect(validated).to eq(program.valid?)
     end
   end
 
