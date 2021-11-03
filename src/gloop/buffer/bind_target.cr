@@ -409,9 +409,9 @@ module Gloop
       # - OpenGL version: 4.3
       @[GLFunction("glClearBufferData", version: "4.3")]
       def clear : Nil
-        internal_format = LibGL::SizedInternalFormat::R8
-        format = LibGL::PixelFormat::Red
-        type = LibGL::PixelType::Byte
+        internal_format = LibGL::SizedInternalFormat::R8UI
+        format = LibGL::PixelFormat::RedInteger
+        type = LibGL::PixelType::UnsignedByte
         data = Pointer(Void).null
         gl.clear_buffer_data(storage_target, internal_format, format, type, data)
       end
@@ -431,7 +431,7 @@ module Gloop
         @[GLFunction("glClearNamedBufferData", version: "4.5")]
         def clear(value : {{type.id}}) : Nil
           internal_format = LibGL::SizedInternalFormat::{{internal_format.id}}
-          format = LibGL::PixelFormat::Red
+          format = LibGL::PixelFormat::Red{% if value != :Float %}Integer{% end %}
           type = LibGL::PixelType::{{value.id}}
           data = pointerof(value).as(Void*)
           gl.clear_buffer_data(storage_target, internal_format, format, type, data)
