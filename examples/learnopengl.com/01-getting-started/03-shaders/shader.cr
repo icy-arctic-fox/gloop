@@ -10,23 +10,23 @@ class Shader
 
   # constructor generates the shader on the fly
   # ------------------------------------------------------------------------
-  def initialize(context, vertex_path, fragment_path)
+  def initialize(@context : Gloop::Context, vertex_path, fragment_path)
     # 1. retrieve the vertex/fragment source code from filePath
     v_shader_code = File.read(vertex_path)
     f_shader_code = File.read(fragment_path)
     # 2. compile shaders
     # vertex shader
-    vertex = context.create_shader(:vertex)
+    vertex = @context.create_shader(:vertex)
     vertex.source = v_shader_code
     vertex.compile
     check_compile_errors(vertex)
     # fragment Shader
-    fragment = context.create_shader(:fragment)
+    fragment = @context.create_shader(:fragment)
     fragment.source = f_shader_code
     fragment.compile
     check_compile_errors(fragment)
     # shader Program
-    @program = context.create_program
+    @program = @context.create_program
     @program.attach(vertex)
     @program.attach(fragment)
     @program.link
@@ -44,18 +44,21 @@ class Shader
 
   # utility uniform functions
   # ------------------------------------------------------------------------
-  def set_bool(name, value)
-    LibGL.uniform_1i(LibGL.get_uniform_location(@program, name), value.to_i32)
+  def set_bool(name, value : Bool)
+    location = @program.uniforms.locate(name)
+    @context.uniforms[location].value = value.to_i32
   end
 
   # ------------------------------------------------------------------------
-  def set_int(name, value)
-    LibGL.uniform_1i(LibGL.get_uniform_location(@program, name), value)
+  def set_int(name, value : Int32)
+    location = @program.uniforms.locate(name)
+    @context.uniforms[location].value = value
   end
 
   # ------------------------------------------------------------------------
-  def set_float(name, value)
-    LibGL.uniform_1f(LibGL.get_uniform_location(@program, name), value)
+  def set_float(name, value : Float32)
+    location = @program.uniforms.locate(name)
+    @context.uniforms[location].value = value
   end
 
   # utility function for checking shader compilation/linking errors.
