@@ -25,11 +25,11 @@ Spectator.describe Gloop::Shader do
       gl_Position = vec4(Position, 1.0);
       Color = vec4(0.03, 0.39, 0.57, 1.0);
     }
-  END_SHADER
+    END_SHADER
 
   INVALID_SHADER = <<-END_SHADER
     asdf;
-  END_SHADER
+    END_SHADER
 
   describe "#type" do
     subject { super.type }

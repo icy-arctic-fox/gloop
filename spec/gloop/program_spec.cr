@@ -8,7 +8,7 @@ VERTEX_SHADER = <<-END_SHADER
     gl_Position = vec4(Position, 1.0);
     VertColor = vec4(0.03, 0.39, 0.57, 1.0);
   }
-END_SHADER
+  END_SHADER
 
 FRAGMENT_SHADER = <<-END_SHADER
   #version 460 core
@@ -17,7 +17,7 @@ FRAGMENT_SHADER = <<-END_SHADER
   void main() {
     FragColor = VertColor;
   }
-END_SHADER
+  END_SHADER
 
 Spectator.describe Gloop::Program do
   subject(program) { described_class.create(context) }
@@ -160,7 +160,7 @@ Spectator.describe Gloop::Program do
             gl_Position = vec4(Position, 1.0);
             VertColor = vec4(0.03, 0.39, 0.57, 1.0);
           }
-        END_SHADER
+          END_SHADER
         shader.compile!
       end
     end
@@ -174,7 +174,7 @@ Spectator.describe Gloop::Program do
           void main() {
             FragColor = BadVertColor;
           }
-        END_SHADER
+          END_SHADER
         shader.compile!
       end
     end
