@@ -45,6 +45,43 @@ module Gloop
           raise "Unable to locate uniform named `#{name}`" if location == -1
         end
       end
+
+      # References an active uniform from this program by its location.
+      def [](location : Int32) : Uniform
+        Uniform.new(@context, @name, location)
+      end
+
+      # References an active uniform from this program by its name.
+      #
+      # Returns nil if there are no uniforms with the specified name.
+      #
+      # The location of the uniform is resolved, but not cached.
+      # Repeated calls to this method will resolve the location of the uniform by name.
+      # It's recommended that the instance returned is kept for repeated use.
+      #
+      # - OpenGL function: `glGetUniformLocation`
+      # - OpenGL version: 2.0
+      @[GLFunction("glGetUniformLocation", version: "2.0")]
+      def []?(name : String) : Uniform?
+        return unless location = locate?(name)
+
+        Uniform.new(@context, @name, location)
+      end
+
+      # References an active uniform from this program by its name.
+      #
+      # Raises if there are no uniforms with the specified name.
+      #
+      # The location of the uniform is resolved, but not cached.
+      # Repeated calls to this method will resolve the location of the uniform by name.
+      # It's recommended that the instance returned is kept for repeated use.
+      #
+      # - OpenGL function: `glGetUniformLocation`
+      # - OpenGL version: 2.0
+      @[GLFunction("glGetUniformLocation", version: "2.0")]
+      def [](name : String) : Uniform
+        self[name]? || raise "No uniform with name #{name} in program."
+      end
     end
 
     # Provides access to the active uniforms in this program.

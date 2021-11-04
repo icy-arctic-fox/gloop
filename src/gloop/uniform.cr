@@ -2,10 +2,10 @@ require "./contextual"
 
 module Gloop
   # Reference to an active uniform in the current program.
-    #
-    # NOTE: If the active program is changed,
-    #   existing references to uniforms will change to the new program,
-    #   which may not exist.
+  #
+  # NOTE: If the active program is changed,
+  #   existing references to uniforms will change to the new program,
+  #   which may not exist.
   struct Uniform
     include Contextual
 
@@ -25,6 +25,17 @@ module Gloop
     @[GLFunction("glUniform1f", version: "2.0")]
     def value=(value : Float32)
       gl.uniform_1f(@location, value)
+    end
+
+    # Sets the value of the uniform.
+    #
+    # Assumes the uniform is a 64-bit, floating-point number.
+    #
+    # - OpenGL function: `glUniform1d`
+    # - OpenGL version: 4.0
+    @[GLFunction("glUniform1d", version: "4.0")]
+    def value=(value : Float64)
+      gl.uniform_1d(@location, value)
     end
 
     # Sets the value of the uniform.
