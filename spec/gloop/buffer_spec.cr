@@ -319,40 +319,44 @@ Spectator.describe Gloop::Buffer do
       buffer.clear
       expect(&.data).to eq(Bytes[0, 0, 0, 0, 0, 0, 0, 0])
     end
+  end
+
+  describe "#fill" do
+    before_each { buffer.data = Bytes[0, 1, 2, 3, 4, 5, 6, 7] }
 
     context "with a single value" do
       it "sets the contents of the buffer (Int8)" do
-        buffer.clear(3_i8)
+        buffer.fill(3_i8)
         expect(&.data).to eq(Bytes[3, 3, 3, 3, 3, 3, 3, 3])
       end
 
       it "sets the contents of the buffer (UInt8)" do
-        buffer.clear(200_u8)
+        buffer.fill(200_u8)
         expect(&.data).to eq(Bytes[200, 200, 200, 200, 200, 200, 200, 200])
       end
 
       it "sets the contents of the buffer (Int16)" do
-        buffer.clear(258_i16)
+        buffer.fill(258_i16)
         expect(&.data).to eq(Bytes[2, 1, 2, 1, 2, 1, 2, 1])
       end
 
       it "sets the contents of the buffer (UInt16)" do
-        buffer.clear(4128_u16)
+        buffer.fill(4128_u16)
         expect(&.data).to eq(Bytes[32, 16, 32, 16, 32, 16, 32, 16])
       end
 
       it "sets the contents of the buffer (Int32)" do
-        buffer.clear(16909060_i32)
+        buffer.fill(16909060_i32)
         expect(&.data).to eq(Bytes[4, 3, 2, 1, 4, 3, 2, 1])
       end
 
       it "sets the contents of the buffer (UInt32)" do
-        buffer.clear(270544960_u32)
+        buffer.fill(270544960_u32)
         expect(&.data).to eq(Bytes[64, 48, 32, 16, 64, 48, 32, 16])
       end
 
       it "sets the contents of the buffer (Float32)" do
-        buffer.clear(1.234_f32)
+        buffer.fill(1.234_f32)
         expect(&.data).to eq(Bytes[182, 243, 157, 63, 182, 243, 157, 63])
       end
     end

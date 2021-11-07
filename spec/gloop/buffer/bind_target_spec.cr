@@ -1,8 +1,8 @@
 require "../../spec_helper"
 
 Spectator.describe Gloop::Buffer::BindTarget do
-  subject(buffer) { Gloop::Buffer.generate(context) }
   subject(target) { context.buffers.array }
+  let(buffer) { Gloop::Buffer.generate(context) }
   let(data) { Bytes.new(8, &.to_u8) }
   before_each { target.bind(buffer) }
 
@@ -282,40 +282,44 @@ Spectator.describe Gloop::Buffer::BindTarget do
       target.clear
       expect(&.data).to eq(Bytes[0, 0, 0, 0, 0, 0, 0, 0])
     end
+  end
+
+  describe "#fill" do
+    before_each { target.data = Bytes[0, 1, 2, 3, 4, 5, 6, 7] }
 
     context "with a single value" do
       it "sets the contents of the buffer (Int8)" do
-        target.clear(3_i8)
+        target.fill(3_i8)
         expect(&.data).to eq(Bytes[3, 3, 3, 3, 3, 3, 3, 3])
       end
 
       it "sets the contents of the buffer (UInt8)" do
-        target.clear(200_u8)
+        target.fill(200_u8)
         expect(&.data).to eq(Bytes[200, 200, 200, 200, 200, 200, 200, 200])
       end
 
       it "sets the contents of the buffer (Int16)" do
-        target.clear(258_i16)
+        target.fill(258_i16)
         expect(&.data).to eq(Bytes[2, 1, 2, 1, 2, 1, 2, 1])
       end
 
       it "sets the contents of the buffer (UInt16)" do
-        target.clear(4128_u16)
+        target.fill(4128_u16)
         expect(&.data).to eq(Bytes[32, 16, 32, 16, 32, 16, 32, 16])
       end
 
       it "sets the contents of the buffer (Int32)" do
-        target.clear(16909060_i32)
+        target.fill(16909060_i32)
         expect(&.data).to eq(Bytes[4, 3, 2, 1, 4, 3, 2, 1])
       end
 
       it "sets the contents of the buffer (UInt32)" do
-        target.clear(270544960_u32)
+        target.fill(270544960_u32)
         expect(&.data).to eq(Bytes[64, 48, 32, 16, 64, 48, 32, 16])
       end
 
       it "sets the contents of the buffer (Float32)" do
-        target.clear(1.234_f32)
+        target.fill(1.234_f32)
         expect(&.data).to eq(Bytes[182, 243, 157, 63, 182, 243, 157, 63])
       end
     end

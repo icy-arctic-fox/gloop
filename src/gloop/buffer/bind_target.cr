@@ -421,7 +421,7 @@ module Gloop
                        %i[Int32 Int R32I], %i[UInt32 UnsignedInt R32UI],
                        %i[Float32 Float R32F]] %}
         {% type, value, internal_format = combo %}
-        # Clears the contents of the buffer to a single value.
+        # Fills the contents of the buffer to a single value.
         #
         # The value is repeated throughout the buffer.
         # Ensure the correct numerical type is used.
@@ -429,7 +429,7 @@ module Gloop
         # - OpenGL function: `glClearNamedBufferData`
         # - OpenGL version: 4.5
         @[GLFunction("glClearNamedBufferData", version: "4.5")]
-        def clear(value : {{type.id}}) : Nil
+        def fill(value : {{type.id}}) : Nil
           internal_format = LibGL::SizedInternalFormat::{{internal_format.id}}
           format = LibGL::PixelFormat::Red{% if value != :Float %}Integer{% end %}
           type = LibGL::PixelType::{{value.id}}
