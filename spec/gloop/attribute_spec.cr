@@ -1,7 +1,7 @@
 require "../spec_helper"
 
 Spectator.describe Gloop::Attribute do
-  subject(attribute) { Gloop::Attribute.new(context, index) }
+  subject(attribute) { described_class.new(context, index) }
   let(vao) { Gloop::VertexArray.create(context) }
   let(index) { 2_u32 }
 

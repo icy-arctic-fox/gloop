@@ -1,7 +1,7 @@
 require "../../spec_helper"
 
 Spectator.describe Gloop::Program::Uniforms do
-  subject(uniforms) { Gloop::Program::Uniforms.new(context, program.name) }
+  subject(uniforms) { described_class.new(context, program.name) }
 
   SHADER_SOURCE = <<-END_SHADER
     #version 460 core

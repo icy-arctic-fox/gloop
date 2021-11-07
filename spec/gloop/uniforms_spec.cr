@@ -1,7 +1,7 @@
 require "../spec_helper"
 
 Spectator.describe Gloop::Uniforms do
-  subject(uniforms) { Gloop::Uniforms.new(context) }
+  subject(uniforms) { described_class.new(context) }
 
   describe "#[]" do
     it "returns a uniform with the specified location" do

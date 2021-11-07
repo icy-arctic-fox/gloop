@@ -1,7 +1,7 @@
 require "../spec_helper"
 
 Spectator.describe Gloop::Buffers do
-  subject(buffers) { Gloop::Buffers.new(context) }
+  subject(buffers) { described_class.new(context) }
 
   describe "#array" do
     subject { buffers.array }

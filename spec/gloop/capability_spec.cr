@@ -1,7 +1,7 @@
 require "../spec_helper"
 
 Spectator.describe Gloop::Capability do
-  subject(capability) { Gloop::Capability.new(context, :blend) }
+  subject(capability) { described_class.new(context, :blend) }
 
   describe "#enable" do
     it "enables a capability" do
