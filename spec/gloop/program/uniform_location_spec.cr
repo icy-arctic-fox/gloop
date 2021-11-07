@@ -1,7 +1,7 @@
-require "../spec_helper"
+require "../../spec_helper"
 
-Spectator.describe Gloop::Uniform do
-  subject(uniform) { Gloop::Uniform.new(context, 0) }
+Spectator.describe Gloop::Program::UniformLocation do
+  subject(uniform) { described_class.new(context, program.name, 0) }
 
   def shader_source(type)
     <<-END_SHADER
@@ -38,7 +38,7 @@ Spectator.describe Gloop::Uniform do
       let(type) { :float }
 
       it "updates a uniform" do
-        expect { uniform.value = 0.75_f32 }.to change { program.uniforms[0].value_as(Float32) }.to(0.75)
+        expect { uniform.value = 0.75_f32 }.to change { uniform.value_as(Float32) }.to(0.75)
       end
     end
 
@@ -46,7 +46,7 @@ Spectator.describe Gloop::Uniform do
       let(type) { :double }
 
       it "updates a uniform" do
-        expect { uniform.value = 0.75 }.to change { program.uniforms[0].value_as(Float64) }.to(0.75)
+        expect { uniform.value = 0.75 }.to change { uniform.value_as(Float64) }.to(0.75)
       end
     end
 
@@ -54,7 +54,7 @@ Spectator.describe Gloop::Uniform do
       let(type) { :int }
 
       it "updates a uniform" do
-        expect { uniform.value = 42 }.to change { program.uniforms[0].value_as(Int32) }.to(42)
+        expect { uniform.value = 42 }.to change { uniform.value_as(Int32) }.to(42)
       end
     end
 
@@ -62,7 +62,7 @@ Spectator.describe Gloop::Uniform do
       let(type) { :uint }
 
       it "updates a uniform" do
-        expect { uniform.value = 12345_u32 }.to change { program.uniforms[0].value_as(UInt32) }.to(12345_u32)
+        expect { uniform.value = 12345_u32 }.to change { uniform.value_as(UInt32) }.to(12345_u32)
       end
     end
   end

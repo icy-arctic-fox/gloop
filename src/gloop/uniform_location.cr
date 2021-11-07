@@ -6,7 +6,7 @@ module Gloop
   # NOTE: If the active program is changed,
   #   existing references to uniforms will change to the new program,
   #   which may not exist.
-  struct Uniform
+  struct UniformLocation
     include Contextual
 
     # Location of the uniform.

@@ -1,13 +1,57 @@
 require "../contextual"
+require "./parameters"
+require "./uniform"
 
 module Gloop
   struct Program < Object
     # Access to active uniforms from a program.
+    #
+    # NOTE: The uniform *index* is different than its *location*.
+    #   The *location* is used to get and set a uniform's value.
+    #   The *index* is used to retrieve metadata of the uniform.
     struct Uniforms
       include Contextual
+      include Indexable(Uniform)
+      include Parameters
+
+      # Number of active attributes in the program.
+      #
+      # - OpenGL function `glGetProgramiv`
+      # - OpenGL enum: `GL_ACTIVE_UNIFORMS`
+      # - OpenGL version: 2.0
+      @[GLFunction("glGetProgramiv", enum: "GL_ACTIVE_UNIFORMS", version: "2.0")]
+      program_parameter ActiveUniforms, size
+
+      # Length of the longest name from the program's uniforms.
+      #
+      # - OpenGL function: `glGetProgramiv`
+      # - OpenGL enum: `GL_ACTIVE_UNIFORM_MAX_LENGTH`
+      # - OpenGL version: 2.0
+      @[GLFunction("glGetProgramiv", enum: "GL_ACTIVE_UNIFORM_MAX_LENGTH", version: "2.0")]
+      private program_parameter(ActiveUniformMaxLength, max_name_size) do |value|
+        (value - 1) unless value.zero?
+      end
+
+      # Name of the program the uniforms are from.
+      private getter name
 
       # Creates a references to the active uniforms in a program.
       def initialize(@context : Context, @name : Name)
+      end
+
+      # Retrieves a uniform at the specified index.
+      #
+      # - OpenGL function: `glGetActiveUniform`
+      # - OpenGL version: 2.0
+      @[GLFunction("glGetActiveUniform", version: "2.0")]
+      def unsafe_fetch(index : Int)
+        size = uninitialized Int32
+        type = uninitialized Uniform::Type
+        name = string_query(max_name_size, null_terminator: true) do |buffer, capacity, length|
+          gl.get_active_uniform(@name, index, capacity, length, pointerof(size), pointerof(type), buffer)
+        end
+
+        Uniform.new(name, type, size)
       end
 
       # Gets the location of a named uniform.
@@ -47,8 +91,8 @@ module Gloop
       end
 
       # References an active uniform from this program by its location.
-      def [](location : Int32) : Uniform
-        Uniform.new(@context, @name, location)
+      def [](location : Int32) : UniformLocation
+        UniformLocation.new(@context, @name, location)
       end
 
       # References an active uniform from this program by its name.
@@ -62,10 +106,10 @@ module Gloop
       # - OpenGL function: `glGetUniformLocation`
       # - OpenGL version: 2.0
       @[GLFunction("glGetUniformLocation", version: "2.0")]
-      def []?(name : String) : Uniform?
+      def []?(name : String) : UniformLocation?
         return unless location = locate?(name)
 
-        Uniform.new(@context, @name, location)
+        UniformLocation.new(@context, @name, location)
       end
 
       # References an active uniform from this program by its name.
@@ -79,7 +123,7 @@ module Gloop
       # - OpenGL function: `glGetUniformLocation`
       # - OpenGL version: 2.0
       @[GLFunction("glGetUniformLocation", version: "2.0")]
-      def [](name : String) : Uniform
+      def [](name : String) : UniformLocation
         self[name]? || raise "No uniform with name #{name} in program."
       end
     end

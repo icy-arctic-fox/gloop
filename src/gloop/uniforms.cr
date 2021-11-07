@@ -1,5 +1,5 @@
 require "./contextual"
-require "./uniform"
+require "./uniform_location"
 
 module Gloop
   # Access to uniforms from the program currently in use.
@@ -11,8 +11,8 @@ module Gloop
     include Contextual
 
     # References a uniform in the current program by its location.
-    def [](location : Int32) : Uniform
-      Uniform.new(@context, location)
+    def [](location : Int32) : UniformLocation
+      UniformLocation.new(@context, location)
     end
   end
 
