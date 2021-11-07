@@ -40,7 +40,7 @@ module Gloop
       @[GLFunction("glGetIntegerv", enum: "GL_DEBUG_LOGGED_MESSAGES", version: "4.3")]
       parameter LibGL::DEBUG_LOGGED_MESSAGES, size
 
-      # Retrieves the maximum number of debug messages thte log can hold.
+      # Retrieves the maximum number of debug messages the log can hold.
       #
       # - OpenGL function: `glGetIntegerv`
       # - OpenGL enum: `GL_MAX_DEBUG_LOGGED_MESSAGES`

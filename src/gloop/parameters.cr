@@ -348,7 +348,7 @@ module Gloop
               %value
 
             {% elsif type <= Float64 %}
-              %value = uninitilized Float64
+              %value = uninitialized Float64
               gl.get_double_i_v(%pname, self.index, pointerof(%value))
               %value
 
@@ -400,7 +400,7 @@ module Gloop
     # A new string will be allocated.
     # The buffer (pointer to the string contents), capacity, and length pointer are yielded.
     # The block must call an OpenGL method to retrieve the string and the final length.
-    # This method returns the string or nil if *capacity* is less than zero.
+    # This method returns the string or nil if *capacity* is nil.
     # Set *null_terminator* to true if the length returned by OpenGL includes a null-terminator.
     private def string_query(capacity, *, null_terminator = false)
       return unless capacity
