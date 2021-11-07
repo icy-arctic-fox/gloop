@@ -1,6 +1,6 @@
 require "../contextual"
+require "../uniform"
 require "./parameters"
-require "./uniform"
 
 module Gloop
   struct Program < Object
