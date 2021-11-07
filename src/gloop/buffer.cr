@@ -672,9 +672,7 @@ module Gloop
     #
     # See: `BindTarget#mapping?`
     def mapping? : Map?
-      return unless mapped?
-
-      Map.new(context, name)
+      Map.new(context, name) if mapped?
     end
 
     # Retrieves information about the buffer's current map.

@@ -586,9 +586,7 @@ module Gloop
       #
       # See: `Buffer#mapping?`
       def mapping? : TargetMap?
-        return unless mapped?
-
-        TargetMap.new(context, target)
+        TargetMap.new(context, target) if mapped?
       end
 
       # Retrieves information about the bound buffer's current map.

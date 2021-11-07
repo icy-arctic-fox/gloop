@@ -21,7 +21,7 @@ module Gloop
       # - OpenGL version: 4.3
       @[GLFunction("glGetIntegerv", enum: "GL_DEBUG_NEXT_LOGGED_MESSAGE_LENGTH", version: "4.3")]
       private parameter(LibGL::DEBUG_NEXT_LOGGED_MESSAGE_LENGTH, next_message_size) do |value|
-        return (value - 1) unless value.zero?
+        (value - 1) unless value.zero?
       end
 
       # Retrieves the maximum number of bytes a log message can have.
