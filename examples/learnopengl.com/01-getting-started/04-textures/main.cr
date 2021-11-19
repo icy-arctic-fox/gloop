@@ -143,7 +143,8 @@ LibSTBImage.image_free(data)
 # -------------------------------------------------------------------------------------------
 our_shader.use # don't forget to activate/use the shader before setting uniforms!
 # either set it manually like so:
-LibGL.uniform_1i(LibGL.get_uniform_location(our_shader.id, "texture1"), 0)
+location = Gloop::Program.new(context, our_shader.id).uniforms.locate("texture1")
+context.uniforms[location].value = 0
 # or set it via the shader class
 our_shader.set_int("texture2", 1)
 
