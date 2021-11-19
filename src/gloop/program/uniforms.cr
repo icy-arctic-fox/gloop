@@ -50,7 +50,7 @@ module Gloop
       def unsafe_fetch(index : Int)
         size = uninitialized Int32
         type = uninitialized LibGL::UniformType
-        name = string_query(max_name_size, null_terminator: true) do |buffer, capacity, length|
+        name = string_query(max_name_size) do |buffer, capacity, length|
           gl.get_active_uniform(@name, index.to_u32!, capacity, length, pointerof(size), pointerof(type), buffer)
         end.not_nil!
 

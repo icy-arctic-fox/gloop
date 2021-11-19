@@ -28,6 +28,26 @@ Spectator.describe Gloop::Program::Uniforms do
 
   after_each { program.delete }
 
+  describe "#size" do
+    subject { uniforms.size }
+
+    it "is the number of uniforms" do
+      is_expected.to eq(1)
+    end
+  end
+
+  describe "#unsafe_fetch" do
+    subject(uniform) { uniforms.unsafe_fetch(0) }
+
+    it "retrieves the uniform specified" do
+      is_expected.to have_attributes(
+        name: "color",
+        type: Gloop::Uniform::Type::Float32,
+        size: 1
+      )
+    end
+  end
+
   describe "#locate" do
     subject { uniforms.locate(name) }
     let(name) { "color" }
