@@ -104,6 +104,11 @@ module Gloop
     def initialize(@name : String, @type : Type, @size : Int32 = 1)
     end
 
+    # Creates metadata about an active uniform from a program.
+    def initialize(@name : String, type, @size : Int32 = 1)
+      @type = Type.new(type.to_u32!)
+    end
+
     # Checks whether the uniform references an array.
     def array?
       size != 1

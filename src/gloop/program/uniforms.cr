@@ -6,6 +6,9 @@ module Gloop
   struct Program < Object
     # Access to active uniforms from a program.
     #
+    # Use `#at` to reference a uniform by its location.
+    # Use the string variants of `#[]` and `#[]?` to reference a uniform by its name.
+    #
     # NOTE: The uniform *index* is different than its *location*.
     #   The *location* is used to get and set a uniform's value.
     #   The *index* is used to retrieve metadata of the uniform.
@@ -46,10 +49,10 @@ module Gloop
       @[GLFunction("glGetActiveUniform", version: "2.0")]
       def unsafe_fetch(index : Int)
         size = uninitialized Int32
-        type = uninitialized Uniform::Type
+        type = uninitialized LibGL::UniformType
         name = string_query(max_name_size, null_terminator: true) do |buffer, capacity, length|
-          gl.get_active_uniform(@name, index, capacity, length, pointerof(size), pointerof(type), buffer)
-        end
+          gl.get_active_uniform(@name, index.to_u32!, capacity, length, pointerof(size), pointerof(type), buffer)
+        end.not_nil!
 
         Uniform.new(name, type, size)
       end
@@ -91,7 +94,7 @@ module Gloop
       end
 
       # References an active uniform from this program by its location.
-      def [](location : Int32) : UniformLocation
+      def at(location : Int32) : UniformLocation
         UniformLocation.new(@context, @name, location)
       end
 

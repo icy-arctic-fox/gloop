@@ -83,14 +83,14 @@ Spectator.describe Gloop::Program::Uniforms do
     end
   end
 
-  describe "#[]" do
-    context "with a location" do
-      it "returns a uniform with the specified location" do
-        uniform = uniforms[5]
-        expect(uniform.location).to eq(5)
-      end
+  describe "#at" do
+    it "returns a uniform with the specified location" do
+      uniform = uniforms.at(5)
+      expect(uniform.location).to eq(5)
     end
+  end
 
+  describe "#[]" do
     context "with a name" do
       it "returns a uniform with its location" do
         uniform = uniforms["color"]
