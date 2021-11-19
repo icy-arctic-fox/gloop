@@ -48,6 +48,14 @@ Spectator.describe Gloop::Program::Uniforms do
     end
   end
 
+  describe "#name" do
+    subject { uniforms.name(0) }
+
+    it "retrieves the name of a uniform" do
+      is_expected.to eq("color")
+    end
+  end
+
   describe "#locate" do
     subject { uniforms.locate(name) }
     let(name) { "color" }

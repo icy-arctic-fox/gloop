@@ -57,6 +57,17 @@ module Gloop
         Uniform.new(name, type, size)
       end
 
+      # Retrieves the name of the specified uniform.
+      #
+      # - OpenGL function: `glGetActiveUniformName`
+      # - OpenGL version: 3.1
+      @[GLFunction("glGetActiveUniformName", version: "3.1")]
+      def name(index : UInt32) : String
+        string_query(max_name_size) do |buffer, capacity, length|
+          gl.get_active_uniform_name(@name, index, capacity, length, buffer)
+        end.not_nil!
+      end
+
       # Gets the location of a named uniform.
       #
       # Returns -1 if the uniform wasn't found.
