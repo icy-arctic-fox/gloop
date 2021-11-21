@@ -21,6 +21,8 @@ module Gloop
   end
 
   # Specifies number of components, bit-depth, and data type used for pixels.
+  #
+  # See: https://www.khronos.org/opengl/wiki/Image_Format
   enum ImageFormat : UInt32
     UIntNormR   = LibGL::InternalFormat::Red
     UInt8NormR  = LibGL::InternalFormat::R8
