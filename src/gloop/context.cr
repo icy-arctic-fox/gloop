@@ -161,6 +161,17 @@ module Gloop
       def initialize(@loader : OpenGL::Loader)
       end
 
+      # Constructs a string representation of the object, useful for debugging.
+      #
+      # Hides contents of the loader to prevent bloated output.
+      # Displays the pointer to it so it can be checked if needed.
+      def inspect(io : IO) : Nil
+        io << {{@type.name.id.stringify}}
+        io << "(@loader=0x"
+        @loader.object_id.to_s(io, 16)
+        io << ')'
+      end
+
       # Delegates calls to the OpenGL function loader.
       #
       # Wraps calls with error checking, when enabled.
