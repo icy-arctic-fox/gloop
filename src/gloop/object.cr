@@ -50,7 +50,7 @@ module Gloop
     # Unique identifier of this object.
     getter name : Name
 
-    # Enum idicating which type of object this is.
+    # Enum indicating which type of object this is.
     abstract def object_type
 
     # Creates a reference to an existing object.

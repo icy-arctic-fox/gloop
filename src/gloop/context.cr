@@ -80,7 +80,7 @@ module Gloop
     # MAJOR.MINOR[.RELEASE][ VENDOR]
     # ```
     # Vendor-specific information may follow the version string.
-    # Its format dependes on the implementation,
+    # Its format depends on the implementation,
     # but a space always separates the version number and the vendor-specific information.
     #
     # - OpenGL function: `glGetString`
@@ -96,7 +96,7 @@ module Gloop
     # MAJOR.MINOR[.RELEASE][ VENDOR]
     # ```
     # Vendor-specific information may follow the version string.
-    # Its format dependes on the implementation,
+    # Its format depends on the implementation,
     # but a space always separates the version number and the vendor-specific information.
     #
     # - OpenGL function: `glGetString`
