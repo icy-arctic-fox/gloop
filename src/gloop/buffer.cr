@@ -155,8 +155,7 @@ module Gloop
     # - OpenGL version: 2.0
     @[GLFunction("glDeleteBuffers", version: "2.0")]
     def self.delete(buffers : Enumerable(self)) : Nil
-      buffers.group_by(&.context).each do |context, subset|
-        names = subset.map(&.to_unsafe)
+      super do |context, names|
         context.gl.delete_buffers(names.size, names.to_unsafe)
       end
     end

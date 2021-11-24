@@ -120,8 +120,7 @@ module Gloop
     # - OpenGL version: 3.0
     @[GLFunction("glDeleteVertexArrays", version: "3.0")]
     def self.delete(vertex_arrays : Enumerable(self)) : Nil
-      vertex_arrays.group_by(&.context).each do |context, subset|
-        names = subset.map(&.to_unsafe)
+      super do |context, names|
         context.gl.delete_vertex_arrays(names.size, names.to_unsafe)
       end
     end

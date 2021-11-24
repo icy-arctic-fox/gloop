@@ -126,8 +126,7 @@ module Gloop
     # - OpenGL version: 2.0
     @[GLFunction("glDeleteTextures", version: "2.0")]
     def self.delete(textures : Enumerable(self)) : Nil
-      textures.group_by(&.context).each do |context, subset|
-        names = subset.map(&.to_unsafe)
+      super do |context, names|
         context.gl.delete_textures(names.size, names.to_unsafe)
       end
     end

@@ -59,6 +59,16 @@ module Gloop
     def initialize(@context : Context, @name : Name)
     end
 
+    # Wrapper for deleting multiple objects of the same type, but possibly from different contexts.
+    #
+    # Groups the objects by their context, then yields their common context and the object names.
+    private def self.delete(objects : Enumerable(self)) : Nil
+      objects.group_by(&.context).each do |context, subset|
+        names = subset.map(&.to_unsafe)
+        yield context, names
+      end
+    end
+
     # Constructs a string representation of the object.
     #
     # Contains the object type and its name (unique identifier).
