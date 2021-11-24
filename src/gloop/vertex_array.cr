@@ -82,7 +82,7 @@ module Gloop
     #
     # - OpenGL function: `glGenVertexArrays`
     # - OpenGL version: 3.0
-    @[GLFunction("glGenVertexArrays", version: "3.")]
+    @[GLFunction("glGenVertexArrays", version: "3.0")]
     def self.generate(context) : self
       name = uninitialized Name
       context.gl.gen_vertex_arrays(1, pointerof(name))

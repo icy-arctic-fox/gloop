@@ -65,7 +65,7 @@ module Gloop
       #
       # - OpenGL function: `glVertexAttribBinding`
       # - OpenGL version: 4.3
-      @[GLFunction("glVertexAttribBinding", veresion: "4.5")]
+      @[GLFunction("glVertexAttribBinding", version: "4.5")]
       def bind_attribute(attribute : Gloop::Attribute, to slot : UInt32)
         gl.vertex_attrib_binding(attribute.index, slot)
       end

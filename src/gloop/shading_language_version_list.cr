@@ -23,7 +23,7 @@ module Gloop
     # - OpenGL function: `glGetStringi`
     # - OpenGL enum: `GL_SHADING_LANGAUGE_VERSION`
     # - OpenGL version: 4.3
-    @[GLFunction("glGetStringi", enum: "GL_SHADING_LANGAUGE_VERSION", version: "4.3")]
+    @[GLFunction("glGetStringi", enum: "GL_SHADING_LANGUAGE_VERSION", version: "4.3")]
     def unsafe_fetch(index : Int)
       ptr = gl.get_string_i(LibGL::StringName::ShadingLanguageVersion, index.to_u32)
       String.new(ptr)

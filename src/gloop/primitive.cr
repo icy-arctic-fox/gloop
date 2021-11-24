@@ -1,5 +1,5 @@
 module Gloop
-  # Primitive shape used for drawing verticies.
+  # Primitive shape used for drawing vertices.
   enum Primitive : UInt32
     Points                 = LibGL::PrimitiveType::Points
     Lines                  = LibGL::PrimitiveType::Lines

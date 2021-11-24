@@ -81,7 +81,7 @@ module Gloop
     #
     # See: `#clear`
     #
-    # - OpenGL function: `glCearColor`
+    # - OpenGL function: `glClearColor`
     # - OpenGL version: 2.0
     @[GLFunction("glClearColor", version: "2.0")]
     def clear_color=(color : FloatColorTuple)

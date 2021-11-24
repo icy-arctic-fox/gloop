@@ -23,7 +23,7 @@ module Gloop
       @[GLFunction("glGetVertexArrayIndexediv", enum: "GL_VERTEX_ATTRIB_ARRAY_ENABLED", version: "4.5")]
       array_attribute_parameter? VertexAttribArrayEnabled, enabled
 
-      # Indicates whether the attribute's value is normalized when converted to a float-poing number.
+      # Indicates whether the attribute's value is normalized when converted to a float-point number.
       #
       # - OpenGL function: `glGetVertexArrayIndexediv`
       # - OpenGL enum: `GL_VERTEX_ATTRIB_ARRAY_NORMALIZED`

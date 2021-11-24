@@ -12,7 +12,7 @@ module Gloop
     end
 
     # Creates a list of objects from the same context with their names.
-    def intialize(@context : Context, names : Enumerable(Object::Name))
+    def initialize(@context : Context, names : Enumerable(Object::Name))
       names = names.to_a unless names.responds_to?(:to_unsafe)
       @names = names.to_unsafe.to_slice(array.size)
     end

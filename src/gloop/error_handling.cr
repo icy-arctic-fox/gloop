@@ -4,7 +4,7 @@ require "./errors/*"
 Exception::CallStack.skip(__FILE__)
 
 module Gloop
-  # Mix-in providing error handling feautres to OpenGL calls.
+  # Mix-in providing error handling features to OpenGL calls.
   # Can be included or extended.
   #
   # Exposes two methods - `#checked` and `#expect_truthy`.
@@ -84,7 +84,7 @@ module Gloop
     # Checks if there was an error from OpenGL.
     #
     # If there was an error, it is raised.
-    # Othwerise, this method does nothing.
+    # Otherwise, this method does nothing.
     #
     # If consecutive errors occur, they are queued up.
     # This method should be checked immediately
