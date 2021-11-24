@@ -102,10 +102,10 @@ module Gloop
     # - OpenGL function: `glCreateBuffers`
     # - OpenGL version: 4.5
     @[GLFunction("glCreateBuffers", version: "4.5")]
-    def self.create(context, count) : BufferList
-      names = Slice(Name).new(count)
-      context.gl.create_buffers(count, names.to_unsafe)
-      BufferList.new(context, names)
+    def self.create(context, count : Int) : BufferList
+      BufferList.new(context, count) do |names|
+        context.gl.create_buffers(count, names)
+      end
     end
 
     # Generates a new buffer.
@@ -134,10 +134,10 @@ module Gloop
     # - OpenGL function: `glGenBuffers`
     # - OpenGL version: 2.0
     @[GLFunction("glGenBuffers", version: "2.0")]
-    def self.generate(context, count) : BufferList
-      names = Slice(Name).new(count)
-      context.gl.gen_buffers(count, names.to_unsafe)
-      BufferList.new(context, names)
+    def self.generate(context, count : Int) : BufferList
+      BufferList.new(context, count) do |names|
+        context.gl.gen_buffers(count, names)
+      end
     end
 
     # Deletes this buffer.

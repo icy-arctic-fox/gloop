@@ -26,6 +26,14 @@ module Gloop
       end
     end
 
+    # Creates a list of objects from the same context.
+    #
+    # Yields a pointer to a block of memory to populate with object names.
+    def initialize(@context : Context, size : Int)
+      @names = Slice.new(size, Object::Name.new!(0))
+      yield @names.to_unsafe
+    end
+
     # Returns the number of objects in this list.
     def size
       @names.size

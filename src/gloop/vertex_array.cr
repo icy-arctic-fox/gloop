@@ -99,10 +99,10 @@ module Gloop
     # - OpenGL function: `glGenVertexArrays`
     # - OpenGL version: 3.0
     @[GLFunction("glGenVertexArrays", version: "3.0")]
-    def self.generate(context, count) : VertexArrayList
-      names = Slice(Name).new(count)
-      context.gl.gen_vertex_arrays(count, names.to_unsafe)
-      VertexArrayList.new(context, names)
+    def self.generate(context, count : Int) : VertexArrayList
+      VertexArrayList.new(context, count) do |names|
+        context.gl.gen_vertex_arrays(count, names)
+      end
     end
 
     # Deletes this vertex array.
