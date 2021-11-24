@@ -150,134 +150,134 @@ module Gloop
         case components
         when 1, :r
           case depth
-          when 8   then return ImageFormat::UInt8NormR
-          when 16  then return ImageFormat::UInt16NormR
-          when nil then return ImageFormat::UIntNormR
+          when 8   then return UInt8NormR
+          when 16  then return UInt16NormR
+          when nil then return UIntNormR
           end
         when 2, :rg
           case depth
-          when 8   then return ImageFormat::UInt8NormRG
-          when 16  then return ImageFormat::UInt16NormRG
-          when nil then return ImageFormat::UIntNormRG
+          when 8   then return UInt8NormRG
+          when 16  then return UInt16NormRG
+          when nil then return UIntNormRG
           end
         when 3, :rgb
           case depth
-          when 4   then return ImageFormat::UInt4NormRGB
-          when 5   then return ImageFormat::UInt5NormRGB
-          when 8   then return ImageFormat::UInt8NormRGB
-          when 10  then return ImageFormat::UInt10NormRGB
-          when 12  then return ImageFormat::UInt12NormRGB
-          when 16  then return ImageFormat::UInt16NormRGB
-          when nil then return ImageFormat::UIntNormRGB
+          when 4   then return UInt4NormRGB
+          when 5   then return UInt5NormRGB
+          when 8   then return UInt8NormRGB
+          when 10  then return UInt10NormRGB
+          when 12  then return UInt12NormRGB
+          when 16  then return UInt16NormRGB
+          when nil then return UIntNormRGB
           end
         when 4, :rgba
           case depth
-          when 2   then return ImageFormat::UInt2NormRGBA
-          when 4   then return ImageFormat::UInt4NormRGBA
-          when 8   then return ImageFormat::UInt8NormRGBA
-          when 12  then return ImageFormat::UInt12NormRGBA
-          when 16  then return ImageFormat::UInt16NormRGBA
-          when nil then return ImageFormat::UIntNormRGBA
+          when 2   then return UInt2NormRGBA
+          when 4   then return UInt4NormRGBA
+          when 8   then return UInt8NormRGBA
+          when 12  then return UInt12NormRGBA
+          when 16  then return UInt16NormRGBA
+          when nil then return UIntNormRGBA
           end
         end
       in .int_norm?
         case components
         when 1, :r
           case depth
-          when  8 then return ImageFormat::Int8NormR
-          when 16 then return ImageFormat::Int16NormR
+          when  8 then return Int8NormR
+          when 16 then return Int16NormR
           end
         when 2, :rg
           case depth
-          when  8 then return ImageFormat::Int8NormRG
-          when 16 then return ImageFormat::Int16NormRG
+          when  8 then return Int8NormRG
+          when 16 then return Int16NormRG
           end
         when 3, :rgb
           case depth
-          when  8 then return ImageFormat::Int8NormRGB
-          when 16 then return ImageFormat::Int16NormRGB
+          when  8 then return Int8NormRGB
+          when 16 then return Int16NormRGB
           end
         when 4, :rgba
           case depth
-          when  8 then return ImageFormat::Int8NormRGBA
-          when 16 then return ImageFormat::Int16NormRGBA
+          when  8 then return Int8NormRGBA
+          when 16 then return Int16NormRGBA
           end
         end
       in .u_int?
         case components
         when 1, :r
           case depth
-          when  8 then return ImageFormat::UInt8R
-          when 16 then return ImageFormat::UInt16R
-          when 32 then return ImageFormat::UInt32R
+          when  8 then return UInt8R
+          when 16 then return UInt16R
+          when 32 then return UInt32R
           end
         when 2, :rg
           case depth
-          when  8 then return ImageFormat::UInt8RG
-          when 16 then return ImageFormat::UInt16RG
-          when 32 then return ImageFormat::UInt32RG
+          when  8 then return UInt8RG
+          when 16 then return UInt16RG
+          when 32 then return UInt32RG
           end
         when 3, :rgb
           case depth
-          when  8 then return ImageFormat::UInt8RGB
-          when 16 then return ImageFormat::UInt16RGB
-          when 32 then return ImageFormat::UInt32RGB
+          when  8 then return UInt8RGB
+          when 16 then return UInt16RGB
+          when 32 then return UInt32RGB
           end
         when 4, :rgba
           case depth
-          when  8 then return ImageFormat::UInt8RGBA
-          when 16 then return ImageFormat::UInt16RGBA
-          when 32 then return ImageFormat::UInt32RGBA
+          when  8 then return UInt8RGBA
+          when 16 then return UInt16RGBA
+          when 32 then return UInt32RGBA
           end
         end
       in .int?
         case components
         when 1, :r
           case depth
-          when  8 then return ImageFormat::Int8R
-          when 16 then return ImageFormat::Int16R
-          when 32 then return ImageFormat::Int32R
+          when  8 then return Int8R
+          when 16 then return Int16R
+          when 32 then return Int32R
           end
         when 2, :rg
           case depth
-          when  8 then return ImageFormat::Int8RG
-          when 16 then return ImageFormat::Int16RG
-          when 32 then return ImageFormat::Int32RG
+          when  8 then return Int8RG
+          when 16 then return Int16RG
+          when 32 then return Int32RG
           end
         when 3, :rgb
           case depth
-          when  8 then return ImageFormat::Int8RGB
-          when 16 then return ImageFormat::Int16RGB
-          when 32 then return ImageFormat::Int32RGB
+          when  8 then return Int8RGB
+          when 16 then return Int16RGB
+          when 32 then return Int32RGB
           end
         when 4, :rgba
           case depth
-          when  8 then return ImageFormat::Int8RGBA
-          when 16 then return ImageFormat::Int16RGBA
-          when 32 then return ImageFormat::Int32RGBA
+          when  8 then return Int8RGBA
+          when 16 then return Int16RGBA
+          when 32 then return Int32RGBA
           end
         end
       in .float?
         case components
         when 1, :r
           case depth
-          when 16 then return ImageFormat::Float16R
-          when 32 then return ImageFormat::Float32R
+          when 16 then return Float16R
+          when 32 then return Float32R
           end
         when 2, :rg
           case depth
-          when 16 then return ImageFormat::Float16RG
-          when 32 then return ImageFormat::Float32RG
+          when 16 then return Float16RG
+          when 32 then return Float32RG
           end
         when 3, :rgb
           case depth
-          when 16 then return ImageFormat::Float16RGB
-          when 32 then return ImageFormat::Float32RGB
+          when 16 then return Float16RGB
+          when 32 then return Float32RGB
           end
         when 4, :rgba
           case depth
-          when 16 then return ImageFormat::Float16RGBA
-          when 32 then return ImageFormat::Float32RGBA
+          when 16 then return Float16RGBA
+          when 32 then return Float32RGBA
           end
         end
       end
