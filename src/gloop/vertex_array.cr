@@ -251,7 +251,7 @@ module Gloop
     #
     # - OpenGL function: `glVertexArrayAttribBinding`
     # - OpenGL version: 4.5
-    @[GLFunction("glVertexArrayAttribBinding", veresion: "4.5")]
+    @[GLFunction("glVertexArrayAttribBinding", version: "4.5")]
     def bind_attribute(attribute : Attribute, to slot : UInt32)
       gl.vertex_array_attrib_binding(@name, attribute.index, slot)
     end
