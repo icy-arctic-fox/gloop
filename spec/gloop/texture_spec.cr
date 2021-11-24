@@ -62,7 +62,7 @@ Spectator.describe Gloop::Texture do
       expect { texture.delete }.to change(&.exists?).from(true).to(false)
     end
   end
-  
+
   context "Labelable" do
     it "can be labeled" do
       subject.label = "Test label"
@@ -99,7 +99,7 @@ Spectator.describe Gloop::Context do
 
   describe "#generate_texture" do
     pending "creates a texture", pending: "Texture#bind is not implemented" do
-    texture = context.generate_texture
+      texture = context.generate_texture
       texture.bind
       expect(texture.exists?).to be_true
     ensure
@@ -109,7 +109,7 @@ Spectator.describe Gloop::Context do
 
   describe "#generate_textures" do
     pending "creates multiple textures", pending: "Texture#bind is not implemented" do
-    textures = context.generate_textures(3)
+      textures = context.generate_textures(3)
       aggregate_failures do
         3.times do |i|
           textures[i].bind
