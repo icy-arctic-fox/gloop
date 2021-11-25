@@ -11,10 +11,10 @@ Spectator.describe Gloop::Texture do
   end
 
   describe ".generate" do
-    skip "creates a texture", skip: "Texture#bind not implemented" do
-      textures = described_class.generate(context)
-      textures.bind
-      expect(vao.exists?).to be_true
+    it "creates a texture" do
+      texture = described_class.generate(context)
+      texture.bind(:texture_2d)
+      expect(texture.exists?).to be_true
     end
   end
 
@@ -71,9 +71,9 @@ Spectator.describe Gloop::Context do
   end
 
   describe "#generate_texture" do
-    skip "creates a texture", skip: "Texture#bind is not implemented" do
+    it "creates a texture" do
       texture = context.generate_texture
-      texture.bind
+      texture.bind(:texture_2d)
       expect(texture.exists?).to be_true
     ensure
       texture.try(&.delete)
@@ -81,9 +81,9 @@ Spectator.describe Gloop::Context do
   end
 
   describe "#generate_textures" do
-    skip "creates multiple textures", skip: "Texture#bind is not implemented" do
+    it "creates multiple textures" do
       textures = context.generate_textures(3)
-      textures.each(&.bind)
+      textures.each(&.bind(:texture_2d))
       expect(textures.map(&.exists?)).to all(be_true)
     ensure
       textures.try(&.delete)
@@ -104,9 +104,9 @@ Spectator.describe Gloop::TextureList do
   end
 
   describe ".generate" do
-    skip "creates multiple textures", skip: "Texture#bind is not implemented" do
+    it "creates multiple textures" do
       textures = described_class.generate(context, 3)
-      textures.each(&.bind)
+      textures.each(&.bind(:texture_2d))
       expect(textures.map(&.exists?)).to all(be_true)
     ensure
       textures.try(&.delete)

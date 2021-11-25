@@ -109,6 +109,25 @@ module Gloop
     def object_type
       Object::Type::Texture
     end
+
+    # Binds this texture to a specified target.
+    #
+    # - OpenGL function: `glBindTexture`
+    # - OpenGL version: 2.0
+    @[GLFunction("glBindTexture", version: "2.0")]
+    def bind(target : Type) : Nil
+      gl.bind_texture(target.to_unsafe, @name)
+    end
+
+    # Binds this texture to a specified target.
+    #
+    # - OpenGL function: `glBindTexture`
+    # - OpenGL version: 2.0
+    @[GLFunction("glBindTexture", version: "2.0")]
+    @[AlwaysInline]
+    def bind(target : Symbol) : Nil
+      bind(Type.new(target))
+    end
   end
 
   struct Context
