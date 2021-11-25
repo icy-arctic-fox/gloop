@@ -8,32 +8,13 @@ Spectator.describe Gloop::Texture do
       texture = described_class.create(context, :texture_2d)
       expect(texture.exists?).to be_true
     end
-
-    it "creates multiple textures" do
-      textures = described_class.create(context, :texture_2d, 3)
-      aggregate_failures do
-        expect(textures[0].exists?).to be_true
-        expect(textures[1].exists?).to be_true
-        expect(textures[2].exists?).to be_true
-      end
-    end
   end
 
   describe ".generate" do
-    pending "creates a textures", pending: "Texture#bind not implemented" do
+    skip "creates a texture", skip: "Texture#bind not implemented" do
       textures = described_class.generate(context)
       textures.bind
       expect(vao.exists?).to be_true
-    end
-
-    pending "creates multiple textures", pending: "Texture#bind not implemented" do
-      textures = described_class.generate(context, 3)
-      aggregate_failures do
-        3.times do |i|
-          textures[i].bind
-          expect(textures[i].exists?).to be_true
-        end
-      end
     end
   end
 
@@ -47,13 +28,9 @@ Spectator.describe Gloop::Texture do
 
   describe ".delete" do
     it "deletes textures" do
-      textures = described_class.create(context, :texture_2d, 3)
+      textures = Array.new(3) { described_class.create(context, :texture_2d) }
       described_class.delete(textures)
-      aggregate_failures do
-        expect(textures[0].exists?).to be_false
-        expect(textures[1].exists?).to be_false
-        expect(textures[2].exists?).to be_false
-      end
+      expect(textures.map(&.exists?)).to all(be_false)
     end
   end
 
@@ -87,18 +64,14 @@ Spectator.describe Gloop::Context do
   describe "#create_textures" do
     it "creates multiple textures" do
       textures = context.create_textures(:texture_2d, 3)
-      aggregate_failures do
-        expect(textures[0].exists?).to be_true
-        expect(textures[1].exists?).to be_true
-        expect(textures[2].exists?).to be_true
-      end
+      expect(textures.map(&.exists?)).to all(be_true)
     ensure
-      textures.delete if textures
+      textures.try(&.delete)
     end
   end
 
   describe "#generate_texture" do
-    pending "creates a texture", pending: "Texture#bind is not implemented" do
+    skip "creates a texture", skip: "Texture#bind is not implemented" do
       texture = context.generate_texture
       texture.bind
       expect(texture.exists?).to be_true
@@ -108,41 +81,42 @@ Spectator.describe Gloop::Context do
   end
 
   describe "#generate_textures" do
-    pending "creates multiple textures", pending: "Texture#bind is not implemented" do
+    skip "creates multiple textures", skip: "Texture#bind is not implemented" do
       textures = context.generate_textures(3)
-      aggregate_failures do
-        3.times do |i|
-          textures[i].bind
-          expect(textures[i].exists?).to be_true
-        end
-      end
+      textures.each(&.bind)
+      expect(textures.map(&.exists?)).to all(be_true)
     ensure
-      textures.delete if textures
+      textures.try(&.delete)
     end
   end
 end
 
 Spectator.describe Gloop::TextureList do
-  subject(list) { Gloop::Texture.create(context, :texture_2d, 3) }
+  subject(list) { described_class.create(context, :texture_2d, 3) }
 
-  it "holds textures" do
-    is_expected.to be_an(Indexable(Gloop::Texture))
-    expect(&.size).to eq(3)
-    aggregate_failures "textures" do
-      expect(list[0]).to be_a(Gloop::Texture)
-      expect(list[1]).to be_a(Gloop::Texture)
-      expect(list[2]).to be_a(Gloop::Texture)
+  describe ".create" do
+    it "creates multiple textures" do
+      textures = described_class.create(context, :texture_2d, 3)
+      expect(textures.map(&.exists?)).to all(be_true)
+    ensure
+      textures.try(&.delete)
+    end
+  end
+
+  describe ".generate" do
+    skip "creates multiple textures", skip: "Texture#bind is not implemented" do
+      textures = described_class.generate(context, 3)
+      textures.each(&.bind)
+      expect(textures.map(&.exists?)).to all(be_true)
+    ensure
+      textures.try(&.delete)
     end
   end
 
   describe "#delete" do
     it "deletes all textures" do
       list.delete
-      aggregate_failures "textures" do
-        list.each do |texture|
-          expect(texture.exists?).to be_false
-        end
-      end
+      expect(list.map(&.exists?)).to all(be_false)
     end
   end
 end

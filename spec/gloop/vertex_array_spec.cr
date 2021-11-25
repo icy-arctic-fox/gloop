@@ -12,15 +12,6 @@ Spectator.describe Gloop::VertexArray do
       vao = described_class.create(context)
       expect(vao.exists?).to be_true
     end
-
-    it "creates multiple vertex arrays" do
-      vaos = described_class.create(context, 3)
-      aggregate_failures do
-        expect(vaos[0].exists?).to be_true
-        expect(vaos[1].exists?).to be_true
-        expect(vaos[2].exists?).to be_true
-      end
-    end
   end
 
   describe ".generate" do
@@ -28,16 +19,6 @@ Spectator.describe Gloop::VertexArray do
       vao = described_class.generate(context)
       vao.bind
       expect(vao.exists?).to be_true
-    end
-
-    it "creates multiple vertex arrays" do
-      vaos = described_class.generate(context, 3)
-      aggregate_failures do
-        3.times do |i|
-          vaos[i].bind
-          expect(vaos[i].exists?).to be_true
-        end
-      end
     end
   end
 
@@ -51,13 +32,9 @@ Spectator.describe Gloop::VertexArray do
 
   describe ".delete" do
     it "deletes vertex arrays" do
-      vaos = described_class.create(context, 3)
-      Gloop::VertexArray.delete(vaos)
-      aggregate_failures do
-        expect(vaos[0].exists?).to be_false
-        expect(vaos[1].exists?).to be_false
-        expect(vaos[2].exists?).to be_false
-      end
+      vaos = Array.new(3) { described_class.create(context) }
+      described_class.delete(vaos)
+      expect(vaos.map(&.exists?)).to all(be_false)
     end
   end
 
@@ -242,13 +219,9 @@ Spectator.describe Gloop::Context do
   describe "#create_vertex_arrays" do
     it "creates multiple vertex arrays" do
       vaos = context.create_vertex_arrays(3)
-      aggregate_failures do
-        expect(vaos[0].exists?).to be_true
-        expect(vaos[1].exists?).to be_true
-        expect(vaos[2].exists?).to be_true
-      end
+      expect(vaos.map(&.exists?)).to all(be_true)
     ensure
-      vaos.delete if vaos
+      vaos.try(&.delete)
     end
   end
 
@@ -265,14 +238,10 @@ Spectator.describe Gloop::Context do
   describe "#generate_vertex_arrays" do
     it "creates multiple vertex arrays" do
       vaos = context.generate_vertex_arrays(3)
-      aggregate_failures do
-        3.times do |i|
-          vaos[i].bind
-          expect(vaos[i].exists?).to be_true
-        end
-      end
+      vaos.each(&.bind)
+      expect(vaos.map(&.exists?)).to all(be_true)
     ensure
-      vaos.delete if vaos
+      vaos.try(&.delete)
     end
   end
 
@@ -313,26 +282,31 @@ Spectator.describe Gloop::Context do
 end
 
 Spectator.describe Gloop::VertexArrayList do
-  subject(list) { Gloop::VertexArray.create(context, 3) }
+  subject(list) { described_class.create(context, 3) }
 
-  it "holds vertex arrays" do
-    is_expected.to be_an(Indexable(Gloop::VertexArray))
-    expect(&.size).to eq(3)
-    aggregate_failures "vertex arrays" do
-      expect(list[0]).to be_a(Gloop::VertexArray)
-      expect(list[1]).to be_a(Gloop::VertexArray)
-      expect(list[2]).to be_a(Gloop::VertexArray)
+  describe ".create" do
+    it "creates multiple vertex arrays" do
+      vaos = described_class.create(context, 3)
+      expect(vaos.map(&.exists?)).to all(be_true)
+    ensure
+      vaos.try(&.delete)
+    end
+  end
+
+  describe ".generate" do
+    it "creates multiple vertex arrays" do
+      vaos = described_class.generate(context, 3)
+      vaos.each(&.bind)
+      expect(vaos.map(&.exists?)).to all(be_true)
+    ensure
+      vaos.try(&.delete)
     end
   end
 
   describe "#delete" do
     it "deletes all vertex arrays" do
       list.delete
-      aggregate_failures "vertex arrays" do
-        list.each do |vertex_array|
-          expect(vertex_array.exists?).to be_false
-        end
-      end
+      expect(list.map(&.exists?)).to all(be_false)
     end
   end
 end

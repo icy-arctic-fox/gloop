@@ -59,20 +59,6 @@ module Gloop
       new(context, name)
     end
 
-    # Creates multiple new vertex arrays.
-    #
-    # The number of vertex arrays to create is given by *count*.
-    # Unlike `.generate`, resources are created in advance instead of on the first binding.
-    #
-    # - OpenGL function: `glCreateVertexArrays`
-    # - OpenGL version: 4.5
-    @[GLFunction("glCreateVertexArrays", version: "4.5")]
-    def self.create(context, count) : VertexArrayList
-      names = Slice(Name).new(count)
-      context.gl.create_vertex_arrays(count, names.to_unsafe)
-      VertexArrayList.new(context, names)
-    end
-
     # Generates a new vertex array.
     #
     # This ensures a unique name for a vertex array object.
@@ -87,22 +73,6 @@ module Gloop
       name = uninitialized Name
       context.gl.gen_vertex_arrays(1, pointerof(name))
       new(context, name)
-    end
-
-    # Generates multiple new vertex arrays.
-    #
-    # This ensures unique names for the vertex array objects.
-    # Resources are not allocated for the vertex arrays until they are bound.
-    #
-    # See: `.create`
-    #
-    # - OpenGL function: `glGenVertexArrays`
-    # - OpenGL version: 3.0
-    @[GLFunction("glGenVertexArrays", version: "3.0")]
-    def self.generate(context, count : Int) : VertexArrayList
-      VertexArrayList.new(context, count) do |names|
-        context.gl.gen_vertex_arrays(count, names)
-      end
     end
 
     # Deletes this vertex array.
@@ -272,9 +242,9 @@ module Gloop
 
     # Creates multiple vertex arrays in this context.
     #
-    # See: `VertexArray.create`
+    # See: `VertexArrayList.create`
     def create_vertex_arrays(count : Int) : VertexArrayList
-      VertexArray.create(self, count)
+      VertexArrayList.create(self, count)
     end
 
     # Generates a vertex array in this context.
@@ -286,9 +256,9 @@ module Gloop
 
     # Generates multiple vertex arrays in this context.
     #
-    # See: `VertexArray.generate`
+    # See: `VertexArrayList.generate`
     def generate_vertex_arrays(count : Int) : VertexArrayList
-      VertexArray.generate(self, count)
+      VertexArrayList.generate(self, count)
     end
 
     # Retrieves the currently bound vertex array.
@@ -319,6 +289,36 @@ module Gloop
 
   # Collection of vertex arrays belonging to the same context.
   struct VertexArrayList < ObjectList(VertexArray)
+    # Creates multiple new vertex arrays.
+    #
+    # The number of vertex arrays to create is given by *count*.
+    # Unlike `.generate`, resources are created in advance instead of on the first binding.
+    #
+    # - OpenGL function: `glCreateVertexArrays`
+    # - OpenGL version: 4.5
+    @[GLFunction("glCreateVertexArrays", version: "4.5")]
+    def self.create(context, count : Int) : self
+      new(context, count) do |names|
+        context.gl.create_vertex_arrays(count, names)
+      end
+    end
+
+    # Generates multiple new vertex arrays.
+    #
+    # This ensures unique names for the vertex array objects.
+    # Resources are not allocated for the vertex arrays until they are bound.
+    #
+    # See: `.create`
+    #
+    # - OpenGL function: `glGenVertexArrays`
+    # - OpenGL version: 3.0
+    @[GLFunction("glGenVertexArrays", version: "3.0")]
+    def self.generate(context, count : Int) : self
+      new(context, count) do |names|
+        context.gl.gen_vertex_arrays(count, names)
+      end
+    end
+
     # Deletes all vertex arrays in the list.
     #
     # - OpenGL function: `glDeleteVertexArrays`

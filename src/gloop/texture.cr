@@ -54,21 +54,6 @@ module Gloop
       new(context, name)
     end
 
-    # Generates multiple textures.
-    #
-    # The textures aren't assigned a type or resources until they are bound.
-    #
-    # See: `#create`
-    #
-    # - OpenGL function: `glGenTextures`
-    # - OpenGL version: 2.0
-    @[GLFunction("glGenTextures", version: "2.0")]
-    def self.generate(context, count : Int) : TextureList
-      TextureList.new(context, count) do |names|
-        context.gl.gen_textures(count, names)
-      end
-    end
-
     # Creates a new texture of the specified type.
     #
     # - OpenGL function: `glCreateTextures`
@@ -88,27 +73,6 @@ module Gloop
     @[AlwaysInline]
     def self.create(context, type : Symbol) : self
       create(context, Type.new(type))
-    end
-
-    # Creates multiple textures of the specified type.
-    #
-    # - OpenGL function: `glCreateTextures`
-    # - OpenGL version: 4.5
-    @[GLFunction("glCreateTextures", version: "4.5")]
-    def self.create(context, type : Type, count : Int) : TextureList
-      TextureList.new(context, count) do |names|
-        context.gl.create_textures(type.to_unsafe, count, names)
-      end
-    end
-
-    # Creates multiple textures of the specified type.
-    #
-    # - OpenGL function: `glCreateTextures`
-    # - OpenGL version: 4.5
-    @[GLFunction("glCreateTextures", version: "4.5")]
-    @[AlwaysInline]
-    def self.create(context, type : Symbol, count : Int) : TextureList
-      create(context, Type.new(type), count)
     end
 
     # Deletes this texture.
@@ -159,7 +123,7 @@ module Gloop
     #
     # See: `Texture.generate`
     def generate_textures(count : Int) : TextureList
-      Texture.generate(self, count)
+      TextureList.generate(self, count)
     end
 
     # Creates a new texture of the specified type.
@@ -180,19 +144,55 @@ module Gloop
     #
     # See: `Texture.create`
     def create_textures(type : Texture::Type, count : Int) : TextureList
-      Texture.create(self, type, count)
+      TextureList.create(self, type, count)
     end
 
     # Creates multiple textures of the specified type.
     #
     # See: `Texture.create`
     def create_textures(type : Symbol, count : Int) : TextureList
-      Texture.create(self, type, count)
+      TextureList.create(self, type, count)
     end
   end
 
   # Collection of textures belonging to the same context.
   struct TextureList < ObjectList(Texture)
+    # Generates multiple textures.
+    #
+    # The textures aren't assigned a type or resources until they are bound.
+    #
+    # See: `#create`
+    #
+    # - OpenGL function: `glGenTextures`
+    # - OpenGL version: 2.0
+    @[GLFunction("glGenTextures", version: "2.0")]
+    def self.generate(context, count : Int) : self
+      new(context, count) do |names|
+        context.gl.gen_textures(count, names)
+      end
+    end
+
+    # Creates multiple textures of the specified type.
+    #
+    # - OpenGL function: `glCreateTextures`
+    # - OpenGL version: 4.5
+    @[GLFunction("glCreateTextures", version: "4.5")]
+    def self.create(context, type : Texture::Type, count : Int) : self
+      new(context, count) do |names|
+        context.gl.create_textures(type.to_unsafe, count, names)
+      end
+    end
+
+    # Creates multiple textures of the specified type.
+    #
+    # - OpenGL function: `glCreateTextures`
+    # - OpenGL version: 4.5
+    @[GLFunction("glCreateTextures", version: "4.5")]
+    @[AlwaysInline]
+    def self.create(context, type : Symbol, count : Int) : self
+      create(context, Texture::Type.new(type), count)
+    end
+
     # Deletes all textures in the list.
     #
     # - OpenGL function: `glDeleteTextures`

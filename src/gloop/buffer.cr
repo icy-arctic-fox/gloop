@@ -94,20 +94,6 @@ module Gloop
       new(context, name)
     end
 
-    # Creates multiple new buffers.
-    #
-    # The number of buffers to create is given by *count*.
-    # Unlike `.generate`, resources are created in advance instead of on the first binding.
-    #
-    # - OpenGL function: `glCreateBuffers`
-    # - OpenGL version: 4.5
-    @[GLFunction("glCreateBuffers", version: "4.5")]
-    def self.create(context, count : Int) : BufferList
-      BufferList.new(context, count) do |names|
-        context.gl.create_buffers(count, names)
-      end
-    end
-
     # Generates a new buffer.
     #
     # This ensures a unique name for a buffer object.
@@ -122,22 +108,6 @@ module Gloop
       name = uninitialized Name
       context.gl.gen_buffers(1, pointerof(name))
       new(context, name)
-    end
-
-    # Generates multiple new buffers.
-    #
-    # This ensures unique names for the buffer objects.
-    # Resources are not allocated for the buffers until they are bound.
-    #
-    # See: `.create`
-    #
-    # - OpenGL function: `glGenBuffers`
-    # - OpenGL version: 2.0
-    @[GLFunction("glGenBuffers", version: "2.0")]
-    def self.generate(context, count : Int) : BufferList
-      BufferList.new(context, count) do |names|
-        context.gl.gen_buffers(count, names)
-      end
     end
 
     # Deletes this buffer.
@@ -694,9 +664,9 @@ module Gloop
 
     # Creates multiple buffers in this context.
     #
-    # See: `Buffer.create`
+    # See: `BufferList.create`
     def create_buffers(count : Int) : BufferList
-      Buffer.create(self, count)
+      BufferList.create(self, count)
     end
 
     # Generates a buffer in this context.
@@ -708,14 +678,44 @@ module Gloop
 
     # Generates multiple buffer in this context.
     #
-    # See: `Buffer.generate`
+    # See: `BufferList.generate`
     def generate_buffers(count : Int) : BufferList
-      Buffer.generate(self, count)
+      BufferList.generate(self, count)
     end
   end
 
   # Collection of buffers belonging to the same context.
   struct BufferList < ObjectList(Buffer)
+    # Creates multiple new buffers.
+    #
+    # The number of buffers to create is given by *count*.
+    # Unlike `.generate`, resources are created in advance instead of on the first binding.
+    #
+    # - OpenGL function: `glCreateBuffers`
+    # - OpenGL version: 4.5
+    @[GLFunction("glCreateBuffers", version: "4.5")]
+    def self.create(context, count : Int) : self
+      new(context, count) do |names|
+        context.gl.create_buffers(count, names)
+      end
+    end
+
+    # Generates multiple new buffers.
+    #
+    # This ensures unique names for the buffer objects.
+    # Resources are not allocated for the buffers until they are bound.
+    #
+    # See: `.create`
+    #
+    # - OpenGL function: `glGenBuffers`
+    # - OpenGL version: 2.0
+    @[GLFunction("glGenBuffers", version: "2.0")]
+    def self.generate(context, count : Int) : self
+      new(context, count) do |names|
+        context.gl.gen_buffers(count, names)
+      end
+    end
+
     # Deletes all buffers in the list.
     #
     # - OpenGL function: `glDeleteBuffers`

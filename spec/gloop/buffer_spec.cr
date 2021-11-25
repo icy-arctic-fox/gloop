@@ -11,17 +11,6 @@ Spectator.describe Gloop::Buffer do
     ensure
       buffer.try(&.delete)
     end
-
-    it "creates multiple buffers" do
-      buffers = described_class.create(context, 3)
-      aggregate_failures do
-        expect(buffers[0].exists?).to be_true
-        expect(buffers[1].exists?).to be_true
-        expect(buffers[2].exists?).to be_true
-      end
-    ensure
-      described_class.delete(buffers) if buffers
-    end
   end
 
   describe ".generate" do
@@ -31,18 +20,6 @@ Spectator.describe Gloop::Buffer do
       expect(buffer.exists?).to be_true
     ensure
       buffer.try(&.delete)
-    end
-
-    it "creates multiple buffers" do
-      buffers = described_class.generate(context, 3)
-      aggregate_failures do
-        3.times do |i|
-          buffers[i].bind(:array)
-          expect(buffers[i].exists?).to be_true
-        end
-      end
-    ensure
-      described_class.delete(buffers) if buffers
     end
   end
 
@@ -56,13 +33,9 @@ Spectator.describe Gloop::Buffer do
 
   describe ".delete" do
     it "deletes buffers" do
-      buffers = described_class.create(context, 3)
+      buffers = Array.new(3) { described_class.create(context) }
       described_class.delete(buffers)
-      aggregate_failures do
-        expect(buffers[0].exists?).to be_false
-        expect(buffers[1].exists?).to be_false
-        expect(buffers[2].exists?).to be_false
-      end
+      expect(buffers.map(&.exists?)).to all(be_false)
     end
   end
 
@@ -777,13 +750,9 @@ Spectator.describe Gloop::Context do
   describe "#create_buffers" do
     it "creates multiple buffers" do
       buffers = context.create_buffers(3)
-      aggregate_failures do
-        expect(buffers[0].exists?).to be_true
-        expect(buffers[1].exists?).to be_true
-        expect(buffers[2].exists?).to be_true
-      end
+      expect(buffers.map(&.exists?)).to all(be_true)
     ensure
-      buffers.delete if buffers
+      buffers.try(&.delete)
     end
   end
 
@@ -800,39 +769,40 @@ Spectator.describe Gloop::Context do
   describe "#generate_buffers" do
     it "creates multiple buffers" do
       buffers = context.generate_buffers(3)
-      aggregate_failures do
-        3.times do |i|
-          buffers[i].bind(:array)
-          expect(buffers[i].exists?).to be_true
-        end
-      end
+      buffers.each(&.bind(:array))
+      expect(buffers.map(&.exists?)).to all(be_true)
     ensure
-      buffers.delete if buffers
+      buffers.try(&.delete)
     end
   end
 end
 
 Spectator.describe Gloop::BufferList do
-  subject(list) { Gloop::Buffer.create(context, 3) }
+  subject(list) { Gloop::BufferList.create(context, 3) }
 
-  it "holds buffers" do
-    is_expected.to be_an(Indexable(Gloop::Buffer))
-    expect(&.size).to eq(3)
-    aggregate_failures "buffers" do
-      expect(list[0]).to be_a(Gloop::Buffer)
-      expect(list[1]).to be_a(Gloop::Buffer)
-      expect(list[2]).to be_a(Gloop::Buffer)
+  describe ".create" do
+    it "creates multiple buffers" do
+      buffers = described_class.create(context, 3)
+      expect(buffers.map(&.exists?)).to all(be_true)
+    ensure
+      buffers.try(&.delete)
+    end
+  end
+
+  describe ".generate" do
+    it "creates multiple buffers" do
+      buffers = described_class.generate(context, 3)
+      buffers.each(&.bind(:array))
+      expect(buffers.map(&.exists?)).to all(be_true)
+    ensure
+      buffers.try(&.delete)
     end
   end
 
   describe "#delete" do
     it "deletes all buffers" do
       list.delete
-      aggregate_failures "buffers" do
-        list.each do |buffer|
-          expect(buffer.exists?).to be_false
-        end
-      end
+      expect(list.map(&.exists?)).to all(be_false)
     end
   end
 end
