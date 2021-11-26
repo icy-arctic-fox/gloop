@@ -22,7 +22,7 @@ module Gloop
       # Creates a texture type from a symbol.
       #
       # This is intended to be used as a workaround for Crystal's limitations and auto-generated names.
-      def self.new(value : Symbol)
+      def self.new(value : Symbol) # ameba:disable Metrics/CyclomaticComplexity
         case value
         when :_1d, :"1d", :texture_1d                   then Texture1D
         when :_2d, :"2d", :texture_2d                   then Texture2D
