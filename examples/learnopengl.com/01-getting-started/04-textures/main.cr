@@ -101,8 +101,8 @@ attribute.enable
 
 # texture 1
 # ---------
-LibGL.gen_textures(1, out texture_1)
-LibGL.bind_texture(LibGL::TextureTarget::Texture2D, texture_1)
+texture_1 = context.generate_texture
+texture_1.bind(:texture_2d)
 # set the texture wrapping parameters
 LibGL.tex_parameter_i(LibGL::TextureTarget::Texture2D, LibGL::TextureParameterName::TextureWrapS, LibGL::TextureWrapMode::Repeat) # set texture wrapping to GL_REPEAT (default wrapping method)
 LibGL.tex_parameter_i(LibGL::TextureTarget::Texture2D, LibGL::TextureParameterName::TextureWrapT, LibGL::TextureWrapMode::Repeat)
@@ -121,8 +121,8 @@ end
 LibSTBImage.image_free(data)
 # texture 2
 # ---------
-LibGL.gen_textures(1, out texture_2)
-LibGL.bind_texture(LibGL::TextureTarget::Texture2D, texture_2)
+texture_2 = context.generate_texture
+texture_2.bind(:texture_2d)
 # set the texture wrapping parameters
 LibGL.tex_parameter_i(LibGL::TextureTarget::Texture2D, LibGL::TextureParameterName::TextureWrapS, LibGL::TextureWrapMode::Repeat) # set texture wrapping to GL_REPEAT (default wrapping method)
 LibGL.tex_parameter_i(LibGL::TextureTarget::Texture2D, LibGL::TextureParameterName::TextureWrapT, LibGL::TextureWrapMode::Repeat)
@@ -162,9 +162,9 @@ while LibGLFW.window_should_close(window).false?
 
   # bind textures on corresponding texture units
   LibGL.active_texture(LibGL::TextureUnit::Texture0)
-  LibGL.bind_texture(LibGL::TextureTarget::Texture2D, texture_1)
+  texture_1.bind(:texture_2d)
   LibGL.active_texture(LibGL::TextureUnit::Texture1)
-  LibGL.bind_texture(LibGL::TextureTarget::Texture2D, texture_2)
+  texture_2.bind(:texture_2d)
 
   # render container
   our_shader.use
