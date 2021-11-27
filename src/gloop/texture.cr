@@ -1,50 +1,11 @@
 require "./object"
+require "./texture/*"
 
 module Gloop
   # Collection of one or more images.
   #
   # See: https://www.khronos.org/opengl/wiki/Texture
   struct Texture < Object
-    # Types of textures.
-    enum Type : UInt32
-      Texture1D          = LibGL::TextureTarget::Texture1D
-      Texture2D          = LibGL::TextureTarget::Texture2D
-      Texture3D          = LibGL::TextureTarget::Texture3D
-      Texture1DArray     = LibGL::TextureTarget::Texture1DArray
-      Texture2DArray     = LibGL::TextureTarget::Texture2DArray
-      Rectangle          = LibGL::TextureTarget::TextureRectangle
-      CubeMap            = LibGL::TextureTarget::TextureCubeMap
-      CubeMapArray       = LibGL::TextureTarget::TextureCubeMapArray
-      Buffer             = LibGL::TextureTarget::TextureBuffer
-      MultiSample2D      = LibGL::TextureTarget::Texture2DMultisample
-      MultiSample2DArray = LibGL::TextureTarget::Texture2DMultisampleArray
-
-      # Creates a texture type from a symbol.
-      #
-      # This is intended to be used as a workaround for Crystal's limitations and auto-generated names.
-      def self.new(value : Symbol) # ameba:disable Metrics/CyclomaticComplexity
-        case value
-        when :_1d, :"1d", :texture_1d                   then Texture1D
-        when :_2d, :"2d", :texture_2d                   then Texture2D
-        when :_3d, :"3d", :texture_3d                   then Texture3D
-        when :_1d_array, :"1d_array", :texture_1d_array then Texture1DArray
-        when :_2d_array, :"2d_array", :texture_2d_array then Texture2DArray
-        when :rectangle                                 then Rectangle
-        when :cube_map                                  then CubeMap
-        when :cube_map_array                            then CubeMapArray
-        when :buffer                                    then Buffer
-        when :multi_sample_2d                           then MultiSample2D
-        when :multi_sample_2d_array                     then MultiSample2DArray
-        else                                                 raise ArgumentError.new("Invalid texture type")
-        end
-      end
-
-      # Converts to an OpenGL enum.
-      def to_unsafe
-        LibGL::TextureTarget.new(value)
-      end
-    end
-
     # Generates a new texture.
     #
     # The texture isn't assigned a type or resources until it is bound.
@@ -65,7 +26,7 @@ module Gloop
     # - OpenGL function: `glCreateTextures`
     # - OpenGL version: 4.5
     @[GLFunction("glCreateTextures", version: "4.5")]
-    def self.create(context, type : Type) : self
+    def self.create(context, type : Target) : self
       name = uninitialized Name
       context.gl.create_textures(type.to_unsafe, 1, pointerof(name))
       new(context, name)
@@ -78,7 +39,7 @@ module Gloop
     @[GLFunction("glCreateTextures", version: "4.5")]
     @[AlwaysInline]
     def self.create(context, type : Symbol) : self
-      create(context, Type.new(type))
+      create(context, Target.new(type))
     end
 
     # Deletes this texture.
@@ -121,7 +82,7 @@ module Gloop
     # - OpenGL function: `glBindTexture`
     # - OpenGL version: 2.0
     @[GLFunction("glBindTexture", version: "2.0")]
-    def bind(target : Type) : Nil
+    def bind(target : Target) : Nil
       gl.bind_texture(target.to_unsafe, @name)
     end
 
@@ -132,7 +93,7 @@ module Gloop
     @[GLFunction("glBindTexture", version: "2.0")]
     @[AlwaysInline]
     def bind(target : Symbol) : Nil
-      bind(Type.new(target))
+      bind(Target.new(target))
     end
   end
 
@@ -154,7 +115,7 @@ module Gloop
     # Creates a new texture of the specified type.
     #
     # See: `Texture.create`
-    def create_texture(type : Texture::Type) : Texture
+    def create_texture(type : Texture::Target) : Texture
       Texture.create(self, type)
     end
 
@@ -168,7 +129,7 @@ module Gloop
     # Creates multiple textures of the specified type.
     #
     # See: `Texture.create`
-    def create_textures(type : Texture::Type, count : Int) : TextureList
+    def create_textures(type : Texture::Target, count : Int) : TextureList
       TextureList.create(self, type, count)
     end
 
@@ -202,7 +163,7 @@ module Gloop
     # - OpenGL function: `glCreateTextures`
     # - OpenGL version: 4.5
     @[GLFunction("glCreateTextures", version: "4.5")]
-    def self.create(context, type : Texture::Type, count : Int) : self
+    def self.create(context, type : Texture::Target, count : Int) : self
       new(context, count) do |names|
         context.gl.create_textures(type.to_unsafe, count, names)
       end
@@ -215,7 +176,7 @@ module Gloop
     @[GLFunction("glCreateTextures", version: "4.5")]
     @[AlwaysInline]
     def self.create(context, type : Symbol, count : Int) : self
-      create(context, Texture::Type.new(type), count)
+      create(context, Texture::Target.new(type), count)
     end
 
     # Deletes all textures in the list.
