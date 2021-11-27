@@ -10,7 +10,7 @@ module Gloop
     #
     # The texture isn't assigned a type or resources until it is bound.
     #
-    # See: `#create`
+    # See: `.create`
     #
     # - OpenGL function: `glGenTextures`
     # - OpenGL version: 2.0
