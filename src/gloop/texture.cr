@@ -6,6 +6,366 @@ module Gloop
   #
   # See: https://www.khronos.org/opengl/wiki/Texture
   struct Texture < Object
+    include Parameters
+
+    # Swizzle values for all components.
+    #
+    # Components are ordered: red, green, blue, alpha.
+    alias SwizzleRGBA = Tuple(Swizzle, Swizzle, Swizzle, Swizzle)
+
+    # Tuple of color components, each value a floating-point number in the range [0, 1].
+    alias FloatColorTuple = Tuple(Float32 | Float64, Float32 | Float64, Float32 | Float64, Float32 | Float64)
+
+    # Tuple of color components, each value a signed integer.
+    alias Int32ColorTuple = Tuple(Int32, Int32, Int32, Int32)
+
+    # Tuple of color components, each value an unsigned integer.
+    alias UInt32ColorTuple = Tuple(UInt32, UInt32, UInt32, UInt32)
+
+    # Mode of operation for textures with mixed depth and stencil data.
+    enum DepthStencilMode : Int32
+      StencilIndex   = LibGL::DepthStencilTextureMode::StencilIndex
+      DepthComponent = LibGL::DepthStencilTextureMode::DepthComponent
+
+      Stencil = StencilIndex
+      Depth   = DepthComponent
+
+      # Converts to an OpenGL enum.
+      def to_unsafe
+        LibGL::DepthStencilTextureMode.new(value)
+      end
+    end
+
+    # Scaling function used when a texture is magnified.
+    enum MagFilter : Int32
+      Nearest = LibGL::TextureMagFilter::Nearest
+      Linear  = LibGL::TextureMagFilter::Linear
+
+      # Converts to an OpenGL enum.
+      def to_unsafe
+        LibGL::TextureMagFilter.new(value)
+      end
+    end
+
+    # Scaling function used when a texture is minified.
+    enum MinFilter : Int32
+      Nearest              = LibGL::TextureMinFilter::Nearest
+      Linear               = LibGL::TextureMinFilter::Linear
+      NearestMipmapNearest = LibGL::TextureMinFilter::NearestMipmapNearest
+      LinearMipmapNearest  = LibGL::TextureMinFilter::LinearMipmapNearest
+      NearestMipmapLinear  = LibGL::TextureMinFilter::NearestMipmapLinear
+      LinearMipmapLinear   = LibGL::TextureMinFilter::LinearMipmapLinear
+
+      # Converts to an OpenGL enum.
+      def to_unsafe
+        LibGL::TextureMinFilter.new(value)
+      end
+    end
+
+    # Method used for texture coordinates outside of the standard range.
+    enum WrapMode : Int32
+      Repeat            = LibGL::TextureWrapMode::Repeat
+      ClampToEdge       = LibGL::TextureWrapMode::ClampToEdge
+      ClampToBorder     = LibGL::TextureWrapMode::ClampToBorder
+      MirroredRepeat    = LibGL::TextureWrapMode::MirroredRepeat
+      MirrorClampToEdge = LibGL::MIRROR_CLAMP_TO_EDGE
+
+      # Converts to an OpenGL enum.
+      def to_unsafe
+        LibGL::TextureWrapMode.new(value)
+      end
+    end
+
+    # Color component or value actually presented to shaders.
+    enum Swizzle : Int32
+      Zero  = LibGL::TextureSwizzle::Zero
+      One   = LibGL::TextureSwizzle::One
+      Red   = LibGL::TextureSwizzle::Red
+      Green = LibGL::TextureSwizzle::Green
+      Blue  = LibGL::TextureSwizzle::Blue
+      Alpha = LibGL::TextureSwizzle::Alpha
+
+      # Converts to an OpenGL enum.
+      def to_unsafe
+        LibGL::TextureSwizzle.new(value)
+      end
+    end
+
+    # Retrieves the mode of operation for a texture using mixed depth and stencil data.
+    #
+    # - OpenGL function: `glGetTextureParameterIiv`
+    # - OpenGL enum: `GL_DEPTH_STENCIL_TEXTURE_MODE`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterIiv", enum: "GL_DEPTH_STENCIL_TEXTURE_MODE", version: "4.5")]
+    texture_parameter_getter LibGL::TextureParameterName::DepthStencilTextureMode, depth_stencil_mode : DepthStencilMode
+
+    # Sets the mode of operation for a texture using mixed depth and stencil data.
+    #
+    # - OpenGL function: `glTextureParameteri`
+    # - OpenGL enum: `GL_DEPTH_STENCIL_TEXTURE_MODE`
+    # - OpenGL version: 4.5
+    @[GLFunction("glTextureParameteri", enum: "GL_DEPTH_STENCIL_TEXTURE_MODE", version: "4.5")]
+    texture_parameter_setter DepthStencilTextureMode, depth_stencil_mode : DepthStencilMode
+
+    # Retrieves the index of the minimum mipmap level.
+    #
+    # - OpenGL function: `glGetTextureParameterIiv`
+    # - OpenGL enum: `GL_TEXTURE_BASE_LEVEL`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterIiv", enum: "GL_TEXTURE_BASE_LEVEL", version: "4.5")]
+    texture_parameter_getter LibGL::TextureParameterName::TextureBaseLevel, base_level : Int32
+
+    # Sets the index of the minimum mipmap level.
+    #
+    # - OpenGL function: `glTextureParameteri`
+    # - OpenGL enum: `GL_TEXTURE_BASE_LEVEL`
+    # - OpenGL version: 4.5
+    @[GLFunction("glTextureParameteri", enum: "GL_TEXTURE_BASE_LEVEL", version: "4.5")]
+    texture_parameter_setter TextureBaseLevel, base_level : Int32
+
+    # Retrieves the maximum mipmap level.
+    #
+    # - OpenGL function: `glGetTextureParameterIiv`
+    # - OpenGL enum: `GL_TEXTURE_MAX_LEVEL`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterIiv", enum: "GL_TEXTURE_MAX_LEVEL", version: "4.5")]
+    texture_parameter_getter LibGL::TextureParameterName::TextureMaxLevel, max_level : Int32
+
+    # Sets the maximum mipmap level.
+    #
+    # - OpenGL function: `glTextureParameteri`
+    # - OpenGL enum: `GL_TEXTURE_MAX_LEVEL`
+    # - OpenGL version: 4.5
+    @[GLFunction("glTextureParameteri", enum: "GL_TEXTURE_MAX_LEVEL", version: "4.5")]
+    texture_parameter_setter TextureMaxLevel, max_level : Int32
+
+    # Retrieves the function that should be used when a texture is magnified.
+    #
+    # - OpenGL function: `glGetTextureParameterIiv`
+    # - OpenGL enum: `GL_TEXTURE_MAG_FILTER`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterIiv", enum: "GL_TEXTURE_MAG_FILTER", version: "4.5")]
+    texture_parameter_getter TextureMagFilter, mag_filter : MagFilter
+
+    # Sets the function that should be used when a texture is magnified.
+    #
+    # - OpenGL function: `glTextureParameteri`
+    # - OpenGL enum: `GL_TEXTURE_MAG_FILTER`
+    # - OpenGL version: 4.5
+    @[GLFunction("glTextureParameteri", enum: "GL_TEXTURE_MAG_FILTER", version: "4.5")]
+    texture_parameter_setter TextureMagFilter, mag_filter : MagFilter
+
+    # Retrieves the function that should be used when a texture is minified.
+    #
+    # - OpenGL function: `glGetTextureParameterIiv`
+    # - OpenGL enum: `GL_TEXTURE_MIN_FILTER`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterIiv", enum: "GL_TEXTURE_MIN_FILTER", version: "4.5")]
+    texture_parameter_getter TextureMinFilter, min_filter : MinFilter
+
+    # Sets the function that should be used when a texture is minified.
+    #
+    # - OpenGL function: `glTextureParameteri`
+    # - OpenGL enum: `GL_TEXTURE_MIN_FILTER`
+    # - OpenGL version: 4.5
+    @[GLFunction("glTextureParameteri", enum: "GL_TEXTURE_MIN_FILTER", version: "4.5")]
+    texture_parameter_setter TextureMinFilter, min_filter : MinFilter
+
+    # Retrieves the minimum level-of-detail.
+    #
+    # - OpenGL function: `glGetTextureParameterf`
+    # - OpenGL enum: `GL_TEXTURE_MIN_LOD`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterf", enum: "GL_TEXTURE_MIN_LOD", version: "4.5")]
+    texture_parameter_getter LibGL::TextureParameterName::TextureMinLOD, min_lod : Float32
+
+    # Sets the minimum level-of-detail.
+    #
+    # - OpenGL function: `glTextureParameterf`
+    # - OpenGL enum: `GL_TEXTURE_MIN_LOD`
+    # - OpenGL version: 4.5
+    @[GLFunction("glTextureParameterf", enum: "GL_TEXTURE_MIN_LOD", version: "4.5")]
+    texture_parameter_setter TextureMinLOD, min_lod : Float32
+
+    # Retrieves the maximum level-of-detail.
+    #
+    # - OpenGL function: `glGetTextureParameterf`
+    # - OpenGL enum: `GL_TEXTURE_MAX_LOD`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterf", enum: "GL_TEXTURE_MAX_LOD", version: "4.5")]
+    texture_parameter_getter LibGL::TextureParameterName::TextureMaxLOD, max_lod : Float32
+
+    # Sets the maximum level-of-detail.
+    #
+    # - OpenGL function: `glTextureParameterf`
+    # - OpenGL enum: `GL_TEXTURE_MAX_LOD`
+    # - OpenGL version: 4.5
+    @[GLFunction("glTextureParameterf", enum: "GL_TEXTURE_MAX_LOD", version: "4.5")]
+    texture_parameter_setter TextureMaxLOD, max_lod : Float32
+
+    # Retrieves the wrapping mode for the s-coordinate.
+    #
+    # - OpenGL function: `glGetTextureParameterIiv`
+    # - OpenGL enum: `GL_TEXTURE_WRAP_S`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterIiv", enum: "GL_TEXTURE_WRAP_S", version: "4.5")]
+    texture_parameter_getter TextureWrapS, wrap_s : WrapMode
+
+    # Sets the wrapping mode for the s-coordinate.
+    #
+    # - OpenGL function: `glTextureParameteri`
+    # - OpenGL enum: `GL_TEXTURE_WRAP_S`
+    # - OpenGL version: 4.5
+    @[GLFunction("glTextureParameteri", enum: "GL_TEXTURE_WRAP_S", version: "4.5")]
+    texture_parameter_setter TextureWrapS, wrap_s : WrapMode
+
+    # Retrieves the wrapping mode for the t-coordinate.
+    #
+    # - OpenGL function: `glGetTextureParameterIiv`
+    # - OpenGL enum: `GL_TEXTURE_WRAP_T`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterIiv", enum: "GL_TEXTURE_WRAP_T", version: "4.5")]
+    texture_parameter_getter TextureWrapT, wrap_t : WrapMode
+
+    # Sets the wrapping mode for the t-coordinate.
+    #
+    # - OpenGL function: `glTextureParameteri`
+    # - OpenGL enum: `GL_TEXTURE_WRAP_T`
+    # - OpenGL version: 4.5
+    @[GLFunction("glTextureParameteri", enum: "GL_TEXTURE_WRAP_T", version: "4.5")]
+    texture_parameter_setter TextureWrapT, wrap_t : WrapMode
+
+    # Retrieves the wrapping mode for the r-coordinate.
+    #
+    # - OpenGL function: `glGetTextureParameterIiv`
+    # - OpenGL enum: `GL_TEXTURE_WRAP_R`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterIiv", enum: "GL_TEXTURE_WRAP_R", version: "4.5")]
+    texture_parameter_getter LibGL::TextureParameterName::TextureWrapR, wrap_r : WrapMode
+
+    # Sets the wrapping mode for the r-coordinate.
+    #
+    # - OpenGL function: `glTextureParameteri`
+    # - OpenGL enum: `GL_TEXTURE_WRAP_R`
+    # - OpenGL version: 4.5
+    @[GLFunction("glTextureParameteri", enum: "GL_TEXTURE_WRAP_R", version: "4.5")]
+    texture_parameter_setter TextureWrapR, wrap_r : WrapMode
+
+    # Retrieves the red component swizzle.
+    #
+    # - OpenGL function: `glGetTextureParameterIiv`
+    # - OpenGL enum: `GL_TEXTURE_SWIZZLE_R`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterIiv", enum: "GL_TEXTURE_SWIZZLE_R", version: "4.5")]
+    texture_parameter_getter LibGL::TextureParameterName::TextureSwizzleR, swizzle_red : Swizzle
+
+    # Sets the red component swizzle.
+    #
+    # - OpenGL function: `glTextureParameteri`
+    # - OpenGL enum: `GL_TEXTURE_SWIZZLE_R`
+    # - OpenGL version: 4.5
+    @[GLFunction("glTextureParameteri", enum: "GL_TEXTURE_SWIZZLE_R", version: "4.5")]
+    texture_parameter_setter TextureSwizzleR, swizzle_red : Swizzle
+
+    # Retrieves the green component swizzle.
+    #
+    # - OpenGL function: `glGetTextureParameterIiv`
+    # - OpenGL enum: `GL_TEXTURE_SWIZZLE_G`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterIiv", enum: "GL_TEXTURE_SWIZZLE_G", version: "4.5")]
+    texture_parameter_getter LibGL::TextureParameterName::TextureSwizzleG, swizzle_green : Swizzle
+
+    # Sets the green component swizzle.
+    #
+    # - OpenGL function: `glTextureParameteri`
+    # - OpenGL enum: `GL_TEXTURE_SWIZZLE_G`
+    # - OpenGL version: 4.5
+    @[GLFunction("glTextureParameteri", enum: "GL_TEXTURE_SWIZZLE_G", version: "4.5")]
+    texture_parameter_setter TextureSwizzleG, swizzle_green : Swizzle
+
+    # Retrieves the blue component swizzle.
+    #
+    # - OpenGL function: `glGetTextureParameterIiv`
+    # - OpenGL enum: `GL_TEXTURE_SWIZZLE_B`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterIiv", enum: "GL_TEXTURE_SWIZZLE_B", version: "4.5")]
+    texture_parameter_getter LibGL::TextureParameterName::TextureSwizzleB, swizzle_blue : Swizzle
+
+    # Sets the blue component swizzle.
+    #
+    # - OpenGL function: `glTextureParameteri`
+    # - OpenGL enum: `GL_TEXTURE_SWIZZLE_B`
+    # - OpenGL version: 4.5
+    @[GLFunction("glTextureParameteri", enum: "GL_TEXTURE_SWIZZLE_B", version: "4.5")]
+    texture_parameter_setter TextureSwizzleB, swizzle_blue : Swizzle
+
+    # Retrieves the alpha component swizzle.
+    #
+    # - OpenGL function: `glGetTextureParameterIiv`
+    # - OpenGL enum: `GL_TEXTURE_SWIZZLE_A`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterIiv", enum: "GL_TEXTURE_SWIZZLE_A", version: "4.5")]
+    texture_parameter_getter LibGL::TextureParameterName::TextureSwizzleA, swizzle_alpha : Swizzle
+
+    # Sets the alpha component swizzle.
+    #
+    # - OpenGL function: `glTextureParameteri`
+    # - OpenGL enum: `GL_TEXTURE_SWIZZLE_A`
+    # - OpenGL version: 4.5
+    @[GLFunction("glTextureParameteri", enum: "GL_TEXTURE_SWIZZLE_A", version: "4.5")]
+    texture_parameter_setter TextureSwizzleA, swizzle_alpha : Swizzle
+
+    # Retrieves all component swizzle values.
+    #
+    # Components are returned in the order: red, green, blue, alpha.
+    #
+    # - OpenGL function: `glGetTextureParameterIiv`
+    # - OpenGL enum: `GL_TEXTURE_SWIZZLE`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterIiv", enum: "GL_TEXTURE_SWIZZLE", version: "4.5")]
+    def swizzle : SwizzleRGBA
+      array = uninitialized StaticArray(Int32, 4)
+      pname = LibGL::GetTextureParameter.new(LibGL::TextureParameterName::TextureSwizzleRGBA.to_u32)
+      gl.get_texture_parameter_i_iv(name, pname, array.to_unsafe)
+      SwizzleRGBA.new(
+        Swizzle.from_value(array.unsafe_fetch(0)),
+        Swizzle.from_value(array.unsafe_fetch(1)),
+        Swizzle.from_value(array.unsafe_fetch(2)),
+        Swizzle.from_value(array.unsafe_fetch(3))
+      )
+    end
+
+    # Sets all component swizzle values.
+    #
+    # - OpenGL function: `glTextureParameteriv`
+    # - OpenGL enum: `GL_TEXTURE_SWIZZLE`
+    # - OpenGL version: 4.5
+    @[GLFunction("glTextureParameteriv", enum: "GL_TEXTURE_SWIZZLE", version: "4.5")]
+    def swizzle=(swizzle : SwizzleRGBA)
+      array = StaticArray[
+        swizzle.unsafe_fetch(0).to_i,
+        swizzle.unsafe_fetch(1).to_i,
+        swizzle.unsafe_fetch(2).to_i,
+        swizzle.unsafe_fetch(3).to_i,
+      ]
+      gl.texture_parameter_iv(name, LibGL::TextureParameterName::TextureSwizzleRGBA, array.to_unsafe)
+    end
+
+    # def border_color : Color
+    # end
+
+    # def border_color=(color : Color)
+    # end
+
+    # def border_color=(color : FloatColorTuple)
+    # end
+
+    # def border_color=(color : Int32ColorTuple)
+    # end
+
+    # def border_color=(color : UInt32ColorTuple)
+    # end
+
     # Generates a new texture.
     #
     # The texture isn't assigned a type or resources until it is bound.
