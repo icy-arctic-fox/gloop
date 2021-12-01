@@ -84,6 +84,24 @@ Spectator.describe Gloop::Texture do
     end
   end
 
+  describe "#lod_bias=" do
+    it "sets the level-of-detail bias" do
+      expect { texture.lod_bias = 50 }.to change(&.lod_bias).to(50)
+    end
+  end
+
+  describe "#compare_mode=" do
+    it "sets the comparison mode" do
+      expect { texture.compare_mode = :compare_ref_to_texture }.to change(&.compare_mode).to(Gloop::Texture::CompareMode::CompareRefToTexture)
+    end
+  end
+
+  describe "#compare_function=" do
+    it "sets the depth comparison method" do
+      expect { texture.compare_function = :always }.to change(&.compare_function).to(Gloop::DepthFunction::Always)
+    end
+  end
+
   describe "#wrap_s=" do
     it "sets the wrap mode for the s-coordinate" do
       texture.wrap_s = :repeat
@@ -149,6 +167,44 @@ Spectator.describe Gloop::Texture do
         swizzle_blue: Gloop::Texture::Swizzle::Green,
         swizzle_alpha: Gloop::Texture::Swizzle::Red
       )
+    end
+  end
+
+  describe "#border_color=" do
+    context "with a color" do
+      let(color) { Gloop::Color.new(0.1, 0.3, 0.5, 0.7) }
+
+      it "sets the border color" do
+        texture.border_color = color
+        expect(&.border_color).to eq(color)
+      end
+    end
+
+    context "with floats" do
+      let(color) { {0.2, 0.4, 0.6, 0.8} }
+
+      it "sets the border color" do
+        texture.border_color = color
+        expect(&.border_color(Float32)).to eq(color.map(&.to_f32))
+      end
+    end
+
+    context "with signed integers" do
+      let(color) { {100, 200, 300, 400} }
+
+      it "sets the border color" do
+        texture.border_color = color
+        expect(&.border_color(Int32)).to eq(color)
+      end
+    end
+
+    context "with unsigned integers" do
+      let(color) { {1000_u32, 2000_u32, 3000_u32, 4000_u32} }
+
+      it "sets the border color" do
+        texture.border_color = color
+        expect(&.border_color(UInt32)).to eq(color)
+      end
     end
   end
 

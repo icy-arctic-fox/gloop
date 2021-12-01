@@ -1,3 +1,5 @@
+require "./color"
+require "./depth_function"
 require "./object"
 require "./texture/*"
 
@@ -59,6 +61,18 @@ module Gloop
       # Converts to an OpenGL enum.
       def to_unsafe
         LibGL::TextureMinFilter.new(value)
+      end
+    end
+
+    # Method for comparing texture values.
+    enum CompareMode : Int32
+      None                =    0x0
+      CompareRefToTexture = 0x884e
+      CompareRToTexture   = 0x884e
+
+      # Converts to an OpenGL enum.
+      def to_unsafe
+        LibGL::TextureCompareMode.new(value)
       end
     end
 
@@ -202,6 +216,54 @@ module Gloop
     # - OpenGL version: 4.5
     @[GLFunction("glTextureParameterf", enum: "GL_TEXTURE_MAX_LOD", version: "4.5")]
     texture_parameter_setter TextureMaxLOD, max_lod : Float32
+
+    # Retrieves the LOD bias.
+    #
+    # - OpenGL function: `glGetTextureParameterf`
+    # - OpenGL enum: `GL_TEXTURE_LOD_BIAS`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterf", enum: "GL_TEXTURE_LOD_BIAS", version: "4.5")]
+    texture_parameter_getter LibGL::TextureParameterName::TextureLODBias, lod_bias : Float32
+
+    # Sets the LOD bias.
+    #
+    # - OpenGL function: `glTextureParameterf`
+    # - OpenGL enum: `GL_TEXTURE_LOD_BIAS`
+    # - OpenGL version: 4.5
+    @[GLFunction("glTextureParameterf", enum: "GL_TEXTURE_LOD_BIAS", version: "4.5")]
+    texture_parameter_setter TextureLODBias, lod_bias : Float32
+
+    # Retrieves the texture comparison mode.
+    #
+    # - OpenGL function: `glGetTextureParameterIiv`
+    # - OpenGL enum: `GL_TEXTURE_COMPARE_MODE`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterIiv", enum: "GL_TEXTURE_COMPARE_MODE", version: "4.5")]
+    texture_parameter_getter LibGL::TextureParameterName::TextureCompareMode, compare_mode : CompareMode
+
+    # Sets the texture comparison mode.
+    #
+    # - OpenGL function: `glTextureParameteri`
+    # - OpenGL enum: `GL_TEXTURE_COMPARE_MODE`
+    # - OpenGL version: 4.5
+    @[GLFunction("glTextureParameteri", enum: "GL_TEXTURE_COMPARE_MODE", version: "4.5")]
+    texture_parameter_setter TextureCompareMode, compare_mode : CompareMode
+
+    # Retrieves the texture comparison function.
+    #
+    # - OpenGL function: `glGetTextureParameterIiv`
+    # - OpenGL enum: `GL_TEXTURE_COMPARE_FUNC`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterIiv", enum: "GL_TEXTURE_COMPARE_FUNC", version: "4.5")]
+    texture_parameter_getter LibGL::TextureParameterName::TextureCompareFunc, compare_function : DepthFunction
+
+    # Sets the texture comparison function.
+    #
+    # - OpenGL function: `glTextureParameteri`
+    # - OpenGL enum: `GL_TEXTURE_COMPARE_FUNC`
+    # - OpenGL version: 4.5
+    @[GLFunction("glTextureParameteri", enum: "GL_TEXTURE_COMPARE_FUNC", version: "4.5")]
+    texture_parameter_setter TextureCompareFunc, compare_function : DepthFunction
 
     # Retrieves the wrapping mode for the s-coordinate.
     #
@@ -351,20 +413,132 @@ module Gloop
       gl.texture_parameter_iv(name, LibGL::TextureParameterName::TextureSwizzleRGBA, array.to_unsafe)
     end
 
-    # def border_color : Color
-    # end
+    # Retrieves the border color.
+    #
+    # - OpenGL function: `glGetTextureParameterfv`
+    # - OpenGL enum: `GL_TEXTURE_BORDER_COLOR`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterfv", enum: "GL_TEXTURE_BORDER_COLOR", version: "4.5")]
+    def border_color : Color
+      components = uninitialized StaticArray(Float32, 4)
+      gl.get_texture_parameter_fv(name, LibGL::GetTextureParameter::TextureBorderColor, components.to_unsafe)
+      Color.new(
+        components.unsafe_fetch(0),
+        components.unsafe_fetch(1),
+        components.unsafe_fetch(2),
+        components.unsafe_fetch(3)
+      )
+    end
 
-    # def border_color=(color : Color)
-    # end
+    # Retrieves the border color.
+    #
+    # - OpenGL function: `glGetTextureParameterfv`
+    # - OpenGL enum: `GL_TEXTURE_BORDER_COLOR`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterfv", enum: "GL_TEXTURE_BORDER_COLOR", version: "4.5")]
+    def border_color(type : Float32.class) : FloatColorTuple
+      components = uninitialized StaticArray(Float32, 4)
+      gl.get_texture_parameter_fv(name, LibGL::GetTextureParameter::TextureBorderColor, components.to_unsafe)
+      {
+        components.unsafe_fetch(0),
+        components.unsafe_fetch(1),
+        components.unsafe_fetch(2),
+        components.unsafe_fetch(3),
+      }
+    end
 
-    # def border_color=(color : FloatColorTuple)
-    # end
+    # Retrieves the border color.
+    #
+    # - OpenGL function: `glGetTextureParameterIiv`
+    # - OpenGL enum: `GL_TEXTURE_BORDER_COLOR`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterIiv", enum: "GL_TEXTURE_BORDER_COLOR", version: "4.5")]
+    def border_color(type : Int32.class) : Int32ColorTuple
+      components = uninitialized StaticArray(Int32, 4)
+      gl.get_texture_parameter_i_iv(name, LibGL::GetTextureParameter::TextureBorderColor, components.to_unsafe)
+      {
+        components.unsafe_fetch(0),
+        components.unsafe_fetch(1),
+        components.unsafe_fetch(2),
+        components.unsafe_fetch(3),
+      }
+    end
 
-    # def border_color=(color : Int32ColorTuple)
-    # end
+    # Retrieves the border color.
+    #
+    # - OpenGL function: `glGetTextureParameterIuiv`
+    # - OpenGL enum: `GL_TEXTURE_BORDER_COLOR`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterIuiv", enum: "GL_TEXTURE_BORDER_COLOR", version: "4.5")]
+    def border_color(type : UInt32.class) : UInt32ColorTuple
+      components = uninitialized StaticArray(UInt32, 4)
+      gl.get_texture_parameter_i_uiv(name, LibGL::GetTextureParameter::TextureBorderColor, components.to_unsafe)
+      {
+        components.unsafe_fetch(0),
+        components.unsafe_fetch(1),
+        components.unsafe_fetch(2),
+        components.unsafe_fetch(3),
+      }
+    end
 
-    # def border_color=(color : UInt32ColorTuple)
-    # end
+    # Sets the border color.
+    #
+    # - OpenGL function: `glTextureParameterfv`
+    # - OpenGL enum: `GL_TEXTURE_BORDER_COLOR`
+    # - OpenGL version: 4.5
+    @[GLFunction("glTextureParameterfv", enum: "GL_TEXTURE_BORDER_COLOR", version: "4.5")]
+    def border_color=(color : Color)
+      components = StaticArray[color.red, color.green, color.blue, color.alpha]
+      gl.texture_parameter_fv(name, LibGL::TextureParameterName::TextureBorderColor, components.to_unsafe)
+    end
+
+    # Sets the border color.
+    #
+    # - OpenGL function: `glTextureParameterfv`
+    # - OpenGL enum: `GL_TEXTURE_BORDER_COLOR`
+    # - OpenGL version: 4.5
+    @[GLFunction("glTextureParameterfv", enum: "GL_TEXTURE_BORDER_COLOR", version: "4.5")]
+    def border_color=(color : FloatColorTuple)
+      components = StaticArray[
+        color.unsafe_fetch(0).to_f32,
+        color.unsafe_fetch(1).to_f32,
+        color.unsafe_fetch(2).to_f32,
+        color.unsafe_fetch(3).to_f32
+      ]
+      gl.texture_parameter_fv(name, LibGL::TextureParameterName::TextureBorderColor, components.to_unsafe)
+    end
+
+    # Sets the border color.
+    #
+    # - OpenGL function: `glTextureParameterIiv`
+    # - OpenGL enum: `GL_TEXTURE_BORDER_COLOR`
+    # - OpenGL version: 4.5
+    @[GLFunction("glTextureParameterIiv", enum: "GL_TEXTURE_BORDER_COLOR", version: "4.5")]
+    def border_color=(color : Int32ColorTuple)
+      components = StaticArray[
+        color.unsafe_fetch(0),
+        color.unsafe_fetch(1),
+        color.unsafe_fetch(2),
+        color.unsafe_fetch(3)
+      ]
+      gl.texture_parameter_i_iv(name, LibGL::TextureParameterName::TextureBorderColor, components.to_unsafe)
+    end
+
+    # Sets the border color.
+    #
+    # - OpenGL function: `glTextureParameterIuiv`
+    # - OpenGL enum: `GL_TEXTURE_BORDER_COLOR`
+    # - OpenGL version: 4.5
+    @[GLFunction("glTextureParameterIuiv", enum: "GL_TEXTURE_BORDER_COLOR", version: "4.5")]
+    def border_color=(color : UInt32ColorTuple)
+      components = StaticArray[
+        color.unsafe_fetch(0),
+        color.unsafe_fetch(1),
+        color.unsafe_fetch(2),
+        color.unsafe_fetch(3)
+      ]
+      gl.texture_parameter_i_uiv(name, LibGL::TextureParameterName::TextureBorderColor, components.to_unsafe)
+    end
 
     # Generates a new texture.
     #
