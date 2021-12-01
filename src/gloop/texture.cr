@@ -503,7 +503,7 @@ module Gloop
         color.unsafe_fetch(0).to_f32,
         color.unsafe_fetch(1).to_f32,
         color.unsafe_fetch(2).to_f32,
-        color.unsafe_fetch(3).to_f32
+        color.unsafe_fetch(3).to_f32,
       ]
       gl.texture_parameter_fv(name, LibGL::TextureParameterName::TextureBorderColor, components.to_unsafe)
     end
@@ -519,7 +519,7 @@ module Gloop
         color.unsafe_fetch(0),
         color.unsafe_fetch(1),
         color.unsafe_fetch(2),
-        color.unsafe_fetch(3)
+        color.unsafe_fetch(3),
       ]
       gl.texture_parameter_i_iv(name, LibGL::TextureParameterName::TextureBorderColor, components.to_unsafe)
     end
@@ -535,7 +535,7 @@ module Gloop
         color.unsafe_fetch(0),
         color.unsafe_fetch(1),
         color.unsafe_fetch(2),
-        color.unsafe_fetch(3)
+        color.unsafe_fetch(3),
       ]
       gl.texture_parameter_i_uiv(name, LibGL::TextureParameterName::TextureBorderColor, components.to_unsafe)
     end
