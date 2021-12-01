@@ -1,4 +1,13 @@
 module Gloop
+  # Tuple of color components, each value a floating-point number in the range [0, 1].
+  alias FloatColorTuple = Tuple(Float32 | Float64, Float32 | Float64, Float32 | Float64, Float32 | Float64)
+
+  # Tuple of color components, each value a signed integer.
+  alias Int32ColorTuple = Tuple(Int32, Int32, Int32, Int32)
+
+  # Tuple of color components, each value an unsigned integer.
+  alias UInt32ColorTuple = Tuple(UInt32, UInt32, UInt32, UInt32)
+
   # Standard four-component color value.
   #
   # Stores four color components - red, green, blue, and alpha.
