@@ -38,16 +38,9 @@ module Gloop
           %texture = self.name
           %return = begin
             {% if type < Enum %}
-              %type = typeof({{type}}.from_value(0).value)
-              %value = if %type < Int32
-                %int32 = uninitialized Int32
-                gl.get_texture_parameter_i_iv(%texture, %pname, pointerof(%int32))
-                {{type}}.from_value(%int32)
-              else
-                %uint32 = uninitialized UInt32
-                gl.get_texture_parameter_i_uiv(%texture, %pname, pointerof(%uint32))
-                {{type}}.from_value(%uint32)
-              end
+              %value = uninitialized Int32
+              gl.get_texture_parameter_iv(%texture, %pname, pointerof(%value))
+              {{type}}.from_value(%value)
 
             {% elsif type <= Float32 %}
               %value = uninitialized Float32
@@ -171,16 +164,9 @@ module Gloop
           %target = self.target.to_unsafe
           %return = begin
             {% if type < Enum %}
-              %type = typeof({{type}}.from_value(0).value)
-              %value = if %type < Int32
-                %int32 = uninitialized Int32
-                gl.get_tex_parameter_i_iv(%texture, %pname, pointerof(%int32))
-                {{type}}.from_value(%int32)
-              else
-                %uint32 = uninitialized UInt32
-                gl.get_tex_parameter_i_uiv(%texture, %pname, pointerof(%uint32))
-                {{type}}.from_value(%uint32)
-              end
+              %value = uninitialized Int32
+              gl.get_tex_parameter_iv(%texture, %pname, pointerof(%value))
+              {{type}}.from_value(%value)
 
             {% elsif type <= Float32 %}
               %value = uninitialized Float32
