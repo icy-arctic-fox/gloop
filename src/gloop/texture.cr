@@ -105,6 +105,14 @@ module Gloop
       end
     end
 
+    # Retrieves the target (type) this texture is bound to.
+    #
+    # - OpenGL function: `glGetTextureParameterIiv`
+    # - OpenGL enum: `GL_TEXTURE_TARGET`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGetTextureParameterIiv", enum: "GL_TEXTURE_TARGET", version: "4.5")]
+    texture_parameter_getter LibGL::TEXTURE_TARGET, target : Target
+
     # Retrieves the mode of operation for a texture using mixed depth and stencil data.
     #
     # - OpenGL function: `glGetTextureParameterIiv`

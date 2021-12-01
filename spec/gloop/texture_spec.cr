@@ -40,6 +40,12 @@ Spectator.describe Gloop::Texture do
     end
   end
 
+  describe "#target" do
+    it "retrieves the texture type" do
+      expect(&.target).to eq(Gloop::Texture::Target::Texture2D)
+    end
+  end
+
   describe "#depth_stencil_mode=" do
     it "sets the depth-stencil mode" do
       expect { texture.depth_stencil_mode = :stencil }.to change(&.depth_stencil_mode).to(Gloop::Texture::DepthStencilMode::Stencil)
