@@ -214,6 +214,47 @@ Spectator.describe Gloop::Texture do
     end
   end
 
+  describe "#bind" do
+    def bound_texture
+      context.textures.texture_2d.texture?
+    end
+
+    it "binds the texture to a target" do
+      expect { texture.bind(:texture_2d) }.to change { bound_texture }.to(texture)
+    end
+
+    context "with a block" do
+      it "rebinds the previous texture after the block" do
+        previous = described_class.generate(context)
+        previous.bind(:texture_2d)
+        texture.bind(:texture_2d) do
+          expect(bound_texture).to eq(texture)
+        end
+        expect(bound_texture).to eq(previous)
+      end
+
+      it "rebinds the previous buffer on error" do
+        previous = described_class.generate(context)
+        previous.bind(:texture_2d)
+        expect do
+          texture.bind(:texture_2d) do
+            expect(bound_texture).to eq(texture)
+            raise "oops"
+          end
+        end.to raise_error("oops")
+        expect(bound_texture).to eq(previous)
+      end
+
+      it "unbinds the buffer when a previous one wasn't bound" do
+        described_class.none(context).bind(:texture_2d)
+        texture.bind(:texture_2d) do
+          expect(bound_texture).to eq(texture)
+        end
+        expect(bound_texture).to be_nil
+      end
+    end
+  end
+
   context "Labelable" do
     it "can be labeled" do
       subject.label = "Test label"

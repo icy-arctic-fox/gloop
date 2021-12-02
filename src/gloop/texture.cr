@@ -524,23 +524,74 @@ module Gloop
       Object::Type::Texture
     end
 
-    # Binds this texture to a specified target.
+    # Binds this texture to the specified target.
+    #
+    # See: `BindTarget#bind`
+    #
+    # - OpenGL function: `glBindTexture`
+    # - OpenGL version: 2.0
+    @[GLFunction("glBindTexture", version: "2.0")]
+    def bind(target : Target | BindTarget) : Nil
+      gl.bind_texture(target.to_unsafe, to_unsafe)
+    end
+
+    # Binds this texture to the specified target.
+    #
+    # See: `BindTarget#bind`
+    #
+    # - OpenGL function: `glBindTexture`
+    # - OpenGL version: 2.0
+    @[AlwaysInline]
+    @[GLFunction("glBindTexture", version: "2.0")]
+    def bind(target : Symbol) : Nil
+      bind(Target.new(target))
+    end
+
+    # Binds this texture to the specified target.
+    #
+    # The previously bound texture (if any) is restored after the block completes.
+    #
+    # See: `BindTarget#bind`
     #
     # - OpenGL function: `glBindTexture`
     # - OpenGL version: 2.0
     @[GLFunction("glBindTexture", version: "2.0")]
     def bind(target : Target) : Nil
-      gl.bind_texture(target.to_unsafe, @name)
+      target = BindTarget.new(context, target)
+      bind(target) { yield }
     end
 
-    # Binds this texture to a specified target.
+    # Binds this texture to the specified target.
+    #
+    # The previously bound texture (if any) is restored after the block completes.
+    #
+    # See: `BindTarget#bind`
     #
     # - OpenGL function: `glBindTexture`
     # - OpenGL version: 2.0
     @[GLFunction("glBindTexture", version: "2.0")]
-    @[AlwaysInline]
+    def bind(target : BindTarget)
+      previous = target.texture
+      target.bind(self)
+
+      begin
+        yield
+      ensure
+        target.bind(previous)
+      end
+    end
+
+    # Binds this texture to the specified target.
+    #
+    # The previously bound texture (if any) is restored after the block completes.
+    #
+    # See: `BindTarget#bind`
+    #
+    # - OpenGL function: `glBindTexture`
+    # - OpenGL version: 2.0
+    @[GLFunction("glBindTexture", version: "2.0")]
     def bind(target : Symbol) : Nil
-      bind(Target.new(target))
+      bind(Target.new(target)) { yield }
     end
   end
 
