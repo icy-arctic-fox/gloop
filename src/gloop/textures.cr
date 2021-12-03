@@ -18,7 +18,7 @@ module Gloop
 
     # Retrieves a binding target for 1D textures.
     texture_target Texture1D, :texture_1d
-    
+
     # Retrieves a binding target for 2D textures.
     texture_target Texture2D, :texture_2d
 
