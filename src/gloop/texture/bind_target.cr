@@ -23,7 +23,7 @@ module Gloop
       # - OpenGL version: 4.3
       @[GLFunction("glGetTexParameteriv", enum: "GL_DEPTH_STENCIL_TEXTURE_MODE", version: "4.3")]
       texture_target_parameter_getter LibGL::TextureParameterName::DepthStencilTextureMode, depth_stencil_mode : DepthStencilMode
-  
+
       # Sets the mode of operation for a texture using mixed depth and stencil data.
       #
       # - OpenGL function: `glTexParameteri`
@@ -31,7 +31,7 @@ module Gloop
       # - OpenGL version: 4.3
       @[GLFunction("glTexParameteri", enum: "GL_DEPTH_STENCIL_TEXTURE_MODE", version: "4.3")]
       texture_target_parameter_setter DepthStencilTextureMode, depth_stencil_mode : DepthStencilMode
-  
+
       # Retrieves the index of the minimum mipmap level.
       #
       # - OpenGL function: `glGetTexParameteriv`
@@ -39,7 +39,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glGetTexParameteriv", enum: "GL_TEXTURE_BASE_LEVEL", version: "2.0")]
       texture_target_parameter_getter LibGL::TextureParameterName::TextureBaseLevel, base_level : Int32
-  
+
       # Sets the index of the minimum mipmap level.
       #
       # - OpenGL function: `glTexParameteri`
@@ -47,7 +47,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glTexParameteri", enum: "GL_TEXTURE_BASE_LEVEL", version: "2.0")]
       texture_target_parameter_setter TextureBaseLevel, base_level : Int32
-  
+
       # Retrieves the maximum mipmap level.
       #
       # - OpenGL function: `glGetTexParameteriv`
@@ -55,7 +55,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glGetTexParameteriv", enum: "GL_TEXTURE_MAX_LEVEL", version: "2.0")]
       texture_target_parameter_getter LibGL::TextureParameterName::TextureMaxLevel, max_level : Int32
-  
+
       # Sets the maximum mipmap level.
       #
       # - OpenGL function: `glTexParameteri`
@@ -63,7 +63,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glTexParameteri", enum: "GL_TEXTURE_MAX_LEVEL", version: "2.0")]
       texture_target_parameter_setter TextureMaxLevel, max_level : Int32
-  
+
       # Retrieves the function that should be used when a texture is magnified.
       #
       # - OpenGL function: `glGetTexParameteriv`
@@ -71,7 +71,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glGetTexParameteriv", enum: "GL_TEXTURE_MAG_FILTER", version: "2.0")]
       texture_target_parameter_getter TextureMagFilter, mag_filter : MagFilter
-  
+
       # Sets the function that should be used when a texture is magnified.
       #
       # - OpenGL function: `glTexParameteri`
@@ -79,7 +79,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glTexParameteri", enum: "GL_TEXTURE_MAG_FILTER", version: "2.0")]
       texture_target_parameter_setter TextureMagFilter, mag_filter : MagFilter
-  
+
       # Retrieves the function that should be used when a texture is minified.
       #
       # - OpenGL function: `glGetTexParameteriv`
@@ -87,7 +87,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glGetTexParameteriv", enum: "GL_TEXTURE_MIN_FILTER", version: "2.0")]
       texture_target_parameter_getter TextureMinFilter, min_filter : MinFilter
-  
+
       # Sets the function that should be used when a texture is minified.
       #
       # - OpenGL function: `glTexParameteri`
@@ -95,7 +95,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glTexParameteri", enum: "GL_TEXTURE_MIN_FILTER", version: "2.0")]
       texture_target_parameter_setter TextureMinFilter, min_filter : MinFilter
-  
+
       # Retrieves the minimum level-of-detail.
       #
       # - OpenGL function: `glGetTexParameterf`
@@ -103,7 +103,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glGetTexParameterf", enum: "GL_TEXTURE_MIN_LOD", version: "2.0")]
       texture_target_parameter_getter LibGL::TextureParameterName::TextureMinLOD, min_lod : Float32
-  
+
       # Sets the minimum level-of-detail.
       #
       # - OpenGL function: `glTexParameterf`
@@ -111,7 +111,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glTexParameterf", enum: "GL_TEXTURE_MIN_LOD", version: "2.0")]
       texture_target_parameter_setter TextureMinLOD, min_lod : Float32
-  
+
       # Retrieves the maximum level-of-detail.
       #
       # - OpenGL function: `glGetTexParameterf`
@@ -119,7 +119,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glGetTexParameterf", enum: "GL_TEXTURE_MAX_LOD", version: "2.0")]
       texture_target_parameter_getter LibGL::TextureParameterName::TextureMaxLOD, max_lod : Float32
-  
+
       # Sets the maximum level-of-detail.
       #
       # - OpenGL function: `glTexParameterf`
@@ -127,7 +127,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glTexParameterf", enum: "GL_TEXTURE_MAX_LOD", version: "2.0")]
       texture_target_parameter_setter TextureMaxLOD, max_lod : Float32
-  
+
       # Retrieves the LOD bias.
       #
       # - OpenGL function: `glGetTexParameterf`
@@ -135,7 +135,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glGetTexParameterf", enum: "GL_TEXTURE_LOD_BIAS", version: "2.0")]
       texture_target_parameter_getter LibGL::TextureParameterName::TextureLODBias, lod_bias : Float32
-  
+
       # Sets the LOD bias.
       #
       # - OpenGL function: `glTexParameterf`
@@ -143,7 +143,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glTexParameterf", enum: "GL_TEXTURE_LOD_BIAS", version: "2.0")]
       texture_target_parameter_setter TextureLODBias, lod_bias : Float32
-  
+
       # Retrieves the texture comparison mode.
       #
       # - OpenGL function: `glGetTexParameteriv`
@@ -151,7 +151,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glGetTexParameteriv", enum: "GL_TEXTURE_COMPARE_MODE", version: "2.0")]
       texture_target_parameter_getter LibGL::TextureParameterName::TextureCompareMode, compare_mode : CompareMode
-  
+
       # Sets the texture comparison mode.
       #
       # - OpenGL function: `glTexParameteri`
@@ -159,7 +159,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glTexParameteri", enum: "GL_TEXTURE_COMPARE_MODE", version: "2.0")]
       texture_target_parameter_setter TextureCompareMode, compare_mode : CompareMode
-  
+
       # Retrieves the texture comparison function.
       #
       # - OpenGL function: `glGetTexParameteriv`
@@ -167,7 +167,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glGetTexParameteriv", enum: "GL_TEXTURE_COMPARE_FUNC", version: "2.0")]
       texture_target_parameter_getter LibGL::TextureParameterName::TextureCompareFunc, compare_function : DepthFunction
-  
+
       # Sets the texture comparison function.
       #
       # - OpenGL function: `glTexParameteri`
@@ -175,7 +175,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glTexParameteri", enum: "GL_TEXTURE_COMPARE_FUNC", version: "2.0")]
       texture_target_parameter_setter TextureCompareFunc, compare_function : DepthFunction
-  
+
       # Retrieves the wrapping mode for the s-coordinate.
       #
       # - OpenGL function: `glGetTexParameteriv`
@@ -183,7 +183,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glGetTexParameteriv", enum: "GL_TEXTURE_WRAP_S", version: "2.0")]
       texture_target_parameter_getter TextureWrapS, wrap_s : WrapMode
-  
+
       # Sets the wrapping mode for the s-coordinate.
       #
       # - OpenGL function: `glTexParameteri`
@@ -191,7 +191,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glTexParameteri", enum: "GL_TEXTURE_WRAP_S", version: "2.0")]
       texture_target_parameter_setter TextureWrapS, wrap_s : WrapMode
-  
+
       # Retrieves the wrapping mode for the t-coordinate.
       #
       # - OpenGL function: `glGetTexParameteriv`
@@ -199,7 +199,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glGetTexParameteriv", enum: "GL_TEXTURE_WRAP_T", version: "2.0")]
       texture_target_parameter_getter TextureWrapT, wrap_t : WrapMode
-  
+
       # Sets the wrapping mode for the t-coordinate.
       #
       # - OpenGL function: `glTexParameteri`
@@ -207,7 +207,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glTexParameteri", enum: "GL_TEXTURE_WRAP_T", version: "2.0")]
       texture_target_parameter_setter TextureWrapT, wrap_t : WrapMode
-  
+
       # Retrieves the wrapping mode for the r-coordinate.
       #
       # - OpenGL function: `glGetTexParameteriv`
@@ -215,7 +215,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glGetTexParameteriv", enum: "GL_TEXTURE_WRAP_R", version: "2.0")]
       texture_target_parameter_getter LibGL::TextureParameterName::TextureWrapR, wrap_r : WrapMode
-  
+
       # Sets the wrapping mode for the r-coordinate.
       #
       # - OpenGL function: `glTexParameteri`
@@ -223,7 +223,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glTexParameteri", enum: "GL_TEXTURE_WRAP_R", version: "2.0")]
       texture_target_parameter_setter TextureWrapR, wrap_r : WrapMode
-  
+
       # Retrieves the red component swizzle.
       #
       # - OpenGL function: `glGetTexParameteriv`
@@ -231,7 +231,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glGetTexParameteriv", enum: "GL_TEXTURE_SWIZZLE_R", version: "2.0")]
       texture_target_parameter_getter LibGL::TextureParameterName::TextureSwizzleR, swizzle_red : Swizzle
-  
+
       # Sets the red component swizzle.
       #
       # - OpenGL function: `glTexParameteri`
@@ -239,7 +239,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glTexParameteri", enum: "GL_TEXTURE_SWIZZLE_R", version: "2.0")]
       texture_target_parameter_setter TextureSwizzleR, swizzle_red : Swizzle
-  
+
       # Retrieves the green component swizzle.
       #
       # - OpenGL function: `glGetTexParameteriv`
@@ -247,7 +247,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glGetTexParameteriv", enum: "GL_TEXTURE_SWIZZLE_G", version: "2.0")]
       texture_target_parameter_getter LibGL::TextureParameterName::TextureSwizzleG, swizzle_green : Swizzle
-  
+
       # Sets the green component swizzle.
       #
       # - OpenGL function: `glTexParameteri`
@@ -255,7 +255,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glTexParameteri", enum: "GL_TEXTURE_SWIZZLE_G", version: "2.0")]
       texture_target_parameter_setter TextureSwizzleG, swizzle_green : Swizzle
-  
+
       # Retrieves the blue component swizzle.
       #
       # - OpenGL function: `glGetTexParameteriv`
@@ -263,7 +263,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glGetTexParameteriv", enum: "GL_TEXTURE_SWIZZLE_B", version: "2.0")]
       texture_target_parameter_getter LibGL::TextureParameterName::TextureSwizzleB, swizzle_blue : Swizzle
-  
+
       # Sets the blue component swizzle.
       #
       # - OpenGL function: `glTexParameteri`
@@ -271,7 +271,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glTexParameteri", enum: "GL_TEXTURE_SWIZZLE_B", version: "2.0")]
       texture_target_parameter_setter TextureSwizzleB, swizzle_blue : Swizzle
-  
+
       # Retrieves the alpha component swizzle.
       #
       # - OpenGL function: `glGetTexParameteriv`
@@ -279,7 +279,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glGetTexParameteriv", enum: "GL_TEXTURE_SWIZZLE_A", version: "2.0")]
       texture_target_parameter_getter LibGL::TextureParameterName::TextureSwizzleA, swizzle_alpha : Swizzle
-  
+
       # Sets the alpha component swizzle.
       #
       # - OpenGL function: `glTexParameteri`
@@ -287,7 +287,7 @@ module Gloop
       # - OpenGL version: 2.0
       @[GLFunction("glTexParameteri", enum: "GL_TEXTURE_SWIZZLE_A", version: "2.0")]
       texture_target_parameter_setter TextureSwizzleA, swizzle_alpha : Swizzle
-  
+
       # Retrieves all component swizzle values.
       #
       # Components are returned in the order: red, green, blue, alpha.
@@ -307,7 +307,7 @@ module Gloop
           Swizzle.from_value(array.unsafe_fetch(3))
         )
       end
-  
+
       # Sets all component swizzle values.
       #
       # - OpenGL function: `glTexParameteriv`
@@ -323,7 +323,7 @@ module Gloop
         ]
         gl.tex_parameter_iv(to_unsafe, LibGL::TextureParameterName::TextureSwizzleRGBA, array.to_unsafe)
       end
-  
+
       # Retrieves the border color.
       #
       # - OpenGL function: `glGetTexParameterfv`
@@ -340,7 +340,7 @@ module Gloop
           components.unsafe_fetch(3)
         )
       end
-  
+
       # Retrieves the border color.
       #
       # - OpenGL function: `glGetTexParameterfv`
@@ -357,7 +357,7 @@ module Gloop
           components.unsafe_fetch(3),
         }
       end
-  
+
       # Retrieves the border color.
       #
       # - OpenGL function: `glGetTexParameterIiv`
@@ -374,7 +374,7 @@ module Gloop
           components.unsafe_fetch(3),
         }
       end
-  
+
       # Retrieves the border color.
       #
       # - OpenGL function: `glGetTexParameterIuiv`
@@ -391,7 +391,7 @@ module Gloop
           components.unsafe_fetch(3),
         }
       end
-  
+
       # Sets the border color.
       #
       # - OpenGL function: `glTexParameterfv`
@@ -402,7 +402,7 @@ module Gloop
         components = StaticArray[color.red, color.green, color.blue, color.alpha]
         gl.tex_parameter_fv(to_unsafe, LibGL::TextureParameterName::TextureBorderColor, components.to_unsafe)
       end
-  
+
       # Sets the border color.
       #
       # - OpenGL function: `glTexParameterfv`
@@ -418,7 +418,7 @@ module Gloop
         ]
         gl.tex_parameter_fv(to_unsafe, LibGL::TextureParameterName::TextureBorderColor, components.to_unsafe)
       end
-  
+
       # Sets the border color.
       #
       # - OpenGL function: `glTexParameterIiv`
@@ -434,7 +434,7 @@ module Gloop
         ]
         gl.tex_parameter_i_iv(to_unsafe, LibGL::TextureParameterName::TextureBorderColor, components.to_unsafe)
       end
-  
+
       # Sets the border color.
       #
       # - OpenGL function: `glTexParameterIuiv`
