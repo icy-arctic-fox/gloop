@@ -165,7 +165,7 @@ module Gloop
           %return = begin
             {% if type < Enum %}
               %value = uninitialized Int32
-              gl.get_tex_parameter_iv(%texture, %pname, pointerof(%value))
+              gl.get_tex_parameter_iv(%target, %pname, pointerof(%value))
               {{type}}.from_value(%value)
 
             {% elsif type <= Float32 %}
@@ -395,7 +395,7 @@ module Gloop
             %value = {{name.var.id}}
           {% end %}
 
-          %target = self.target
+          %target = self.target.to_unsafe
           {% if type <= Float32 %}
             gl.tex_parameter_f(%target, %pname, %value.to_f32)
           {% elsif type <= Enum %}
@@ -423,7 +423,7 @@ module Gloop
             %value = {{name.id}}
           {% end %}
 
-          gl.tex_parameter_i(self.target, %pname, %value.to_i)
+          gl.tex_parameter_i(self.target.to_unsafe, %pname, %value.to_i)
         end
       {% end %}
     end
@@ -452,7 +452,7 @@ module Gloop
         {% end %}
 
         bool = {{name.id}} ? LibGL::Bool::True : LibGL::Bool::False
-        gl.tex_parameter_i(target, pname, bool)
+        gl.tex_parameter_i(target.to_unsafe, pname, bool)
       end
     end
   end
