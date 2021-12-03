@@ -102,13 +102,14 @@ attribute.enable
 # texture 1
 # ---------
 texture_1 = context.generate_texture
-texture_1.bind(:texture_2d)
+texture_2d = context.textures.texture_2d
+texture_1.bind(texture_2d)
 # set the texture wrapping parameters
-LibGL.tex_parameter_i(LibGL::TextureTarget::Texture2D, LibGL::TextureParameterName::TextureWrapS, LibGL::TextureWrapMode::Repeat) # set texture wrapping to GL_REPEAT (default wrapping method)
-LibGL.tex_parameter_i(LibGL::TextureTarget::Texture2D, LibGL::TextureParameterName::TextureWrapT, LibGL::TextureWrapMode::Repeat)
+texture_2d.wrap_s = :repeat # set texture wrapping to GL_REPEAT (default wrapping method)
+texture_2d.wrap_t = :repeat
 # set texture filtering parameters
-LibGL.tex_parameter_i(LibGL::TextureTarget::Texture2D, LibGL::TextureParameterName::TextureMinFilter, LibGL::TextureMinFilter::Linear)
-LibGL.tex_parameter_i(LibGL::TextureTarget::Texture2D, LibGL::TextureParameterName::TextureMagFilter, LibGL::TextureMagFilter::Linear)
+texture_2d.min_filter = :linear
+texture_2d.mag_filter = :linear
 # load image, create texture and generate mipmaps
 LibSTBImage.set_flip_vertically_on_load(1) # tell stb_image.h to flip loaded texture's on the y-axis.
 data = LibSTBImage.load("resources/textures/container.jpg", out width, out height, out channels, 0)
@@ -122,13 +123,13 @@ LibSTBImage.image_free(data)
 # texture 2
 # ---------
 texture_2 = context.generate_texture
-texture_2.bind(:texture_2d)
+texture_2.bind(texture_2d)
 # set the texture wrapping parameters
-LibGL.tex_parameter_i(LibGL::TextureTarget::Texture2D, LibGL::TextureParameterName::TextureWrapS, LibGL::TextureWrapMode::Repeat) # set texture wrapping to GL_REPEAT (default wrapping method)
-LibGL.tex_parameter_i(LibGL::TextureTarget::Texture2D, LibGL::TextureParameterName::TextureWrapT, LibGL::TextureWrapMode::Repeat)
+texture_2d.wrap_s = :repeat # set texture wrapping to GL_REPEAT (default wrapping method)
+texture_2d.wrap_t = :repeat
 # set texture filtering parameters
-LibGL.tex_parameter_i(LibGL::TextureTarget::Texture2D, LibGL::TextureParameterName::TextureMinFilter, LibGL::TextureMinFilter::Linear)
-LibGL.tex_parameter_i(LibGL::TextureTarget::Texture2D, LibGL::TextureParameterName::TextureMagFilter, LibGL::TextureMagFilter::Linear)
+texture_2d.min_filter = :linear
+texture_2d.mag_filter = :linear
 # load image, create texture and generate mipmaps
 data = LibSTBImage.load("resources/textures/awesomeface.png", pointerof(width), pointerof(height), pointerof(channels), 0)
 if data
