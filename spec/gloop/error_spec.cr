@@ -38,6 +38,8 @@ Spectator.describe "Error handling" do
 
     context "with no error" do
       before_each do
+        # Clear any existing errors.
+        gl.error
         # Perform an operation that shouldn't trigger an error.
         value = uninitialized Int32
         gl.get_integer_v(LibGL::GetPName::MajorVersion, pointerof(value), unchecked: true)

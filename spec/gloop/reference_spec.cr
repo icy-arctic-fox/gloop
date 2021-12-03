@@ -14,6 +14,9 @@ Spectator.describe Gloop::Reference do
   end
 
   it "deletes unreferenced objects" do
+    {% if flag?(:release) %}
+      skip "WeakRef appears to not work correctly in release mode - https://github.com/crystal-lang/crystal/issues/10469"
+    {% end %}
     ref = WeakRef.new(Gloop::Reference(Gloop::Buffer).create(context))
     GC.collect
     expect(ref.value).to be_nil
