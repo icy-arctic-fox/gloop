@@ -162,10 +162,10 @@ while LibGLFW.window_should_close(window).false?
   context.clear(:color)
 
   # bind textures on corresponding texture units
-  LibGL.active_texture(LibGL::TextureUnit::Texture0)
-  texture_1.bind(:texture_2d)
-  LibGL.active_texture(LibGL::TextureUnit::Texture1)
-  texture_2.bind(:texture_2d)
+  context.textures.unit = 0
+  texture_1.bind(texture_2d)
+  context.textures.unit = 1
+  texture_2.bind(texture_2d)
 
   # render container
   our_shader.use

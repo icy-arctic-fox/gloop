@@ -1,11 +1,13 @@
+require "./contextual"
+require "./parameters"
 require "./texture/bind_target"
 require "./texture/target"
-require "./contextual"
 
 module Gloop
   # Reference to all texture binding targets for a context.
   struct Textures
     include Contextual
+    include Parameters
 
     # Defines a method that returns a texture binding target for the specified target.
     #
@@ -58,6 +60,26 @@ module Gloop
     @[AlwaysInline]
     def [](target : Symbol) : Texture::BindTarget
       self[Texture::Target.new(target)]
+    end
+
+    # Retrieves the active texture unit.
+    #
+    # - OpenGL function: `glGetIntegerv`
+    # - OpenGL enum: `GL_ACTIVE_TEXTURE`
+    # - OpenGL version: 2.0
+    @[GLFunction("glGetIntegerv", enum: "GL_ACTIVE_TEXTURE", version: "2.0")]
+    parameter(ActiveTexture, unit) do |value|
+      value - LibGL::TextureUnit::Texture0.value
+    end
+
+    # Sets the active texture unit.
+    #
+    # - OpenGL function: `glActiveTexture`
+    # - OpenGL version: 2.0
+    @[GLFunction("glActiveTexture", version: "2.0")]
+    def unit=(unit)
+      value = LibGL::TextureUnit::Texture0.value + unit
+      gl.active_texture(LibGL::TextureUnit.new(value))
     end
   end
 

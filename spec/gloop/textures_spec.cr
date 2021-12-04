@@ -97,6 +97,12 @@ Spectator.describe Gloop::Textures do
       expect(binding.target).to eq(Gloop::Texture::Target::Texture2D)
     end
   end
+
+  describe "#unit=" do
+    it "sets the active texture unit" do
+      expect { textures.unit = 5 }.to change(&.unit).to(5)
+    end
+  end
 end
 
 Spectator.describe Gloop::Context do
