@@ -537,6 +537,15 @@ module Gloop
         gl.bind_texture(to_unsafe, 0_u32)
       end
 
+      # Generates a mipmap for the texture.
+      #
+      # - OpenGL function: `glGenerateMipmap`
+      # - OpenGL version: 3.0
+      @[GLFunction("glGenerateMipmap", version: "3.0")]
+      def generate_mipmap
+        gl.generate_mipmap(to_unsafe)
+      end
+
       # Returns an OpenGL enum representing this texture binding target.
       def to_unsafe
         @target.to_unsafe

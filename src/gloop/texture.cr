@@ -593,6 +593,15 @@ module Gloop
     def bind(target : Symbol) : Nil
       bind(Target.new(target)) { yield }
     end
+
+    # Generates a mipmap for the texture.
+    #
+    # - OpenGL function: `glGenerateTextureMipmap`
+    # - OpenGL version: 4.5
+    @[GLFunction("glGenerateTextureMipmap", version: "4.5")]
+    def generate_mipmap
+      gl.generate_texture_mipmap(name)
+    end
   end
 
   struct Context
