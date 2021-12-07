@@ -103,6 +103,22 @@ module Gloop
     Float16RGBA = LibGL::InternalFormat::RGBA16F
     Float32RGBA = LibGL::InternalFormat::RGBA32F
 
+    UIntDepth = LibGL::InternalFormat::DepthComponent
+    UInt16Depth = LibGL::InternalFormat::DepthComponent16
+    UInt24Depth = LibGL::InternalFormat::DepthComponent24
+    UInt32Depth = LibGL::InternalFormat::DepthComponent32
+    Float32Depth = LibGL::InternalFormat::DepthComponent32F
+
+    UIntStencil = LibGL::InternalFormat::StencilIndex
+    UInt1Stencil = LibGL::InternalFormat::StencilIndex1
+    UInt4Stencil = LibGL::InternalFormat::StencilIndex4
+    UInt8Stencil = LibGL::InternalFormat::StencilIndex8
+    UInt16Stencil = LibGL::InternalFormat::StencilIndex16
+
+    DepthStencil = LibGL::InternalFormat::DepthStencil
+    UInt24DepthUInt8Stencil = LibGL::InternalFormat::Depth24Stencil8
+    Float32DepthUInt8Stencil8 = LibGL::InternalFormat::Depth32FStencil8
+
     R   = UIntNormR
     R8  = UInt8NormR
     R16 = UInt16NormR
@@ -125,6 +141,12 @@ module Gloop
     RGBA8  = UInt8NormRGBA
     RGBA12 = UInt12NormRGBA
     RGBA16 = UInt16NormRGBA
+
+    StencilIndex = UIntStencil
+    Stencil = UIntStencil
+
+    Depth = UIntDepth
+    DepthComponent = UIntDepth
 
     # Creates a standard image format from its parts.
     #
