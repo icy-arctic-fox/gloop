@@ -599,7 +599,7 @@ module Gloop
     # - OpenGL function: `glGenerateTextureMipmap`
     # - OpenGL version: 4.5
     @[GLFunction("glGenerateTextureMipmap", version: "4.5")]
-    def generate_mipmap
+    def generate_mipmap : Nil
       gl.generate_texture_mipmap(name)
     end
   end

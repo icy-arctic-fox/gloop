@@ -542,7 +542,7 @@ module Gloop
       # - OpenGL function: `glGenerateMipmap`
       # - OpenGL version: 3.0
       @[GLFunction("glGenerateMipmap", version: "3.0")]
-      def generate_mipmap
+      def generate_mipmap : Nil
         gl.generate_mipmap(to_unsafe)
       end
 
