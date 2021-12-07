@@ -103,20 +103,20 @@ module Gloop
     Float16RGBA = LibGL::InternalFormat::RGBA16F
     Float32RGBA = LibGL::InternalFormat::RGBA32F
 
-    UIntDepth = LibGL::InternalFormat::DepthComponent
-    UInt16Depth = LibGL::InternalFormat::DepthComponent16
-    UInt24Depth = LibGL::InternalFormat::DepthComponent24
-    UInt32Depth = LibGL::InternalFormat::DepthComponent32
+    UIntDepth    = LibGL::InternalFormat::DepthComponent
+    UInt16Depth  = LibGL::InternalFormat::DepthComponent16
+    UInt24Depth  = LibGL::InternalFormat::DepthComponent24
+    UInt32Depth  = LibGL::InternalFormat::DepthComponent32
     Float32Depth = LibGL::InternalFormat::DepthComponent32F
 
-    UIntStencil = LibGL::InternalFormat::StencilIndex
-    UInt1Stencil = LibGL::InternalFormat::StencilIndex1
-    UInt4Stencil = LibGL::InternalFormat::StencilIndex4
-    UInt8Stencil = LibGL::InternalFormat::StencilIndex8
+    UIntStencil   = LibGL::InternalFormat::StencilIndex
+    UInt1Stencil  = LibGL::InternalFormat::StencilIndex1
+    UInt4Stencil  = LibGL::InternalFormat::StencilIndex4
+    UInt8Stencil  = LibGL::InternalFormat::StencilIndex8
     UInt16Stencil = LibGL::InternalFormat::StencilIndex16
 
-    DepthStencil = LibGL::InternalFormat::DepthStencil
-    UInt24DepthUInt8Stencil = LibGL::InternalFormat::Depth24Stencil8
+    DepthStencil              = LibGL::InternalFormat::DepthStencil
+    UInt24DepthUInt8Stencil   = LibGL::InternalFormat::Depth24Stencil8
     Float32DepthUInt8Stencil8 = LibGL::InternalFormat::Depth32FStencil8
 
     R   = UIntNormR
@@ -143,9 +143,9 @@ module Gloop
     RGBA16 = UInt16NormRGBA
 
     StencilIndex = UIntStencil
-    Stencil = UIntStencil
+    Stencil      = UIntStencil
 
-    Depth = UIntDepth
+    Depth          = UIntDepth
     DepthComponent = UIntDepth
 
     # Creates a standard image format from its parts.
@@ -305,6 +305,20 @@ module Gloop
       end
 
       raise ArgumentError.new("Invalid image format description")
+    end
+
+    # Creates an image format from a symbol.
+    def self.new(value : Symbol)
+      case value
+      when :r             then R
+      when :rg            then RG
+      when :rgb           then RGB
+      when :rgba          then RGBA
+      when :stencil       then Stencil
+      when :depth         then Depth
+      when :depth_stencil then DepthStencil
+      else                     raise ArgumentError.new("Invalid image format")
+      end
     end
 
     # Converts to an OpenGL enum.
