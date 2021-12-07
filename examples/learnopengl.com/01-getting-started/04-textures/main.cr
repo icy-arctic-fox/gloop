@@ -114,7 +114,7 @@ texture_2d.mag_filter = :linear
 LibSTBImage.set_flip_vertically_on_load(1) # tell stb_image.h to flip loaded texture's on the y-axis.
 data = LibSTBImage.load("resources/textures/container.jpg", out width, out height, out channels, 0)
 if data
-  LibGL.tex_image_2d(LibGL::TextureTarget::Texture2D, 0, LibGL::InternalFormat::RGB, width, height, 0, LibGL::PixelFormat::RGB, LibGL::PixelType::UnsignedByte, data)
+  texture_2d.update_2d(width, height, :rgb, :rgb, :uint8, data)
   texture_2d.generate_mipmap
 else
   puts "Failed to load texture"
@@ -133,7 +133,7 @@ texture_2d.mag_filter = :linear
 # load image, create texture and generate mipmaps
 data = LibSTBImage.load("resources/textures/awesomeface.png", pointerof(width), pointerof(height), pointerof(channels), 0)
 if data
-  LibGL.tex_image_2d(LibGL::TextureTarget::Texture2D, 0, LibGL::InternalFormat::RGBA, width, height, 0, LibGL::PixelFormat::RGBA, LibGL::PixelType::UnsignedByte, data)
+  texture_2d.update_2d(width, height, :rgba, :rgba, :uint8, data)
   texture_2d.generate_mipmap
 else
   puts "Failed to load texture"

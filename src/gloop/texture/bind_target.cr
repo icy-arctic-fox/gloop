@@ -1,4 +1,7 @@
 require "../contextual"
+require "../image_format"
+require "../pixel_format"
+require "../pixel_type"
 require "./compare_mode"
 require "./depth_stencil_mode"
 require "./mag_filter"
@@ -535,6 +538,117 @@ module Gloop
       @[GLFunction("glBindTexture", version: "2.0")]
       def unbind : Nil
         gl.bind_texture(to_unsafe, 0_u32)
+      end
+
+      # Stores one-dimensional data in the texture.
+      #
+      # - OpenGL function: `glTexImage1D`
+      # - OpenGL version: 2.0
+      @[GLFunction("glTexImage1D", version: "2.0")]
+      def update_1d(width : Int32,
+                    internal_format : ImageFormat, format : PixelFormat, type : PixelType,
+                    data : Pointer, level = 0) : Nil
+        gl.tex_image_1d(
+          to_unsafe,
+          level,
+          internal_format.to_unsafe,
+          width,
+          0,
+          format.to_unsafe,
+          type.to_unsafe,
+          data.as(Void*)
+        )
+      end
+
+      # Stores one-dimensional data in the texture.
+      #
+      # - OpenGL function: `glTexImage1D`
+      # - OpenGL version: 2.0
+      @[AlwaysInline]
+      @[GLFunction("glTexImage1D", version: "2.0")]
+      def update_1d(width : Int32,
+                    internal_format : Symbol, format : Symbol, type : Symbol,
+                    data : Pointer, level = 0) : Nil
+        update_1d(width,
+          ImageFormat.new(internal_format),
+          PixelFormat.new(format),
+          PixelType.new(type),
+          data, level)
+      end
+
+      # Stores two-dimensional data in the texture.
+      #
+      # - OpenGL function: `glTexImage2D`
+      # - OpenGL version: 2.0
+      @[GLFunction("glTexImage2D", version: "2.0")]
+      def update_2d(width : Int32, height : Int32,
+                    internal_format : ImageFormat, format : PixelFormat, type : PixelType,
+                    data : Pointer, level = 0) : Nil
+        gl.tex_image_2d(
+          to_unsafe,
+          level,
+          internal_format.to_unsafe,
+          width,
+          height,
+          0,
+          format.to_unsafe,
+          type.to_unsafe,
+          data.as(Void*)
+        )
+      end
+
+      # Stores two-dimensional data in the texture.
+      #
+      # - OpenGL function: `glTexImage2D`
+      # - OpenGL version: 2.0
+      @[AlwaysInline]
+      @[GLFunction("glTexImage2D", version: "2.0")]
+      def update_2d(width : Int32, height : Int32,
+                    internal_format : Symbol, format : Symbol, type : Symbol,
+                    data : Pointer, level = 0) : Nil
+        update_2d(width, height,
+          ImageFormat.new(internal_format),
+          PixelFormat.new(format),
+          PixelType.new(type),
+          data, level)
+      end
+
+      # Stores three-dimensional data in the texture.
+      #
+      # - OpenGL function: `glTexImage3D`
+      # - OpenGL version: 2.0
+      @[GLFunction("glTexImage3D", version: "2.0")]
+      def update_3d(width : Int32, height : Int32, depth : Int32,
+                    internal_format : ImageFormat, format : PixelFormat, type : PixelType,
+                    data : Pointer, level = 0) : Nil
+        gl.tex_image_3d(
+          to_unsafe,
+          level,
+          internal_format.to_unsafe,
+          width,
+          height,
+          depth,
+          0,
+          format.to_unsafe,
+          type.to_unsafe,
+          data.as(Void*)
+        )
+      end
+
+      # Stores three-dimensional data in the texture.
+      #
+      # - OpenGL function: `glTexImage3D`
+      # - OpenGL version: 2.0
+      @[AlwaysInline]
+      @[GLFunction("glTexImage3D", version: "2.0")]
+      def update_3d(width : Int32, height : Int32, depth : Int32,
+                    internal_format : Symbol, format : Symbol, type : Symbol,
+                    data : Pointer, level = 0) : Nil
+        update_3d(width, height, depth,
+          ImageFormat.new(internal_format),
+          PixelFormat.new(format),
+          PixelType.new(type),
+          data, level)
       end
 
       # Generates a mipmap for the texture.
