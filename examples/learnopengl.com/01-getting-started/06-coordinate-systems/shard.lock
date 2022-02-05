@@ -1,0 +1,22 @@
+version: 2.0
+shards:
+  geode:
+    git: https://gitlab.com/arctic-fox/geode.git
+    version: 0.2.0+git.commit.86504752e4cd02b642498a707579cf627d624323
+
+  glfw:
+    git: https://gitlab.com/arctic-fox/glfw.cr.git
+    version: 3.3.3
+
+  gloop:
+    path: ../../../../
+    version: 0.2.0
+
+  lib_stb_image:
+    git: https://github.com/calebuharrison/libstbimage.git
+    version: 0.1.0+git.commit.32bc23af165dbe004a7468426f09e6701463bc72
+
+  opengl:
+    git: https://gitlab.com/arctic-fox/opengl.cr.git
+    version: 4.6.0+git.commit.163acf3b4785aba2fd69256ac4181cf00c64f928
+
