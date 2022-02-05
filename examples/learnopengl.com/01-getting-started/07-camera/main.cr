@@ -311,7 +311,7 @@ while LibGLFW.window_should_close(window).false?
 
   # render
   # ------
-  context.clear_color = {0.4, 0.6, 0.6, 1.0}
+  context.clear_color = {0.2, 0.3, 0.3, 1.0}
   context.clear(Gloop::ClearMask.flags(Color, Depth))
 
   # bind textures on corresponding texture units
