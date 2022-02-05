@@ -1,5 +1,5 @@
 # Original post available here:
-# https://learnopengl.com/Getting-started/Transformations
+# https://learnopengl.com/Getting-started/Coordinate-Systems
 # and source code available here:
 # https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/shader.h
 
@@ -77,39 +77,39 @@ class Shader
 
   # ------------------------------------------------------------------------
   def set_vec2(name, value)
-    LibGL.uniform_2fv(LibGL.get_uniform_location(@program, name), value)
+    LibGL.uniform2_fv(LibGL.get_uniform_location(@program, name), value)
   end
 
   def set_vec2(name, x, y)
-    LibGL.uniform_2f(LibGL.get_uniform_location(@program, name), x, y)
+    LibGL.uniform2_f(LibGL.get_uniform_location(@program, name), x, y)
   end
 
   # ------------------------------------------------------------------------
   def set_vec3(name, value)
-    LibGL.uniform_3fv(LibGL.get_uniform_location(@program, name), value)
+    LibGL.uniform3_fv(LibGL.get_uniform_location(@program, name), value)
   end
 
   def set_vec3(name, x, y, z)
-    LibGL.uniform_3f(LibGL.get_uniform_location(@program, name), x, y, z)
+    LibGL.uniform3_f(LibGL.get_uniform_location(@program, name), x, y, z)
   end
 
   # ------------------------------------------------------------------------
   def set_vec4(name, value)
-    LibGL.uniform_4fv(LibGL.get_uniform_location(@program, name), value)
+    LibGL.uniform4_fv(LibGL.get_uniform_location(@program, name), value)
   end
 
   def set_vec4(name, x, y, z, w)
-    LibGL.uniform_4f(LibGL.get_uniform_location(@program, name), x, y, z, w)
+    LibGL.uniform4_f(LibGL.get_uniform_location(@program, name), x, y, z, w)
   end
 
   # ------------------------------------------------------------------------
   def set_mat2(name, mat)
-    LibGL.uniform_matrix_2fv(LibGL.get_uniform_location(@program, name), 1, LibGL::Boolean::False, mat)
+    LibGL.uniform_matrix2_fv(LibGL.get_uniform_location(@program, name), 1, LibGL::Boolean::False, mat)
   end
 
   # ------------------------------------------------------------------------
   def set_mat3(name, mat)
-    LibGL.uniform_matrix_3fv(LibGL.get_uniform_location(@program, name), 1, LibGL::Boolean::False, mat)
+    LibGL.uniform_matrix3_fv(LibGL.get_uniform_location(@program, name), 1, LibGL::Boolean::False, mat)
   end
 
   # ------------------------------------------------------------------------
