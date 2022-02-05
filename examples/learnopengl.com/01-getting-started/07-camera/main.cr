@@ -66,7 +66,7 @@ end
 
 # glfw: whenever the window size changed (by OS or user resize) this callback function executes
 # ---------------------------------------------------------------------------------------------
-def framebuffer_size_callback(window, width, height)
+def framebuffer_size_callback(window, width, height) : Nil
   context = Box(Data).unbox(LibGLFW.get_window_user_pointer(window)).context
   # make sure the viewport matches the new window dimensions; note that width and
   # height will be significantly larger than specified on retina displays.
@@ -75,7 +75,7 @@ end
 
 # glfw: whenever the mouse moves, this callback is called
 # -------------------------------------------------------
-def mouse_callback(window, x_pos_in, y_pos_in)
+def mouse_callback(window, x_pos_in, y_pos_in) : Nil
   state = Box(Data).unbox(LibGLFW.get_window_user_pointer(window)).state
 
   x_pos = x_pos_in.to_f
@@ -117,7 +117,7 @@ end
 
 # glfw: whenever the mouse scroll wheel scrolls, this callback is called
 # ----------------------------------------------------------------------
-def scroll_callback(window, x_offset, y_offset)
+def scroll_callback(window, x_offset, y_offset) : Nil
   state = Box(Data).unbox(LibGLFW.get_window_user_pointer(window)).state
 
   state.fov -= Geode::Degrees.new(y_offset.to_f)

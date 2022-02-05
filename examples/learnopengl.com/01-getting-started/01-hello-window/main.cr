@@ -20,7 +20,7 @@ end
 
 # glfw: whenever the window size changed (by OS or user resize) this callback function executes
 # ---------------------------------------------------------------------------------------------
-def framebuffer_size_callback(window, width, height)
+def framebuffer_size_callback(window, width, height) : Nil
   # make sure the viewport matches the new window dimensions; note that width and
   # height will be significantly larger than specified on retina displays.
   LibGL.viewport(0, 0, width, height)
