@@ -2,7 +2,7 @@ version: 2.0
 shards:
   geode:
     git: https://gitlab.com/arctic-fox/geode.git
-    version: 0.2.0+git.commit.8fc16fcd4c16742e9d72c9cea087fefeef72fc96
+    version: 0.2.1
 
   glfw:
     git: https://gitlab.com/arctic-fox/glfw.cr.git
