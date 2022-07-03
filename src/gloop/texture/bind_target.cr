@@ -666,7 +666,7 @@ module Gloop
       end
 
       # Retrieves the corresponding parameter value for `glGet` for this target.
-      private def binding_pname # ameba:disable Metrics/CyclomaticComplexity
+      private def binding_pname
         case @target
         in Texture::Target::Texture1D          then LibGL::GetPName::TextureBinding1D
         in Texture::Target::Texture2D          then LibGL::GetPName::TextureBinding2D

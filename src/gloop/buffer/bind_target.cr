@@ -616,7 +616,7 @@ module Gloop
       end
 
       # Retrieves the corresponding parameter value for `glGet` for this target.
-      private def binding_pname # ameba:disable Metrics/CyclomaticComplexity
+      private def binding_pname
         case @target
         in Target::Array             then LibGL::GetPName::ArrayBufferBinding
         in Target::ElementArray      then LibGL::GetPName::ElementArrayBufferBinding
