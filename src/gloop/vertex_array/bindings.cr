@@ -21,6 +21,9 @@ module Gloop
       @[GLFunction("glGetIntegerv", enum: "GL_MAX_VERTEX_ATTRIB_BINDINGS", version: "4.3")]
       parameter MaxVertexAttribBindings, size
 
+      # Context associated with the binding slots.
+      private getter context : Context
+
       # Creates a references to the binding slots.
       def initialize(@context : Context, @name : Name)
       end

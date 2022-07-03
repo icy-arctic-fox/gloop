@@ -12,6 +12,9 @@ module Gloop
     # Location of the uniform.
     getter location : Int32
 
+    # Context associated with the uniform location.
+    private getter context : Context
+
     # Creates a reference to an active uniform.
     def initialize(@context : Context, @location : Int32)
     end

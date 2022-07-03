@@ -49,6 +49,9 @@ module Gloop
       @[GLFunction("glGetVertexArrayIndexediv", enum: "GL_VERTEX_BINDING_DIVISOR", version: "4.5")]
       array_attribute_parameter LibGL::GetPName::VertexBindingDivisor, divisor : UInt32
 
+      # Context associated with the binding.
+      private getter context : Context
+
       # Name of the vertex array.
       private getter name : Name
 

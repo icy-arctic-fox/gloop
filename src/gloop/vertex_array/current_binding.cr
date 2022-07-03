@@ -49,6 +49,9 @@ module Gloop
       @[GLFunction("glGetIntegeri_v", enum: "GL_VERTEX_BINDING_DIVISOR", version: "4.3")]
       index_parameter VertexBindingDivisor, divisor : UInt32
 
+      # Context associated with the binding.
+      private getter context : Context
+
       # Index of this binding slot.
       getter index : UInt32
 

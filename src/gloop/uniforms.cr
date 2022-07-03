@@ -10,6 +10,8 @@ module Gloop
   struct Uniforms
     include Contextual
 
+    def_context_initializer
+
     # References a uniform in the current program by its location.
     def [](location : Int32) : UniformLocation
       UniformLocation.new(@context, location)

@@ -14,6 +14,8 @@ module Gloop
     include Indexable(Attribute)
     include Parameters
 
+    def_context_initializer
+
     # Retrieves the maximum number of attributes a vertex array can have.
     #
     # - OpenGL function: `glGetIntegerv`
@@ -21,10 +23,6 @@ module Gloop
     # - OpenGL version: 3.0
     @[GLFunction("glGetIntegerv", enum: "GL_MAX_VERTEX_ATTRIBS", version: "3.0")]
     parameter MaxVertexAttribs, size
-
-    # Creates a references to the attributes for the bound vertex array.
-    def initialize(@context : Context)
-    end
 
     # Retrieves an attribute from the vertex array.
     def unsafe_fetch(index : Int)

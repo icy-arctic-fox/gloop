@@ -95,6 +95,9 @@ module Gloop
       @[GLFunction("glGetVertexArrayIndexed64iv", enum: "GL_VERTEX_BINDING_OFFSET", version: "4.5")]
       array_attribute_parameter LibGL::GetPName::VertexBindingOffset, offset : Int64
 
+      # Context associated with the attribute.
+      private getter context : Context
+
       # Name of the vertex array.
       private getter name : Name
 

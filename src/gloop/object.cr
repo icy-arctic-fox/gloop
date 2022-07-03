@@ -44,7 +44,7 @@ module Gloop
       @name.zero?
     end
 
-    # Retrieves the context for this instance.
+    # Context the object belongs to.
     getter context : Context
 
     # Unique identifier of this object.

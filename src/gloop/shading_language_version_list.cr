@@ -8,6 +8,8 @@ module Gloop
     include Indexable(String)
     include Parameters
 
+    def_context_initializer
+
     # Retrieves the number of supported GLSL versions.
     #
     # - OpenGL function: `glGetIntegerv`

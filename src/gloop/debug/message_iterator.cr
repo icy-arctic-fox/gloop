@@ -12,6 +12,8 @@ module Gloop
       include Iterator(Message)
       include Parameters
 
+      def_context_initializer
+
       # Retrieves the size of the next logged message in bytes.
       #
       # Returns nil if the message log is empty.

@@ -59,9 +59,11 @@ module Gloop
       end
     end
 
+    # Context associated with the attribute reference.
+    private getter context : Context
+
     # Creates a reference to an OpenGL capability for a context.
-    def initialize(context : Context, @value : Enum)
-      initialize(context)
+    def initialize(@context : Context, @value : Enum)
     end
 
     # Enables this capability.

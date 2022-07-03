@@ -8,6 +8,8 @@ module Gloop
   struct Buffers
     include Contextual
 
+    def_context_initializer
+
     # Defines a method that returns a buffer binding target for the specified target.
     #
     # The *target* should be a symbol that refers to an enum value in `Buffer::Target`.

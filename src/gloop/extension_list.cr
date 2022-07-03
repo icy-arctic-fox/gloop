@@ -9,6 +9,8 @@ module Gloop
     include Indexable(Extension)
     include Parameters
 
+    def_context_initializer
+
     # Retrieves the number of extensions.
     #
     # - OpenGL function: `glGetIntegerv`

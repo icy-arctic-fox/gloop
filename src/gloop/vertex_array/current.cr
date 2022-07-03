@@ -14,6 +14,8 @@ module Gloop
       include Contextual
       include Parameters
 
+      def_context_initializer
+
       # Retrieves the name of the currently bound vertex array.
       #
       # - OpenGL function: `glGetIntegerv`
@@ -21,10 +23,6 @@ module Gloop
       # - OpenGL version: 3.0
       @[GLFunction("glGetIntegerv", enum: "GL_VERTEX_ARRAY_BINDING", version: "3.0")]
       protected parameter VertexArrayBinding, name : Name
-
-      # Creates a reference to the currently bound vertex array.
-      def initialize(@context : Context)
-      end
 
       # Checks if there is a vertex array currently bound.
       def bound?

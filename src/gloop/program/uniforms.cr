@@ -35,6 +35,9 @@ module Gloop
         (value - 1) unless value.zero?
       end
 
+      # Context associated with the uniforms.
+      private getter context : Context
+
       # Name of the program the uniforms are from.
       private getter name
 

@@ -15,6 +15,8 @@ module Gloop
       include Indexable(CurrentBinding)
       include Parameters
 
+      def_context_initializer
+
       # Retrieves the maximum number of attributes a vertex array can have.
       #
       # - OpenGL function: `glGetIntegerv`
@@ -22,10 +24,6 @@ module Gloop
       # - OpenGL version: 4.3
       @[GLFunction("glGetIntegerv", enum: "GL_MAX_VERTEX_ATTRIB_BINDINGS", version: "4.3")]
       parameter MaxVertexAttribBindings, size
-
-      # Creates a references to the binding slots.
-      def initialize(@context : Context)
-      end
 
       # Retrieves a binding slot from the vertex array.
       def unsafe_fetch(index : Int)

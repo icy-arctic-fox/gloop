@@ -9,6 +9,8 @@ module Gloop
     include Contextual
     include Parameters
 
+    def_context_initializer
+
     # Defines a method that returns a texture binding target for the specified target.
     #
     # The *target* should be an enum value in `Texture::Target`.

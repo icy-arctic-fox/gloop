@@ -21,6 +21,9 @@ module Gloop
       @[GLFunction("glGetIntegerv", enum: "GL_MAX_VERTEX_ATTRIBS", version: "3.0")]
       parameter MaxVertexAttribs, size
 
+      # Context associated with the attributes.
+      private getter context : Context
+
       # Creates a references to the attributes for a vertex array.
       def initialize(@context : Context, @name : Name)
       end

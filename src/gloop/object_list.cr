@@ -7,6 +7,9 @@ module Gloop
     include Contextual
     include Indexable(T)
 
+    # Context associated with the objects.
+    private getter context : Context
+
     # Creates a list of objects from the same context with their names.
     def initialize(@context : Context, @names : Slice(Object::Name))
     end

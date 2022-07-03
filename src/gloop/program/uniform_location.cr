@@ -22,6 +22,9 @@ module Gloop
       # :nodoc:
       alias Float64ValueBuffer = StaticArray(Float64, 16)
 
+      # Context associated with the uniform.
+      private getter context : Context
+
       # Location of the uniform.
       getter location : Int32
 

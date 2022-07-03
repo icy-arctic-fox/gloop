@@ -454,7 +454,7 @@ module Gloop
         gl.tex_parameter_i_uiv(to_unsafe, LibGL::TextureParameterName::TextureBorderColor, components.to_unsafe)
       end
 
-      # Retrieves the context for this target.
+      # Context for this target.
       getter context : Context
 
       # Target this binding refers to.

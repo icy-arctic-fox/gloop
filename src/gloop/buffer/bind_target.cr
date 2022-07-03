@@ -79,7 +79,7 @@ module Gloop
       @[GLFunction("glGetNamedBufferParameteriv", enum: "GL_BUFFER_USAGE", version: "2.0")]
       buffer_target_parameter BufferUsage, usage : Usage
 
-      # Retrieves the context for this target.
+      # Context for this target.
       getter context : Context
 
       # Target this binding refers to.

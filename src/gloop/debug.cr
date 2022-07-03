@@ -13,6 +13,8 @@ module Gloop
     self_capability DebugOutput, version: "4.3"
     capability DebugOutputSynchronous, sync, version: "4.3"
 
+    def_context_initializer
+
     # Sends a debug message to OpenGL's debug message queue.
     #
     # See: `Message#insert`

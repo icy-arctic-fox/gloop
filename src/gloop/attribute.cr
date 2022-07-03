@@ -92,6 +92,9 @@ module Gloop
     @[GLFunction("glGetVertexAttribiv", enum: "GL_VERTEX_ATTRIB_ARRAY_RELATIVE_OFFSET", version: "4.3")]
     attribute_parameter VertexAttribRelativeOffset, relative_offset : UInt32
 
+    # Context associated with the attribute reference.
+    private getter context : Context
+
     # Index of the attribute.
     getter index : UInt32
 

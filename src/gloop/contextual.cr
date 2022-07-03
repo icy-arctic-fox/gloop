@@ -6,15 +6,15 @@ module Gloop
   # This module defines an initializer that takes a `Context`.
   # It exposes a private `#gl` method for calling OpenGL function in the context.
   module Contextual
-    # Creates the instance for the given OpenGL context.
-    def initialize(@context : Context)
-    end
+    # Context associated with the object.
+    private abstract def context : Context
 
     # Proxies OpenGL function calls to the context.
     #
     # See: `Context#gl`.
+    @[AlwaysInline]
     private def gl
-      @context.gl
+      context.gl
     end
 
     # Defines getters and setters for a value associated with the context.
@@ -49,6 +49,18 @@ module Gloop
 
       def {{name}}=(value : {{type}})
         @@%mutex.synchronize { @@%storage[@context] = value }
+      end
+    end
+
+    # Defines an initializer method and getter that accepts a context.
+    #
+    # Additionally, this method defines a getter to retrieve the context.
+    # This implements the abstract `context` method from this module.
+    private macro def_context_initializer
+      private getter context : ::Gloop::Context
+
+      # Creates a resource associated with a context.
+      def initialize(@context : ::Gloop::Context)
       end
     end
   end

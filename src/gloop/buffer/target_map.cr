@@ -73,6 +73,9 @@ module Gloop
       @[GLFunction("glGetBufferParameteriv", enum: "GL_BUFFER_ACCESS_FLAGS", version: "2.0")]
       buffer_target_parameter BufferAccessFlags, access_mask : AccessMask
 
+      # Context associated with the mapping.
+      private getter context : Context
+
       # Buffer binding target.
       private getter target : Target
 
